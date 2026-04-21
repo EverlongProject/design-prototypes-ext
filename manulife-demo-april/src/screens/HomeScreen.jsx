@@ -1,7 +1,12 @@
+import { useEffect, useState } from 'react'
 import { Menu, Flame, Heart, Video, Headphones, ArrowUpRight, Eye, Award } from 'lucide-react'
 import CoverageTile from '../components/CoverageTile.jsx'
 import ClaimCard from '../components/ClaimCard.jsx'
 import BottomNav from '../components/BottomNav.jsx'
+import NiaHealthCard from '../components/NiaHealthCard.jsx'
+import BottomSheet from '../components/BottomSheet.jsx'
+import ScheduleSheet from '../components/ScheduleSheet.jsx'
+import RewardsSheet from '../components/RewardsSheet.jsx'
 
 const HEADER_DARK = '#1A1D29'
 const CARD_RADIUS = 'rounded-lg'
@@ -26,9 +31,7 @@ function TopHeader() {
   )
 }
 
-function PointsCard() {
-  const points = 475
-  const ticks = [200, 400, 600, 800, 1000]
+function PointsCard({ points = 475, ticks = [200, 400, 600, 800, 1000], streak = 15 }) {
   const markerPct = ((points - ticks[0]) / (ticks[ticks.length - 1] - ticks[0])) * 100
 
   return (
@@ -42,7 +45,7 @@ function PointsCard() {
         </div>
         <div className="bg-manulife-green-dark/40 rounded-full flex items-center gap-1 px-3 py-1">
           <Flame size={14} className="text-orange-400" fill="currentColor" strokeWidth={0} />
-          <span className="text-white text-[13px] font-bold">15 day streak</span>
+          <span className="text-white text-[13px] font-bold">{streak} day streak</span>
         </div>
       </div>
 
@@ -141,9 +144,23 @@ function TodayActivityCard() {
   )
 }
 
-export default function HomeScreen() {
+export default function HomeScreen({ variant = 'default', onLearnMore }) {
+  const [sheetOpen, setSheetOpen] = useState(false)
+  const [rewardsOpen, setRewardsOpen] = useState(false)
+
+  useEffect(() => {
+    if (variant === 'schedule') {
+      const t = setTimeout(() => setSheetOpen(true), 600)
+      return () => clearTimeout(t)
+    }
+    if (variant === 'rewards') {
+      const t = setTimeout(() => setRewardsOpen(true), 500)
+      return () => clearTimeout(t)
+    }
+  }, [variant])
+
   return (
-    <div className="h-full w-full flex flex-col bg-white">
+    <div className="h-full w-full flex flex-col bg-white relative">
       <div className="flex-1 overflow-y-auto">
         <div className="relative">
           <div style={{ backgroundColor: HEADER_DARK }}>
@@ -151,11 +168,22 @@ export default function HomeScreen() {
             <div className="h-16" />
           </div>
           <div className="px-4 -mt-16">
-            <PointsCard />
+            {variant === 'niaHealth' || variant === 'schedule' ? (
+              <PointsCard points={3275} ticks={[3000, 3200, 3400, 3600, 3800]} streak={35} />
+            ) : (
+              <PointsCard />
+            )}
           </div>
         </div>
 
         <div className="pt-12 space-y-12">
+          {variant === 'niaHealth' && (
+            <section>
+              <div className="px-4">
+                <NiaHealthCard onLearnMore={(e) => { e.stopPropagation(); onLearnMore?.() }} />
+              </div>
+            </section>
+          )}
           <section>
             <SectionHeader title="Recommended for you" />
             <div className="px-4">
@@ -207,6 +235,21 @@ export default function HomeScreen() {
       </div>
 
       <BottomNav active="home" />
+
+      <BottomSheet
+        open={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        title={null}
+      >
+        <ScheduleSheet onHelpMeSchedule={() => { setSheetOpen(false); onLearnMore?.() }} />
+      </BottomSheet>
+
+      {variant === 'rewards' && (
+        <>
+          {rewardsOpen && <div className="absolute inset-0 bg-black/40 z-30" />}
+          <RewardsSheet open={rewardsOpen} onViewDetails={() => { setRewardsOpen(false); onLearnMore?.() }} />
+        </>
+      )}
     </div>
   )
 }
