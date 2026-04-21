@@ -81,9 +81,9 @@ export const stage1Flow = [
           heading: "You're covered, Jenn! 🎉",
           subheading: "Your Family Term policy is active.\nHere's what you've unlocked.",
           tiles: [
-            { key: 'kixcare', title: 'KixCare', subtitle: '24/7 pediatric virtual care', asset: '/assets/kixcare-thumb.png' },
-            { key: 'maven', title: 'Maven Clinic', subtitle: '3 bonus prenatal visits', asset: '/assets/maven-thumb.png' },
-            { key: 'aeroplan', title: 'Aeroplan Points', subtitle: '2,500 welcome bonus', asset: '/assets/aeroplan-thumb.png' }
+            { key: 'kixcare', title: 'KixCare', subtitle: '24/7 pediatric virtual care', asset: `${import.meta.env.BASE_URL}assets/kixcare.png` },
+            { key: 'maven', title: 'Maven Clinic', subtitle: '3 bonus prenatal visits', asset: `${import.meta.env.BASE_URL}assets/Maven.png` },
+            { key: 'aeroplan', title: 'Aeroplan Points', subtitle: '2,500 welcome bonus', asset: `${import.meta.env.BASE_URL}assets/Aeroplan.png` }
           ],
           primary: 'View Coverage Details →'
         }
