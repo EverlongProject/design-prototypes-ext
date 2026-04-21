@@ -36,8 +36,8 @@ export default function ManulifeWidget() {
           <div className="text-white text-[14px] font-bold leading-tight mt-0.5">Nia Health Screening</div>
         </div>
         <div className="flex items-center gap-1 bg-black/25 rounded-full px-2 py-1 shrink-0">
-          <MapleLeaf size={11} className="text-red-400" />
-          <span className="text-white text-[12px] font-bold">1000 pts</span>
+          <img src={`${import.meta.env.BASE_URL}assets/Aeroplan-Icon.png`} alt="" className="w-3.5 h-3.5 object-contain" />
+          <span className="text-white text-[12px] font-bold">500 pts</span>
         </div>
       </div>
     </div>

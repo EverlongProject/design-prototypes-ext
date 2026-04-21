@@ -6,6 +6,7 @@ export const stage3Flow = [
     type: 'title',
     label: 'Jenn, age 59',
     payload: {
+      stageLabel: 'Stage 3',
       description:
         'Jenn is thinking about retirement in the next few years and starting to plan for what her health and coverage will look like once she stops working.',
       outerTap: true
@@ -106,6 +107,7 @@ export const stage3Flow = [
     type: 'title',
     label: 'Stage 3 complete',
     payload: {
+      stageLabel: 'Stage 3 Complete',
       description: 'Coverage review, pre-approved continuation, and welcome rewards — a seamless retirement transition.',
       outerTap: true
     }

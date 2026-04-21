@@ -17,6 +17,7 @@ export const stage1Flow = [
     type: 'title',
     label: 'Jenn, age 32',
     payload: {
+      stageLabel: 'Stage 1',
       description:
         'Starting a family, new mortgage, thinking about what comes next. Jenn is the kind of member we want to grow with.'
     }

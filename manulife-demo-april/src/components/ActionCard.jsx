@@ -9,12 +9,12 @@ function ClusterIcon() {
   )
 }
 
-export default function ActionCard({ title, subtitle, ctaLabel, ctaEnabled = true, onCta, collapsed = false }) {
+export default function ActionCard({ title, subtitle, ctaLabel, ctaEnabled = true, onCta, collapsed = false, image }) {
   return (
     <div className="border border-stroke rounded-lg p-3 bg-gray-50">
       <div className="flex items-center gap-3 mb-2">
-        <div className="w-10 h-10 rounded-md bg-white border border-stroke flex items-center justify-center shrink-0">
-          <ClusterIcon />
+        <div className="w-10 h-10 rounded-md overflow-hidden bg-white border border-stroke flex items-center justify-center shrink-0">
+          {image ? <img src={image} alt="" className="w-full h-full object-cover" /> : <ClusterIcon />}
         </div>
         <div className="flex-1 min-w-0">
           <div className="text-ink font-bold text-[15px] leading-tight">{title}</div>

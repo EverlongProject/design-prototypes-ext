@@ -1,5 +1,4 @@
 import { ChevronLeft, ChevronRight, Check, Play, Target, Droplet, UserRound } from 'lucide-react'
-import IOSStatusBar from '../components/IOSStatusBar.jsx'
 
 function StatCircle({ icon: Icon, value, label }) {
   return (
@@ -30,9 +29,9 @@ function InsightCard({ eyebrow, title, body }) {
 
 function PtsBadge({ value }) {
   return (
-    <div className="inline-flex items-center gap-1 bg-red-50 text-red-600 rounded-full px-1.5 py-0.5">
-      <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.2 3.6 3.8-.8-1.4 3.6 3.4 2-3 2.2 1 3.6-3.6-1-.4 3.8-2-3-2 3-.4-3.8-3.6 1 1-3.6-3-2.2 3.4-2L5 4.8l3.8.8L12 2z" /></svg>
-      <span className="text-[11px] font-bold">{value}</span>
+    <div className="inline-flex items-center gap-1.5 bg-gray-100 rounded-full pl-1 pr-2.5 py-0.5">
+      <img src={`${import.meta.env.BASE_URL}assets/Aeroplan-Icon.png`} alt="" className="w-4 h-4 object-contain" />
+      <span className="text-ink text-[13px] font-semibold">{value}</span>
     </div>
   )
 }
@@ -40,13 +39,13 @@ function PtsBadge({ value }) {
 function ActionRow({ eyebrow, title, pts, thumb }) {
   return (
     <div className="bg-white border border-stroke rounded-lg p-3 flex items-center gap-3">
-      <div className={`w-11 h-11 rounded-md flex items-center justify-center shrink-0 text-2xl ${thumb.bg}`}>
-        <span>{thumb.emoji}</span>
+      <div className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 overflow-hidden bg-gray-100">
+        <img src={thumb.src} alt="" className="w-full h-full object-cover" />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-ink-soft text-[11px]">{eyebrow}</div>
-        <div className="text-ink font-bold text-[14px] leading-tight">{title}</div>
-        <div className="mt-1"><PtsBadge value={pts} /></div>
+        <div className="text-ink-soft text-[12px]">{eyebrow}</div>
+        <div className="text-ink font-bold text-[16px] leading-tight">{title}</div>
+        <div className="mt-1.5"><PtsBadge value={pts} /></div>
       </div>
       <ChevronRight size={18} className="text-ink-soft shrink-0" />
     </div>
@@ -74,18 +73,19 @@ function ActionSuggestionCard({ title, body, ctaLabel }) {
 }
 
 function StatRow({ label, value, unit, status, statusColor, abnormal }) {
-  const circleBg = abnormal ? 'bg-[#F4E8D8]' : 'bg-manulife-green-light'
-  const dropColor = abnormal ? 'text-[#6B4A1F]' : 'text-manulife-green'
+  const circleBg = abnormal ? 'bg-[#FFF4CC]' : 'bg-manulife-green-light'
+  const dropColor = abnormal ? 'text-[#6B5300]' : 'text-manulife-green'
   return (
     <div className="bg-white border border-stroke rounded-lg p-3 flex items-center gap-3">
       <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${circleBg}`}>
         <Droplet size={20} className={dropColor} fill="currentColor" strokeWidth={0} />
       </div>
       <div className="flex-1 min-w-0">
-        <div className="text-ink font-bold text-[14px] leading-tight">
-          {label} <span className="text-ink font-bold">{value}</span> <span className="text-ink-soft text-[12px] font-normal">{unit}</span>
+        <div className="text-ink-soft text-[13px] leading-tight">{label}</div>
+        <div className="text-ink font-bold text-[20px] leading-tight mt-0.5">
+          {value} <span className="text-ink-soft text-[13px] font-normal">{unit}</span>
         </div>
-        <div className={`inline-block mt-1 text-[11px] font-semibold px-2 py-0.5 rounded ${statusColor}`}>{status}</div>
+        <div className={`inline-block mt-1.5 text-[12px] font-semibold px-2 py-0.5 rounded ${statusColor}`}>{status}</div>
       </div>
       <div className="text-right shrink-0">
         <div className="text-ink-soft text-[11px]">Yesterday</div>
@@ -96,7 +96,7 @@ function StatRow({ label, value, unit, status, statusColor, abnormal }) {
 }
 
 const INITIAL_STATS = [
-  { label: 'Total Cholesterol', value: '201', unit: 'mg/dL', status: 'Borderline', statusColor: 'bg-[#FFF4CC] text-[#6B5300]', abnormal: true },
+  { label: 'Total Cholesterol', value: '201', unit: 'mg/dL', status: 'Above range', statusColor: 'bg-[#FFF4CC] text-[#6B5300]', abnormal: true },
   { label: 'LDL', value: '147', unit: 'mg/dL', status: 'Above range', statusColor: 'bg-[#FFF4CC] text-[#6B5300]', abnormal: true },
   { label: 'HDL', value: '43', unit: 'mg/dL', status: 'Normal', statusColor: 'bg-manulife-green-light text-manulife-green' },
   { label: 'Triglycerides', value: '142', unit: 'mg/dL', status: 'Normal', statusColor: 'bg-manulife-green-light text-manulife-green' }
@@ -115,7 +115,6 @@ export default function GoalDetail({ state = 'initial' }) {
 
   return (
     <div className="h-full w-full bg-white flex flex-col">
-      <IOSStatusBar dark={true} />
 
       <div className="flex items-center justify-between px-2 pt-1 pb-2">
         <button className="p-2 text-ink">
@@ -155,14 +154,14 @@ export default function GoalDetail({ state = 'initial' }) {
           {isUpdated ? (
             <ActionSuggestionCard
               title="Start a stress management goal"
-              body="Your stress has been consistently moderate \u2014 let\u2019s work on that next."
+              body="Your stress has been consistently moderate. We can work on that next."
               ctaLabel="Add goal to Journey"
             />
           ) : (
             <div className="space-y-2">
-              <ActionRow eyebrow="Check-in" title="Log your first meal" pts="50" thumb={{ emoji: '\ud83e\udd57', bg: 'bg-amber-100' }} />
-              <ActionRow eyebrow="Care" title="Talk to a specialist" pts="400" thumb={{ emoji: '\ud83d\udc69\u200d\u2695\ufe0f', bg: 'bg-rose-100' }} />
-              <ActionRow eyebrow="Goal Setting" title="Set a weekly activity goal" pts="50" thumb={{ emoji: '\ud83c\udfaf', bg: 'bg-indigo-100' }} />
+              <ActionRow eyebrow="Check-in" title="Log your first meal" pts="50" thumb={{ src: `${import.meta.env.BASE_URL}assets/Meal.png` }} />
+              <ActionRow eyebrow="Care" title="Talk to a specialist" pts="400" thumb={{ src: `${import.meta.env.BASE_URL}assets/Specialist.png` }} />
+              <ActionRow eyebrow="Goal Setting" title="Set a weekly activity goal" pts="50" thumb={{ src: `${import.meta.env.BASE_URL}assets/activity.png` }} />
             </div>
           )}
         </div>
@@ -181,19 +180,19 @@ export default function GoalDetail({ state = 'initial' }) {
           <div className="text-ink font-bold text-[18px] mb-2 px-4">Additional resources</div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-4">
             <div className="shrink-0 w-[260px] bg-white border border-stroke rounded-lg overflow-hidden">
-              <div className="h-[120px] bg-gradient-to-br from-orange-200 via-amber-200 to-emerald-200 flex items-center justify-center text-6xl">\ud83e\udd66</div>
+              <img src={`${import.meta.env.BASE_URL}assets/cronometer.png`} alt="" className="w-full h-[120px] object-cover" />
               <div className="p-3">
-                <div className="text-ink font-bold text-[14px] leading-tight mb-1">Track your nutrition with Cronometer</div>
-                <div className="text-ink-soft text-[12px] leading-snug mb-3">Log your meals and monitor key nutrients that impact blood pressure, like sodium and potassium.</div>
+                <div className="text-ink font-bold text-[15px] leading-tight mb-1">Track your nutrition with Cronometer</div>
+                <div className="text-ink-soft text-[13px] leading-snug mb-3">Log your meals and monitor key nutrients that impact blood pressure, like sodium and potassium.</div>
                 <button className="w-full bg-manulife-green text-white rounded-full py-2 font-semibold text-[13px]">Get started with Cronometer</button>
               </div>
             </div>
             <div className="shrink-0 w-[260px] bg-white border border-stroke rounded-lg overflow-hidden">
-              <div className="h-[120px] bg-gradient-to-br from-emerald-200 via-teal-200 to-sky-200 flex items-center justify-center text-6xl">\ud83d\udcaa</div>
+              <img src={`${import.meta.env.BASE_URL}assets/pharmacist.png`} alt="" className="w-full h-[120px] object-cover" />
               <div className="p-3">
-                <div className="text-ink font-bold text-[14px] leading-tight mb-1">Manage stress with Shhh</div>
-                <div className="text-ink-soft text-[12px] leading-snug mb-3">Guided breathing and mindfulness sessions that help lower LDL via stress reduction.</div>
-                <button className="w-full bg-manulife-green text-white rounded-full py-2 font-semibold text-[13px]">Get started with Shhh</button>
+                <div className="text-ink font-bold text-[15px] leading-tight mb-1">Manage your prescriptions</div>
+                <div className="text-ink-soft text-[13px] leading-snug mb-3">Get easier and quicker refills for your Shoppers Drug Mart and grocery store pharmacy prescriptions.</div>
+                <button className="w-full bg-manulife-green text-white rounded-full py-2 font-semibold text-[13px]">Get started</button>
               </div>
             </div>
             <div className="shrink-0 w-4" />

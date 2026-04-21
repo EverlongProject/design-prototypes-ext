@@ -38,7 +38,7 @@ function NiaLogoBadge() {
 
 export default function NiaHealthCard({ onLearnMore }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-4">
+    <div>
       <div className="text-ink font-bold text-[20px] leading-snug mb-3">
         Your NiaHealth results are in
       </div>
