@@ -38,9 +38,11 @@ function PointsCard({ points = 475, ticks = [200, 400, 600, 800, 1000], streak =
     <div className={`bg-manulife-green ${CARD_RADIUS} p-4`}>
       <div className="flex items-center justify-between mb-4">
         <div className="bg-white rounded-full flex items-center gap-1.5 pl-1 pr-3 py-1">
-          <div className="w-5 h-5 rounded-full bg-white flex items-center justify-center">
-            <MapleLeaf size={14} className="text-red-500" />
-          </div>
+          <img
+            src={`${import.meta.env.BASE_URL}assets/Aeroplan-Icon.png`}
+            alt=""
+            className="w-5 h-5 object-contain"
+          />
           <span className="text-ink text-[14px] font-bold">{points} pts</span>
         </div>
         <div className="bg-manulife-green-dark/40 rounded-full flex items-center gap-1 px-3 py-1">
@@ -100,9 +102,11 @@ function SectionHeader({ title, action }) {
 function RecommendedCard() {
   return (
     <div className={`bg-white border border-stroke ${CARD_RADIUS} overflow-hidden`}>
-      <div className="h-[189px] bg-gradient-to-br from-[#F9D5C8] via-[#F3E8D0] to-[#CDE6D7] flex items-center justify-center">
-        <Heart size={64} className="text-manulife-green/40" strokeWidth={1.5} />
-      </div>
+      <img
+        src={`${import.meta.env.BASE_URL}assets/Card/Redeem/familygrowing.png`}
+        alt=""
+        className="w-full h-[189px] object-cover"
+      />
       <div className="p-4">
         <div className="text-ink font-bold text-[17px] leading-snug mb-2">
           Your family is growing. Your coverage can too.

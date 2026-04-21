@@ -1,5 +1,4 @@
 import { ChevronLeft, Video, Plus, Camera, Mic } from 'lucide-react'
-import IOSStatusBar from '../components/IOSStatusBar.jsx'
 
 function ManulifeBars({ size = 14 }) {
   return (
@@ -14,7 +13,6 @@ function ManulifeBars({ size = 14 }) {
 export default function IOSMessagesThread({ onTapLink }) {
   return (
     <div className="h-full w-full bg-white flex flex-col">
-      <IOSStatusBar dark={true} />
 
       <div className="flex items-center justify-between px-3 pt-1 pb-2 border-b border-gray-200">
         <button className="flex items-center text-blue-500">

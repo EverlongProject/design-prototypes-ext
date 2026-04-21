@@ -51,10 +51,10 @@ function ThinkingInline({ lines, totalMs, onDone }) {
 function ResolveBlock({ heading, subheading, cta, activated, onActivate }) {
   return (
     <div className="my-2">
-      <div className="text-ink text-[15px] leading-snug mb-1">{heading}</div>
-      <div className="text-ink text-[15px] leading-snug mb-1">{subheading.split('\n')[0]}</div>
+      <div className="text-ink text-[17px] leading-normal mb-1">{heading}</div>
+      <div className="text-ink text-[17px] leading-normal mb-1">{subheading.split('\n')[0]}</div>
       {subheading.includes('\n') && (
-        <div className="text-ink text-[15px] leading-snug">{subheading.split('\n').slice(1).join('\n')}</div>
+        <div className="text-ink text-[17px] leading-normal">{subheading.split('\n').slice(1).join('\n')}</div>
       )}
       {!activated && (
         <button
@@ -84,7 +84,7 @@ function PolicyTag() {
   )
 }
 
-function ConfirmationCard({ heading, subheading, tiles = [], primary }) {
+function ConfirmationCard({ heading, subheading, tiles = [], primary, onPrimary }) {
   return (
     <div className="bg-gray-100 rounded-2xl p-4 my-2">
       <div className="text-ink font-bold text-lg leading-snug text-center mb-1">{heading}</div>
@@ -101,7 +101,14 @@ function ConfirmationCard({ heading, subheading, tiles = [], primary }) {
           </motion.div>
         ))}
       </div>
-      {primary && <PrimaryCTA>{primary.replace(/\s*→\s*$/, '')}</PrimaryCTA>}
+      {primary && (
+        <button
+          onClick={(e) => { e.stopPropagation(); onPrimary?.() }}
+          className="w-full"
+        >
+          <PrimaryCTA>{primary.replace(/\s*→\s*$/, '')}</PrimaryCTA>
+        </button>
+      )}
     </div>
   )
 }
@@ -333,6 +340,7 @@ export default function ChatFlow({ script = [], onDone }) {
                   subheading={block.subheading}
                   tiles={block.tiles}
                   primary={block.primary}
+                  onPrimary={block.id === cursor ? () => onDone?.() : undefined}
                 />
               )
             case 'appointmentCard':
@@ -375,6 +383,7 @@ export default function ChatFlow({ script = [], onDone }) {
                         key={i}
                         title={item.title}
                         subtitle={item.subtitle}
+                        image={item.image}
                         ctaLabel={item.ctaLabel}
                         ctaEnabled={isActive}
                         onCta={isActive ? advance : undefined}

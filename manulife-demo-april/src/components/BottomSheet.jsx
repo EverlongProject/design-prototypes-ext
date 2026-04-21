@@ -31,7 +31,7 @@ export default function BottomSheet({ open, onClose, children, title }) {
             {title && (
               <div className="px-5 pt-1 text-ink font-bold text-[20px]">{title}</div>
             )}
-            <div className="flex-1 overflow-y-auto px-5 pb-safe pt-1">{children}</div>
+            <div className="flex-1 overflow-y-auto px-5 pt-1 pb-8" style={{ paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>{children}</div>
           </motion.div>
         </>
       )}

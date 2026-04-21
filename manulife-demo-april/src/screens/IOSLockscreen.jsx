@@ -1,5 +1,4 @@
 import { Flashlight, Camera } from 'lucide-react'
-import IOSStatusBar from '../components/IOSStatusBar.jsx'
 
 function ManulifeBars({ size = 18 }) {
   return (
@@ -33,7 +32,6 @@ export default function IOSLockscreen({ onTapNotification }) {
         style={{ background: 'radial-gradient(circle, #6FAFD0 0%, #3E6C9C 55%, transparent 85%)', opacity: 0.45 }}
       />
 
-      <IOSStatusBar dark={false} />
 
       <div className="relative px-6 pt-6 text-center">
         <div className="text-[15px] font-medium">Wednesday, April 22</div>

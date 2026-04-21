@@ -1,5 +1,4 @@
 import { ChevronLeft, Edit, Search } from 'lucide-react'
-import IOSStatusBar from '../components/IOSStatusBar.jsx'
 
 function MessageRow({ avatar, name, preview, time, unread, onTap }) {
   return (
@@ -25,7 +24,6 @@ function MessageRow({ avatar, name, preview, time, unread, onTap }) {
 export default function IOSMessages({ onTapResults }) {
   return (
     <div className="h-full w-full bg-white flex flex-col">
-      <IOSStatusBar dark={true} />
 
       <div className="px-4 pt-1 pb-3 flex items-center justify-between">
         <div className="flex items-center text-blue-500">

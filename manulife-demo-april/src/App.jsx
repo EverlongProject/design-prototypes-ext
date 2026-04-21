@@ -15,7 +15,7 @@ import GoalDetail from './screens/GoalDetail.jsx'
 function renderStep(step, { advance }) {
   switch (step.type) {
     case 'title':
-      return <TitleCard label={step.label} description={step.payload?.description} />
+      return <TitleCard label={step.label} description={step.payload?.description} stageLabel={step.payload?.stageLabel} />
     case 'home':
       return <HomeScreen variant={step.payload?.variant} onLearnMore={advance} />
     case 'chatFlow':
@@ -42,8 +42,9 @@ function FlowRunner({ stageKey, onExit }) {
   const atEnd = stepIndex >= stage.steps.length - 1
 
   const advance = useCallback(() => {
-    if (!atEnd) setStepIndex((i) => i + 1)
-  }, [atEnd])
+    if (atEnd) onExit()
+    else setStepIndex((i) => i + 1)
+  }, [atEnd, onExit])
 
   const outerTapDefault = step.type === 'title' || step.type === 'goalDetail' || (step.type === 'home' && !step.payload?.variant)
   const outerTap = (step.payload?.outerTap ?? outerTapDefault) ? advance : undefined

@@ -4,6 +4,17 @@ const pastaAsset = `${import.meta.env.BASE_URL}assets/pasta-meal.png`
 
 export const stage2Flow = [
   {
+    id: '2.0',
+    type: 'title',
+    label: 'Jenn, age 43',
+    payload: {
+      stageLabel: 'Stage 2',
+      description:
+        'A few years in, Jenn is juggling work, family, and her own health. A routine screening surfaces a new goal worth tracking.',
+      outerTap: true
+    }
+  },
+  {
     id: '2.1',
     type: 'iosHome',
     label: 'iOS springboard'
@@ -111,12 +122,14 @@ export const stage2Flow = [
             {
               title: 'Manage Cholesterol',
               subtitle: 'Health Goal',
-              ctaLabel: 'Add goal to Journey'
+              ctaLabel: 'Add goal to Journey',
+              image: `${import.meta.env.BASE_URL}assets/ManageCholesterol.png`
             },
             {
               title: 'Talk to a nutritionist',
               subtitle: 'Virtual Care',
-              ctaLabel: 'Start a consultation'
+              ctaLabel: 'Start a consultation',
+              image: `${import.meta.env.BASE_URL}assets/Nutritionist.png`
             }
           ]
         },
@@ -131,23 +144,11 @@ export const stage2Flow = [
         { kind: 'goalAddedTag' },
         {
           kind: 'stream',
-          text:
-            'Great, you have added a new goal to your journey! I recommend that you connect a wearable device to auto-log activity and enable other tracking tools.'
-        },
-        {
-          kind: 'stream',
-          text: 'Do you have a wearable device like an Apple Watch or Fitbit you can connect to Manulife?'
+          text: "Great, you've added a new goal to your journey! Let's check it out in the Journey experience."
         },
         {
           kind: 'chips',
-          items: [{ label: 'Connect now' }, { label: 'Maybe later', primary: true }]
-        },
-        { kind: 'userBubble', text: 'Maybe later' },
-        { kind: 'stream', text: "No worries! Let's check out your new goal in the Journey experience." },
-        {
-          kind: 'goalCard',
-          title: 'Manage Cholesterol',
-          subtitle: 'Health Goal'
+          items: [{ label: 'View Goal', primary: true }]
         },
         { kind: 'done' }
       ]
@@ -211,6 +212,7 @@ export const stage2Flow = [
     type: 'title',
     label: 'Stage 2 complete',
     payload: {
+      stageLabel: 'Stage 2 Complete',
       description:
         'Scheduling, results, goal setting, and daily habit logging — all in one continuous conversation.',
       outerTap: true

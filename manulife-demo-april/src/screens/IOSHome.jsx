@@ -1,5 +1,4 @@
 import ManulifeWidget from '../components/ManulifeWidget.jsx'
-import IOSStatusBar from '../components/IOSStatusBar.jsx'
 
 function MailIcon() {
   return (
@@ -205,7 +204,6 @@ export default function IOSHome({ onOpenManulife }) {
         background: 'linear-gradient(170deg, #E8A87C 0%, #D98F6B 25%, #7A5A8E 55%, #2C3E5F 100%)'
       }}
     >
-      <IOSStatusBar dark={false} />
 
       <div className="flex-1 px-4 pt-2 flex flex-col gap-5 overflow-hidden">
         <button onClick={onOpenManulife} className="active:scale-[0.98] transition-transform">
