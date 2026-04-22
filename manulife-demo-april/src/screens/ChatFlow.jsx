@@ -204,7 +204,7 @@ export default function ChatFlow({ script = [], onDone }) {
 
 
     if (current.kind === 'goalCard') {
-      addBlock({ id, kind: 'goalCard', title: current.title, subtitle: current.subtitle })
+      addBlock({ id, kind: 'goalCard', title: current.title, subtitle: current.subtitle, image: current.image })
       return
     }
 
@@ -454,8 +454,12 @@ export default function ChatFlow({ script = [], onDone }) {
                   onClick={(e) => { e.stopPropagation(); if (block.id === cursor) advance() }}
                   className="my-2 w-full text-left bg-white border border-stroke rounded-lg p-4 flex items-center gap-3 active:bg-gray-50"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-manulife-green-light text-manulife-green flex items-center justify-center shrink-0">
-                    <Target size={20} strokeWidth={2} />
+                  <div className="w-10 h-10 rounded-lg bg-manulife-green-light text-manulife-green flex items-center justify-center shrink-0 overflow-hidden">
+                    {block.image ? (
+                      <img src={block.image} alt="" className="w-full h-full object-cover" />
+                    ) : (
+                      <Target size={20} strokeWidth={2} />
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="text-ink font-semibold text-[15px] leading-tight">{block.title}</div>

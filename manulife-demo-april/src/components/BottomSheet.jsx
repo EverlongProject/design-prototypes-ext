@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 
-export default function BottomSheet({ open, onClose, children, title }) {
+export default function BottomSheet({ open, onClose, children, title, hideClose = false }) {
   return (
     <AnimatePresence>
       {open && (
@@ -23,10 +23,12 @@ export default function BottomSheet({ open, onClose, children, title }) {
             transition={{ type: 'spring', stiffness: 340, damping: 32 }}
             className="absolute inset-x-0 bottom-0 z-50 bg-white rounded-t-2xl max-h-[80%] flex flex-col"
           >
-            <div className="flex justify-end px-3 pt-3">
-              <button onClick={onClose} className="p-1 text-ink-soft">
-                <X size={22} />
-              </button>
+            <div className="flex justify-end px-3 pt-3 min-h-[28px]">
+              {!hideClose && (
+                <button onClick={onClose} className="p-1 text-ink-soft">
+                  <X size={22} />
+                </button>
+              )}
             </div>
             {title && (
               <div className="px-5 pt-1 text-ink font-bold text-[20px]">{title}</div>

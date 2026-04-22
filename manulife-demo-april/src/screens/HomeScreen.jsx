@@ -7,6 +7,7 @@ import NiaHealthCard from '../components/NiaHealthCard.jsx'
 import BottomSheet from '../components/BottomSheet.jsx'
 import ScheduleSheet from '../components/ScheduleSheet.jsx'
 import RewardsSheet from '../components/RewardsSheet.jsx'
+import ScratchSheet from '../components/ScratchSheet.jsx'
 
 const HEADER_DARK = '#1A1D29'
 const CARD_RADIUS = 'rounded-lg'
@@ -25,7 +26,11 @@ function TopHeader() {
       <Menu size={26} className="text-white" strokeWidth={2.25} />
       <div className="flex items-center gap-2">
         <span className="text-white text-[15px]">Jenn Wright</span>
-        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#D4A574] to-[#8B5A3C] border border-white/20" />
+        <img
+          src={`${import.meta.env.BASE_URL}assets/Jenn-ProfilePic.png`}
+          alt=""
+          className="w-8 h-8 rounded-full object-cover border border-white/20"
+        />
       </div>
     </div>
   )
@@ -99,23 +104,29 @@ function SectionHeader({ title, action }) {
   )
 }
 
-function RecommendedCard() {
+function RecommendedCard({ variant = 'default' }) {
+  const content = variant === 'schedule' || variant === 'rewards'
+    ? {
+        image: `${import.meta.env.BASE_URL}assets/running.jpg`,
+        title: 'Discover more for your wellbeing',
+        body: 'You have additional benefits available to you for managing your health and wellness. Access them for free and save on your healthcare costs.',
+        cta: 'View additional benefits'
+      }
+    : {
+        image: `${import.meta.env.BASE_URL}assets/Card/Redeem/familygrowing.png`,
+        title: 'Your family is growing. Your coverage can too.',
+        body: 'We can help you make sure your growing family is protected and support you through every step of the journey.',
+        cta: 'Learn more'
+      }
+
   return (
     <div className={`bg-white border border-stroke ${CARD_RADIUS} overflow-hidden`}>
-      <img
-        src={`${import.meta.env.BASE_URL}assets/Card/Redeem/familygrowing.png`}
-        alt=""
-        className="w-full h-[189px] object-cover"
-      />
+      <img src={content.image} alt="" className="w-full h-[189px] object-cover" />
       <div className="p-4">
-        <div className="text-ink font-bold text-[17px] leading-snug mb-2">
-          Your family is growing. Your coverage can too.
-        </div>
-        <div className="text-ink-soft text-[14px] leading-snug mb-4">
-          We can help you make sure your growing family is protected and support you through every step of the journey.
-        </div>
+        <div className="text-ink font-bold text-[17px] leading-snug mb-2">{content.title}</div>
+        <div className="text-ink-soft text-[14px] leading-snug mb-4">{content.body}</div>
         <button className="inline-flex items-center gap-1.5 border border-ink rounded-full px-4 py-1.5 text-ink text-[14px] font-semibold">
-          <span>Learn more</span>
+          <span>{content.cta}</span>
           <ArrowUpRight size={14} strokeWidth={2.5} />
         </button>
       </div>
@@ -151,6 +162,7 @@ function TodayActivityCard() {
 export default function HomeScreen({ variant = 'default', onLearnMore }) {
   const [sheetOpen, setSheetOpen] = useState(false)
   const [rewardsOpen, setRewardsOpen] = useState(false)
+  const [scratchOpen, setScratchOpen] = useState(false)
 
   useEffect(() => {
     if (variant === 'schedule') {
@@ -161,7 +173,13 @@ export default function HomeScreen({ variant = 'default', onLearnMore }) {
       const t = setTimeout(() => setRewardsOpen(true), 500)
       return () => clearTimeout(t)
     }
+    if (variant === 'scratch') {
+      const t = setTimeout(() => setScratchOpen(true), 600)
+      return () => clearTimeout(t)
+    }
   }, [variant])
+
+  const closeScratch = () => setScratchOpen(false)
 
   return (
     <div className="h-full w-full flex flex-col bg-white relative">
@@ -190,8 +208,8 @@ export default function HomeScreen({ variant = 'default', onLearnMore }) {
           )}
           <section>
             <SectionHeader title="Recommended for you" />
-            <div className="px-4">
-              <RecommendedCard />
+            <div className="px-4" onClick={() => onLearnMore?.()}>
+              <RecommendedCard variant={variant} />
             </div>
           </section>
 
@@ -228,11 +246,30 @@ export default function HomeScreen({ variant = 'default', onLearnMore }) {
           </section>
 
           <section className="pb-6">
-            <SectionHeader title="Group Benefits" />
+            <SectionHeader title="Your Coverage" />
             <div className="px-4 space-y-3">
-              <CoverageTile title="Health Benefits" iconKey="health" spent={380} total={2000} remaining={1620} />
-              <CoverageTile title="Dental Benefits" iconKey="dental" spent={450} total={1500} remaining={1050} />
-              <CoverageTile title="Paramedical Benefits" iconKey="paramedical" spent={400} total={1000} remaining={600} />
+              <CoverageTile
+                eyebrow="Group Benefits"
+                title="Health Benefits"
+                icon={`${import.meta.env.BASE_URL}assets/healthbenefits-icon.png`}
+                spent={1800}
+                total={2000}
+                remaining={200}
+              />
+              <CoverageTile
+                eyebrow="Other Coverage"
+                title="Flexcare Health & Dental"
+                icon={`${import.meta.env.BASE_URL}assets/flexcare-icon.png`}
+                spent={0}
+                total={1500}
+                remaining={1500}
+              />
+              <CoverageTile
+                eyebrow="Life Insurance"
+                title="Optional Life Insurance"
+                icon={`${import.meta.env.BASE_URL}assets/life-icon.png`}
+                coverageAmount={100000}
+              />
             </div>
           </section>
         </div>
@@ -246,6 +283,13 @@ export default function HomeScreen({ variant = 'default', onLearnMore }) {
         title={null}
       >
         <ScheduleSheet onHelpMeSchedule={() => { setSheetOpen(false); onLearnMore?.() }} />
+      </BottomSheet>
+
+      <BottomSheet
+        open={scratchOpen}
+        onClose={closeScratch}
+      >
+        <ScratchSheet onAdvance={closeScratch} />
       </BottomSheet>
 
       {variant === 'rewards' && (
