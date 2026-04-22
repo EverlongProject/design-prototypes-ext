@@ -9,7 +9,7 @@ export default function ClaimCard({
   cost
 }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-4">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-4">
       <div className="flex items-center gap-2 mb-2">
         <span className="inline-block text-[11px] font-semibold text-ink bg-gray-100 rounded-md px-2 py-0.5">{date}</span>
         <span className="inline-block text-[11px] font-semibold text-manulife-green bg-manulife-green-light rounded-md px-2 py-0.5">{status}</span>

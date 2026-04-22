@@ -34,7 +34,7 @@ export default function ChatView({
         )}
 
         {statusLines.length > 0 && (
-          <div className="bg-white border border-stroke rounded-2xl p-3 my-3 shadow-card">
+          <div className="bg-[#F5F5F5] border border-stroke rounded-2xl p-3 my-3 shadow-card">
             {statusLines.slice(0, revealedCount).map((line, i) => (
               <StatusLine key={i}>{line}</StatusLine>
             ))}

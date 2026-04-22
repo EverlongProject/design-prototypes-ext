@@ -9,7 +9,7 @@ export default function CoverageTile({ eyebrow, title, icon, spent, total, remai
   const remainingValue = remaining ?? (total != null ? total - spent : 0)
 
   return (
-    <div className="bg-white border border-stroke rounded-lg p-4">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           {eyebrow && (

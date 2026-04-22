@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Menu, Flame, Heart, Video, Headphones, ArrowUpRight, Eye, Award } from 'lucide-react'
+import { Menu, Flame, Heart, Video, Headphones, Sparkles, Eye, Award } from 'lucide-react'
 import CoverageTile from '../components/CoverageTile.jsx'
 import ClaimCard from '../components/ClaimCard.jsx'
 import BottomNav from '../components/BottomNav.jsx'
@@ -120,14 +120,14 @@ function RecommendedCard({ variant = 'default' }) {
       }
 
   return (
-    <div className={`bg-white border border-stroke ${CARD_RADIUS} overflow-hidden`}>
+    <div className={`bg-[#F5F5F5] border border-stroke ${CARD_RADIUS} overflow-hidden`}>
       <img src={content.image} alt="" className="w-full h-[189px] object-cover" />
       <div className="p-4">
         <div className="text-ink font-bold text-[17px] leading-snug mb-2">{content.title}</div>
         <div className="text-ink-soft text-[14px] leading-snug mb-4">{content.body}</div>
         <button className="inline-flex items-center gap-1.5 border border-ink rounded-full px-4 py-1.5 text-ink text-[14px] font-semibold">
           <span>{content.cta}</span>
-          <ArrowUpRight size={14} strokeWidth={2.5} />
+          <Sparkles size={14} strokeWidth={2.5} />
         </button>
       </div>
     </div>
@@ -136,7 +136,7 @@ function RecommendedCard({ variant = 'default' }) {
 
 function HelpCard({ title, Icon, tint }) {
   return (
-    <div className={`shrink-0 w-[180px] bg-white border border-stroke ${CARD_RADIUS} p-4`}>
+    <div className={`shrink-0 w-[180px] bg-[#F5F5F5] border border-stroke ${CARD_RADIUS} p-4`}>
       <div className={`w-8 h-8 rounded-lg flex items-center justify-center mb-3 ${tint}`}>
         <Icon size={18} strokeWidth={2} />
       </div>
@@ -147,7 +147,7 @@ function HelpCard({ title, Icon, tint }) {
 
 function TodayActivityCard() {
   return (
-    <div className={`bg-white border border-stroke ${CARD_RADIUS} p-4`}>
+    <div className={`bg-[#F5F5F5] border border-stroke ${CARD_RADIUS} p-4`}>
       <div className="flex items-center gap-1.5 mb-1.5">
         <Heart size={14} className="text-manulife-green" fill="currentColor" strokeWidth={0} />
         <div className="text-ink-soft text-[12px] font-semibold">Growing Your Family</div>

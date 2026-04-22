@@ -35,7 +35,7 @@ export default function IOSLockscreen({ onTapNotification }) {
 
       <div className="relative px-6 pt-6 text-center">
         <div className="text-[15px] font-medium">Wednesday, April 22</div>
-        <div className="text-[84px] font-light leading-none mt-1">9:41</div>
+        <div className="text-[84px] font-light leading-none mt-1">7:04</div>
       </div>
 
       <div className="flex-1" />
@@ -51,7 +51,7 @@ export default function IOSLockscreen({ onTapNotification }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
               <span className="font-semibold text-[14px]">Manulife</span>
-              <span className="text-[12px] opacity-80">12:30 PM</span>
+              <span className="text-[12px] opacity-80">7:04 PM</span>
             </div>
             <div className="text-[14px] leading-snug mt-0.5">
               Heading to dinner? Tap to log it in a snap.

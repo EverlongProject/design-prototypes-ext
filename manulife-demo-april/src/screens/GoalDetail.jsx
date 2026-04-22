@@ -1,20 +1,21 @@
 import { ChevronLeft, ChevronRight, Check, Play, Target, Droplet, UserRound } from 'lucide-react'
 
-function StatCircle({ icon: Icon, value, label }) {
+function StatCircle({ icon: Icon, iconImg, value, label }) {
   return (
     <div className="flex flex-col items-center flex-1">
-      <div className="w-12 h-12 rounded-full border-2 border-manulife-green flex items-center justify-center gap-0.5">
-        {Icon && <Icon size={12} className="text-manulife-green" strokeWidth={2.5} />}
+      <div className="bg-white rounded-full px-4 h-8 flex items-center justify-center gap-1">
+        {Icon && <Icon size={14} className="text-manulife-green" strokeWidth={2.5} />}
+        {iconImg && <img src={iconImg} alt="" className="w-4 h-4 object-contain" />}
         <span className="text-ink font-bold text-[15px]">{value}</span>
       </div>
-      <div className="text-ink-soft text-[11px] font-semibold mt-1.5">{label}</div>
+      <div className="text-white text-[12px] font-semibold mt-1.5">{label}</div>
     </div>
   )
 }
 
 function InsightCard({ eyebrow, title, body }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-3 flex items-start gap-3">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-3 flex items-start gap-3">
       <div className="flex-1 min-w-0">
         <div className="text-ink-soft text-[11px] font-semibold">{eyebrow}</div>
         <div className="text-ink font-bold text-[15px] leading-snug mt-0.5">{title}</div>
@@ -38,7 +39,7 @@ function PtsBadge({ value }) {
 
 function ActionRow({ eyebrow, title, pts, thumb }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-3 flex items-center gap-3">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-3 flex items-center gap-3">
       <div className="w-11 h-11 rounded-md flex items-center justify-center shrink-0 overflow-hidden bg-gray-100">
         <img src={thumb.src} alt="" className="w-full h-full object-cover" />
       </div>
@@ -54,7 +55,7 @@ function ActionRow({ eyebrow, title, pts, thumb }) {
 
 function ActionSuggestionCard({ title, body, ctaLabel }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-3">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-3">
       <div className="flex items-start gap-3 mb-3">
         <div className="w-11 h-11 rounded-md bg-manulife-green-light flex items-center justify-center shrink-0">
           <UserRound size={22} className="text-manulife-green" strokeWidth={2} />
@@ -76,7 +77,7 @@ function StatRow({ label, value, unit, status, statusColor, abnormal }) {
   const circleBg = abnormal ? 'bg-[#FFF4CC]' : 'bg-manulife-green-light'
   const dropColor = abnormal ? 'text-[#6B5300]' : 'text-manulife-green'
   return (
-    <div className="bg-white border border-stroke rounded-lg p-3 flex items-center gap-3">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-3 flex items-center gap-3">
       <div className={`w-11 h-11 rounded-full flex items-center justify-center shrink-0 ${circleBg}`}>
         <Droplet size={20} className={dropColor} fill="currentColor" strokeWidth={0} />
       </div>
@@ -125,19 +126,16 @@ export default function GoalDetail({ state = 'initial' }) {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="px-4 pt-3 pb-4">
-          <div className="flex gap-3">
+        <div
+          className="px-4 pt-4 pb-5 bg-cover bg-center"
+          style={{ backgroundImage: `url(${import.meta.env.BASE_URL}assets/insights-bg.png)` }}
+        >
+          <div className="flex gap-3 mb-4">
             <StatCircle icon={Check} value={isUpdated ? '25' : '1'} label="Check-ins" />
             <StatCircle icon={Target} value={isUpdated ? '20' : '0'} label="Day Streak" />
-            <StatCircle value={isUpdated ? '600' : '0'} label="Points Earned" />
+            <StatCircle iconImg={`${import.meta.env.BASE_URL}assets/Aeroplan-Icon.png`} value={isUpdated ? '600' : '0'} label="Points Earned" />
           </div>
-        </div>
 
-        <div className="px-4 pb-3">
-          <div className="h-[5px] rounded-full bg-gradient-to-r from-purple-500 via-pink-400 to-manulife-green" />
-        </div>
-
-        <div className="px-4 pt-2 pb-5">
           <InsightCard
             eyebrow={isUpdated ? '3-month update' : 'Daily Insight'}
             title={isUpdated ? 'Your pattern is shifting' : 'Your pattern this week'}
@@ -149,7 +147,7 @@ export default function GoalDetail({ state = 'initial' }) {
           />
         </div>
 
-        <div className="px-4 pb-5">
+        <div className="px-4 pt-6 pb-5">
           <div className="text-ink font-bold text-[18px] mb-2">Actions</div>
           {isUpdated ? (
             <ActionSuggestionCard
@@ -179,7 +177,7 @@ export default function GoalDetail({ state = 'initial' }) {
         <div className="pb-6">
           <div className="text-ink font-bold text-[18px] mb-2 px-4">Additional resources</div>
           <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2 px-4">
-            <div className="shrink-0 w-[260px] bg-white border border-stroke rounded-lg overflow-hidden">
+            <div className="shrink-0 w-[260px] bg-[#F5F5F5] border border-stroke rounded-lg overflow-hidden">
               <img src={`${import.meta.env.BASE_URL}assets/cronometer.png`} alt="" className="w-full h-[120px] object-cover" />
               <div className="p-3">
                 <div className="text-ink font-bold text-[15px] leading-tight mb-1">Track your nutrition with Cronometer</div>
@@ -187,7 +185,7 @@ export default function GoalDetail({ state = 'initial' }) {
                 <button className="w-full bg-manulife-green text-white rounded-full py-2 font-semibold text-[13px]">Get started with Cronometer</button>
               </div>
             </div>
-            <div className="shrink-0 w-[260px] bg-white border border-stroke rounded-lg overflow-hidden">
+            <div className="shrink-0 w-[260px] bg-[#F5F5F5] border border-stroke rounded-lg overflow-hidden">
               <img src={`${import.meta.env.BASE_URL}assets/pharmacist.png`} alt="" className="w-full h-[120px] object-cover" />
               <div className="p-3">
                 <div className="text-ink font-bold text-[15px] leading-tight mb-1">Manage your prescriptions</div>

@@ -34,7 +34,7 @@ export const stage2Flow = [
         {
           kind: 'stream',
           text:
-            "Good call Jenn! You're at the age where getting a full picture of your health pays off. Manulife is offering a free NiaHealth biomarker screening — it's an at-home blood draw, zero friction. Here are some times that may work for you."
+            "Good call Jenn! You're at the age where getting a full picture of your health pays off. Manulife is offering a free NiaHealth biomarker screening — it's an at-home blood draw, zero friction.\n\n**Which time works best for you?**"
         },
         {
           kind: 'chips',
@@ -86,12 +86,12 @@ export const stage2Flow = [
         {
           kind: 'stream',
           text:
-            "Overall, there's a lot to feel good about. Your score is B, and your NiaAge is 40.3 — 3 years younger than your calendar age. Your blood sugar and blood pressure both look great."
+            "Overall, there's a lot to feel good about. **Your score is B**, and your **NiaAge is 40.3 — 3 years younger** than your calendar age.\n\nYour blood sugar and blood pressure both look great."
         },
         {
           kind: 'stream',
           text:
-            'One thing worth paying attention to is your cholesterol, which is trending in a direction we should address.'
+            'One thing worth paying attention to is your **cholesterol**, which is trending in a direction we should address.'
         },
         { kind: 'stream', text: 'What should we look into further?' },
         {
