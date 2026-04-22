@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 
 export default function MemberTimeline({ heading, entries = [] }) {
   return (
-    <div className="my-2">
+    <div className="my-4">
       {heading && (
         <div className="text-center text-ink-soft text-[13px] font-semibold mb-3">
           {heading}

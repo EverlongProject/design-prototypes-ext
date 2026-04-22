@@ -33,5 +33,6 @@ export default function StreamingText({ text, onDone }) {
     }
   }, [text])
 
-  return <>{shown}</>
+  const html = shown.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  return <span dangerouslySetInnerHTML={{ __html: html }} />
 }

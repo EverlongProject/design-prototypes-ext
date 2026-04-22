@@ -1,4 +1,4 @@
-import { ChevronLeft, Video, Plus, Camera, Mic } from 'lucide-react'
+import { ChevronLeft, Video, Plus, Mic } from 'lucide-react'
 
 function ManulifeBars({ size = 14 }) {
   return (
@@ -14,30 +14,37 @@ export default function IOSMessagesThread({ onTapLink }) {
   return (
     <div className="h-full w-full bg-white flex flex-col">
 
-      <div className="flex items-center justify-between px-3 pt-1 pb-2 border-b border-gray-200">
-        <button className="flex items-center text-blue-500">
-          <ChevronLeft size={26} strokeWidth={2.25} />
+      <div className="relative flex items-center justify-center px-3 pt-2 pb-3 bg-[#F6F6F6] border-b border-gray-200">
+        <button className="absolute left-2 flex items-center text-blue-500">
+          <ChevronLeft size={28} strokeWidth={2.25} />
         </button>
+        <Video size={22} className="absolute right-3 text-blue-500" strokeWidth={2} />
         <div className="flex flex-col items-center">
-          <div className="w-9 h-9 rounded-full bg-manulife-green flex items-center justify-center">
-            <ManulifeBars size={14} />
+          <div className="w-10 h-10 rounded-full bg-manulife-green flex items-center justify-center">
+            <ManulifeBars size={16} />
           </div>
-          <div className="flex items-center text-ink text-[11px] mt-0.5">
-            <span className="font-semibold">Manny</span>
-            <ChevronLeft size={10} className="rotate-180 text-ink-soft" />
+          <div className="flex items-center text-ink text-[12px] mt-1">
+            <span>Manny</span>
+            <ChevronLeft size={11} className="rotate-180 text-ink-soft ml-0.5" strokeWidth={2.5} />
           </div>
         </div>
-        <Video size={22} className="text-blue-500" strokeWidth={2} />
       </div>
 
       <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2">
-        <div className="max-w-[78%] bg-[#E9E9EB] text-ink rounded-2xl rounded-bl-md px-3 py-2 text-[15px] leading-snug">
-          Hi Jenn, you've been with us for over 30 years — we want to make sure your coverage keeps up with you as you head into retirement. Your health guide is ready whenever you are.
+        <div className="text-center text-[11px] text-ink-soft pb-1">
+          <span className="font-semibold">Today</span> <span>4:23 PM</span>
+        </div>
+        <div className="relative max-w-[78%] w-fit">
+          <div className="relative z-10 bg-[#E9E9EB] text-ink rounded-[16px] px-4 py-2.5 text-[15px] leading-snug">
+            Hi Jenn, you've been with us for over 30 years — we want to make sure your coverage keeps up with you as you head into retirement. Your health guide is ready whenever you are.
+          </div>
+          <span className="absolute bottom-[-2px] left-[-4px] w-4 h-4 bg-[#E9E9EB] rounded-br-[16px] z-0" aria-hidden="true" />
+          <span className="absolute bottom-[-2px] left-[-10px] w-[10px] h-4 bg-white rounded-br-[10px] z-20" aria-hidden="true" />
         </div>
 
         <button
           onClick={onTapLink}
-          className="block w-[82%] rounded-2xl overflow-hidden active:opacity-80 text-left"
+          className="block w-[82%] rounded-[16px] overflow-hidden active:opacity-80 text-left"
         >
           <div className="bg-manulife-green px-3 py-2.5 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">

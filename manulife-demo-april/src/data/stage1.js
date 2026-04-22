@@ -35,7 +35,7 @@ export const stage1Flow = [
     payload: {
       script: [
         { kind: 'stream', text: 'Hi Jenn! It looks like your family might be growing — congratulations!' },
-        { kind: 'stream', text: 'I wanted to share something that might be helpful. Now is a great time to review your life insurance coverage and make sure your family is protected as things change.' },
+        { kind: 'stream', text: 'I wanted to share something that might be helpful. **Now is a great time to review your life insurance coverage** and make sure your family is protected as things change.' },
         { kind: 'stream', text: 'Want me to walk you through your options?' },
         {
           kind: 'chips',
@@ -45,10 +45,7 @@ export const stage1Flow = [
           ]
         },
         { kind: 'userBubble', text: 'Yes, tell me more' },
-        { kind: 'stream', text: 'Right now you have Optional Life Insurance through your group benefits.' },
-        { kind: 'stream', text: "One option worth considering is a Family Term policy — it's designed for growing families and can provide up to $250K in additional coverage." },
-        { kind: 'stream', text: 'It also comes with access to Maven Clinic for prenatal and mental health care and KixCare for 24/7 pediatric support.' },
-        { kind: 'stream', text: 'Does any of that sound relevant to you?' },
+        { kind: 'stream', text: 'Right now you have Optional Life Insurance through your group benefits.   One option worth considering is a **Family Term policy**:\n\n•  Designed for growing families\n•  Provides up to $250K in additional coverage.\n•  Access to Maven Clinic for prenatal and mental health care\n•  Access to KixCare for 24/7 pediatric support.\n\nDoes any of that sound relevant to you?' },
         { kind: 'coverage', data: coverage },
         {
           kind: 'chips',

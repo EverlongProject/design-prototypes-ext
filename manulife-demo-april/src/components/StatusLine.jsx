@@ -28,7 +28,7 @@ export default function StatusLine({ children }) {
       <div className="pt-[3px] shrink-0">
         <Sparkle />
       </div>
-      <div className="text-[14px] leading-snug text-ink">{children}</div>
+      <div className="text-[16px] leading-snug text-ink">{children}</div>
     </motion.div>
   )
 }

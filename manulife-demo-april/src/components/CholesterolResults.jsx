@@ -90,7 +90,7 @@ export default function CholesterolResults() {
     <div className="bg-white border border-stroke rounded-lg p-3 my-2">
       <div className="text-ink font-bold text-[14px] mb-2">Current results</div>
       <div className="flex gap-3 mb-4">
-        <Metric label="Total Cholesterol" value="201" unit="mg/dL" healthy="Healthy  <200" />
+        <Metric label="Total Cholest..." value="201" unit="mg/dL" healthy="Healthy  <200" />
         <Metric label="LDL Cholesterol" value="147" unit="mg/dL" healthy="Healthy  <130" />
         <Metric label="HDL Cholesterol" value="43" unit="mg/dL" healthy="Healthy  >50" />
       </div>

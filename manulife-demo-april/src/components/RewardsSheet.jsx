@@ -44,7 +44,7 @@ function Confetti() {
 
 function RewardRow({ eyebrow, title, iconBg, iconContent }) {
   return (
-    <div className="bg-white border border-stroke rounded-lg p-3 flex items-center gap-3">
+    <div className="bg-[#F5F5F5] border border-stroke rounded-lg p-3 flex items-center gap-3">
       <div className="flex-1 min-w-0">
         <div className="text-ink-soft text-[12px]">{eyebrow}</div>
         <div className="text-ink font-bold text-[22px] leading-tight mt-0.5">{title}</div>
@@ -67,7 +67,7 @@ export default function RewardsSheet({ open, onViewDetails }) {
     >
       {open && <Confetti />}
       <div className="relative px-5 pt-5 pb-6">
-        <button className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
+        <button onClick={onViewDetails} className="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center">
           <X size={16} className="text-ink" />
         </button>
 
@@ -81,12 +81,7 @@ export default function RewardsSheet({ open, onViewDetails }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mt-5 mb-2">
-          <div className="w-2 h-2 rounded-full bg-manulife-green" />
-          <div className="text-ink font-bold text-[14px]">Your welcome rewards</div>
-        </div>
-
-        <div className="space-y-2">
+        <div className="space-y-2 mt-5">
           <RewardRow
             eyebrow="GRAIL Cancer Screening"
             title="1 free screening"
@@ -111,7 +106,7 @@ export default function RewardsSheet({ open, onViewDetails }) {
         >
           View coverage details
         </button>
-        <button className="w-full mt-2 text-ink font-semibold text-[14px] py-2">
+        <button onClick={onViewDetails} className="w-full mt-2 text-ink font-semibold text-[14px] py-2">
           View rewards
         </button>
       </div>

@@ -117,9 +117,9 @@ export default function ScratchSheet({ onRevealed, onAdvance }) {
       </div>
 
       <div className="mt-5 px-1">
-        <div className="text-ink font-bold text-[22px] leading-tight">One tap, a lot unlocked.</div>
+        <div className="text-ink font-bold text-[22px] leading-tight">Scratch for a small thank-you.</div>
         <div className="text-ink-soft text-[15px] mt-2 leading-snug">
-          Your Apple Watch just joined the team. From here on, it helps shape your plan, your premium, and what Manny knows about you. Scratch for a small thank-you.
+          Your Apple Watch just joined the team. From here on, it helps shape your plan, your premium, and what Manny knows about you.
         </div>
       </div>
 

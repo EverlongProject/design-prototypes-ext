@@ -52,7 +52,7 @@ function ResolveBlock({ heading, subheading, cta, activated, onActivate }) {
   return (
     <div className="my-2">
       <div className="text-ink text-[17px] leading-normal mb-1">{heading}</div>
-      <div className="text-ink text-[17px] leading-normal mb-1">{subheading.split('\n')[0]}</div>
+      <div className="text-ink text-[20px] font-bold leading-snug mb-3">{subheading.split('\n')[0]}</div>
       {subheading.includes('\n') && (
         <div className="text-ink text-[17px] leading-normal">{subheading.split('\n').slice(1).join('\n')}</div>
       )}
@@ -87,7 +87,7 @@ function PolicyTag() {
 function ConfirmationCard({ heading, subheading, tiles = [], primary, onPrimary }) {
   return (
     <div className="bg-gray-100 rounded-2xl p-4 my-2">
-      <div className="text-ink font-bold text-lg leading-snug text-center mb-1">{heading}</div>
+      <div className="text-ink font-bold text-[20px] leading-snug text-center mb-1">{heading}</div>
       <div className="text-ink text-sm leading-snug text-center mb-4">{subheading}</div>
       <div className="space-y-2 mb-3">
         {tiles.map((tile, i) => (
@@ -293,7 +293,7 @@ export default function ChatFlow({ script = [], onDone }) {
                 <ChatBubble key={block.id} from="manny">
                   {block.id === cursor
                     ? <StreamingText text={block.text} onDone={advance} />
-                    : block.text}
+                    : <span dangerouslySetInnerHTML={{ __html: block.text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>') }} />}
                 </ChatBubble>
               )
             case 'user':
@@ -454,18 +454,18 @@ export default function ChatFlow({ script = [], onDone }) {
                   onClick={(e) => { e.stopPropagation(); if (block.id === cursor) advance() }}
                   className="my-2 w-full text-left bg-white border border-stroke rounded-lg p-4 flex items-center gap-3 active:bg-gray-50"
                 >
-                  <div className="w-10 h-10 rounded-lg bg-manulife-green-light text-manulife-green flex items-center justify-center shrink-0 overflow-hidden">
+                  <div className="w-12 h-12 rounded-lg bg-manulife-green-light text-manulife-green flex items-center justify-center shrink-0 overflow-hidden">
                     {block.image ? (
                       <img src={block.image} alt="" className="w-full h-full object-cover" />
                     ) : (
-                      <Target size={20} strokeWidth={2} />
+                      <Target size={22} strokeWidth={2} />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="text-ink font-semibold text-[15px] leading-tight">{block.title}</div>
-                    {block.subtitle && <div className="text-ink-soft text-[12px] leading-snug mt-0.5">{block.subtitle}</div>}
+                    <div className="text-ink font-bold text-[18px] leading-tight">{block.title}</div>
+                    {block.subtitle && <div className="text-ink-soft text-[14px] leading-snug mt-0.5">{block.subtitle}</div>}
                   </div>
-                  <ChevronRight size={18} className="text-ink-soft shrink-0" />
+                  <ChevronRight size={20} className="text-ink-soft shrink-0" />
                 </motion.button>
               )
             case 'photoCaptureCard':
