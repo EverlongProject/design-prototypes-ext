@@ -25,7 +25,8 @@ export const stage1Flow = [
   {
     id: '1.2',
     type: 'home',
-    label: 'Unified home'
+    label: 'Unified home',
+    payload: { variant: 'scratch' }
   },
   {
     id: '1.3',
@@ -51,7 +52,10 @@ export const stage1Flow = [
         { kind: 'coverage', data: coverage },
         {
           kind: 'chips',
-          items: [{ label: "I'm ready to purchase →", primary: true }]
+          items: [
+            { label: "I'm ready to purchase →", primary: true },
+            { label: 'Talk to an advisor' }
+          ]
         },
         { kind: 'userBubble', text: "I'm ready to purchase" },
         {
@@ -89,6 +93,17 @@ export const stage1Flow = [
           primary: 'View Coverage Details →'
         }
       ]
+    }
+  },
+  {
+    id: '1.4',
+    type: 'title',
+    label: 'Stage 1 complete',
+    payload: {
+      stageLabel: 'Stage 1 Complete',
+      description:
+        'A timely nudge turned into a Family Term upgrade, activated coverage, and unlocked perks — all inside one conversation with Manny.',
+      outerTap: true
     }
   }
 ]

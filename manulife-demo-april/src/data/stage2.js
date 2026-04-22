@@ -194,8 +194,9 @@ export const stage2Flow = [
         { kind: 'stream', text: "You've been consistent overall. This is just the meal to swap, not the habit." },
         {
           kind: 'goalCard',
-          title: 'View Manage Cholesterol goal',
-          subtitle: 'Health Goal'
+          title: 'Manage Cholesterol',
+          subtitle: 'Health Goal',
+          image: `${import.meta.env.BASE_URL}assets/ManageCholesterol.png`
         },
         { kind: 'done' }
       ]

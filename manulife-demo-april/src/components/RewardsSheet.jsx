@@ -1,37 +1,43 @@
 import { motion } from 'framer-motion'
 import { X, PartyPopper } from 'lucide-react'
 
-const CONFETTI = Array.from({ length: 24 }, (_, i) => ({
-  id: i,
-  left: 5 + Math.random() * 90,
-  color: ['#2E8A4C', '#F5A623', '#D94D75', '#8E1C3B', '#2D7BD1', '#A89BB3'][i % 6],
-  rot: Math.random() * 360,
-  rotEnd: Math.random() * 720,
-  delay: Math.random() * 0.3,
-  size: 6 + Math.random() * 6,
-  dist: 160 + Math.random() * 140
-}))
-
 function Confetti() {
+  const pieces = Array.from({ length: 48 }, (_, i) => i)
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      {CONFETTI.map((c) => (
-        <motion.div
-          key={c.id}
-          initial={{ opacity: 0, y: 80, x: 0, rotate: c.rot }}
-          animate={{ opacity: [0, 1, 1, 0], y: -c.dist, rotate: c.rotEnd }}
-          transition={{ duration: 1.6, delay: c.delay, ease: 'easeOut' }}
-          className="absolute"
-          style={{
-            left: `${c.left}%`,
-            top: '35%',
-            width: c.size,
-            height: c.size * 1.4,
-            backgroundColor: c.color,
-            borderRadius: 2
-          }}
-        />
-      ))}
+    <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      {pieces.map((i) => {
+        const angle = (i / pieces.length) * 360 + (i % 2 ? 12 : -12)
+        const dist = 220 + (i % 4) * 60
+        const delay = (i % 6) * 0.04
+        const duration = 1.1 + (i % 5) * 0.15
+        const palette = ['#FFFFFF', '#C4A9F7', '#F5E6A8', '#6EE7B7', '#FDBA74']
+        const color = palette[i % palette.length]
+        const w = 6 + (i % 3) * 2
+        const h = 10 + (i % 3) * 3
+        return (
+          <motion.span
+            key={i}
+            initial={{ x: 0, y: 0, opacity: 0, rotate: 0 }}
+            animate={{
+              x: Math.cos((angle * Math.PI) / 180) * dist,
+              y: Math.sin((angle * Math.PI) / 180) * dist,
+              opacity: [0, 1, 1, 0],
+              rotate: 360 + (i % 2 ? 180 : -180),
+            }}
+            transition={{ duration, delay, ease: 'easeOut' }}
+            className="absolute rounded-[1px]"
+            style={{
+              top: '18%',
+              left: '50%',
+              width: w,
+              height: h,
+              backgroundColor: color,
+              translateX: '-50%',
+              translateY: '-50%',
+            }}
+          />
+        )
+      })}
     </div>
   )
 }
@@ -84,22 +90,17 @@ export default function RewardsSheet({ open, onViewDetails }) {
           <RewardRow
             eyebrow="GRAIL Cancer Screening"
             title="1 free screening"
-            iconBg="bg-white border border-stroke"
+            iconBg="bg-white"
             iconContent={
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-                <path d="M12 4l2 4 4 .8-3 3 .8 4.2L12 14l-3.8 2 .8-4.2-3-3 4-.8L12 4z" fill="#D94D75" />
-                <path d="M12 8l1 2 2 .4-1.5 1.5.4 2.1L12 13l-1.9 1 .4-2.1L9 10.4l2-.4L12 8z" fill="#2D7BD1" />
-              </svg>
+              <img src={`${import.meta.env.BASE_URL}assets/grail.png`} alt="" className="w-10 h-10 object-contain" />
             }
           />
           <RewardRow
             eyebrow="Bonus Aeroplan Points"
             title="2,500 pts"
-            iconBg="bg-[#1A1D29]"
+            iconBg="bg-white"
             iconContent={
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="#E11E38">
-                <path d="M12 2l1.2 3.6 3.8-.8-1.4 3.6 3.4 2-3 2.2 1 3.6-3.6-1-.4 3.8-2-3-2 3-.4-3.8-3.6 1 1-3.6-3-2.2 3.4-2L5 4.8l3.8.8L12 2z" />
-              </svg>
+              <img src={`${import.meta.env.BASE_URL}assets/Aeroplan.png`} alt="" className="w-10 h-10 object-contain" />
             }
           />
         </div>

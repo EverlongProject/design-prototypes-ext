@@ -17,8 +17,8 @@ export default function ActionCard({ title, subtitle, ctaLabel, ctaEnabled = tru
           {image ? <img src={image} alt="" className="w-full h-full object-cover" /> : <ClusterIcon />}
         </div>
         <div className="flex-1 min-w-0">
-          <div className="text-ink font-bold text-[15px] leading-tight">{title}</div>
-          <div className="text-ink-soft text-[12px] leading-tight mt-0.5">{subtitle}</div>
+          <div className="text-ink font-bold text-[18px] leading-tight">{title}</div>
+          <div className="text-ink-soft text-[14px] leading-tight mt-0.5">{subtitle}</div>
         </div>
       </div>
       <button
