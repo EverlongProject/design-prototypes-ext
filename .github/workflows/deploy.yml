@@ -23,21 +23,31 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
-          cache-dependency-path: manulife-demo-april/package-lock.json
 
-      - name: Install
+      # Manulife demo (uses package-lock for reproducible ci install)
+      - name: Install Manulife
         working-directory: manulife-demo-april
         run: npm ci
 
-      - name: Build
+      - name: Build Manulife
         working-directory: manulife-demo-april
+        run: npm run build
+
+      # Highmark demo (uses npm install until a package-lock is committed)
+      - name: Install Highmark
+        working-directory: highmark-demo-may
+        run: npm install
+
+      - name: Build Highmark
+        working-directory: highmark-demo-may
         run: npm run build
 
       - name: Stage site
         run: |
           mkdir -p _site/manulife-demo-april
           cp -r manulife-demo-april/dist/. _site/manulife-demo-april/
+          mkdir -p _site/highmark-demo-may
+          cp -r highmark-demo-may/dist/. _site/highmark-demo-may/
 
       - uses: actions/upload-pages-artifact@v3
         with:
