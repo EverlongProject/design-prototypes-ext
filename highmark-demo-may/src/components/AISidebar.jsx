@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Minus } from 'lucide-react'
-import AIConversation from './AIConversation.jsx'
+import ChatRunner from './ChatRunner.jsx'
 
 const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 
@@ -21,13 +21,13 @@ export default function AISidebar({ open, onClose }) {
         }}
         transition={{ type: 'spring', stiffness: 240, damping: 28 }}
         style={{ pointerEvents: minimized ? 'none' : 'auto' }}
-        className="fixed top-6 right-6 bottom-6 w-[400px] z-40 bg-surface-card rounded-2xl shadow-[0_24px_60px_rgba(0,34,60,0.18)] border border-border flex flex-col overflow-hidden"
+        className="fixed top-6 right-6 bottom-6 w-[550px] z-40 bg-surface-card rounded-2xl shadow-[0_24px_60px_rgba(0,34,60,0.18)] border border-border flex flex-col overflow-hidden"
       >
         <SidebarHeader
           onMinimize={() => setMinimized(true)}
           onClose={onClose}
         />
-        <AIConversation />
+        <ChatRunner />
       </motion.div>
 
       <AnimatePresence>

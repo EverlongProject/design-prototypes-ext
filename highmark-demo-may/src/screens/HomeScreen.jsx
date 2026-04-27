@@ -37,7 +37,7 @@ export default function HomeScreen({ stageKey, onAdvance }) {
     const t = setTimeout(() => {
       autoOpened.current = true
       setAiOpen(true)
-    }, 3000)
+    }, 1500)
     return () => clearTimeout(t)
   }, [])
 

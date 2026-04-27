@@ -5,14 +5,13 @@ const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 
 export default function MessagesScreen({ onAdvance }) {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-black">
-      {/* Dimmed spreadsheet for continuity */}
+    <div className="relative min-h-screen overflow-hidden">
+      {/* Spreadsheet stays fully visible behind — iMessage feels like a window opening on top */}
       <img
         src={ASSET('Spreadsheet.png')}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover opacity-40 blur-sm select-none pointer-events-none"
+        className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
       />
-      <div className="absolute inset-0 bg-black/30" />
 
       <div className="relative min-h-screen flex items-center justify-center p-8">
         <motion.div
