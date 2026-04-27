@@ -1,0 +1,210 @@
+import { useState, useEffect, useRef, useCallback } from 'react'
+import {
+  VISION_SCRIPT,
+  PROVIDERS_ALL,
+  PROVIDERS_WEEKEND,
+  PT_BOOKING,
+  COLONOSCOPY_BOOKING,
+} from '../data/visionScript.js'
+import AgentMessage from './AgentMessage.jsx'
+import UserMessage from './UserMessage.jsx'
+import SuggestedReplies from './SuggestedReplies.jsx'
+import VideoPlayer from './VideoPlayer.jsx'
+import SwordPreviewCard from './SwordPreviewCard.jsx'
+import ProviderSearch from './ProviderSearch.jsx'
+import ConfirmationCard from './ConfirmationCard.jsx'
+import ThinkingInline from './ThinkingInline.jsx'
+
+// Drives the linear conversation script. Renders message history at the top,
+// the current input affordance (chips + composer) at the bottom.
+//
+// Dev affordance: Shift+Right arrow advances past the current turn,
+// useful for rehearsal.
+
+export default function ChatRunner() {
+  const [history, setHistory] = useState([])
+  const [cursor, setCursor] = useState(0)
+  const scrollRef = useRef(null)
+  const advanceTimer = useRef(null)
+
+  const currentTurn = VISION_SCRIPT[cursor]
+
+  // Sync history with every agent turn up through the current cursor.
+  // The current cursor's agent turn streams (if it has text); earlier turns
+  // are added (or marked) as fully rendered. This keeps the conversation
+  // consistent under both natural advancement and Shift+Right skips, where
+  // multiple cursor increments may batch into a single useEffect run.
+  useEffect(() => {
+    setHistory((h) => {
+      let next = [...h]
+      for (let i = 0; i <= cursor && i < VISION_SCRIPT.length; i++) {
+        const turn = VISION_SCRIPT[i]
+        if (!turn || turn.type !== 'agent') continue
+        if (next.some((m) => m.id === turn.id)) continue
+        const hasText = !!turn.text
+        const isCurrent = i === cursor
+        next.push({
+          kind: 'agent',
+          id: turn.id,
+          text: turn.text || '',
+          streaming: hasText && isCurrent,
+        })
+      }
+      // Any earlier agent turn that's still flagged as streaming should settle.
+      next = next.map((m) => {
+        if (m.kind !== 'agent' || !m.streaming) return m
+        const idx = VISION_SCRIPT.findIndex((t) => t.id === m.id)
+        return idx < cursor ? { ...m, streaming: false } : m
+      })
+      return next
+    })
+  }, [cursor])
+
+  // For media-only agent turns (no text), there's no stream onDone to fire,
+  // so schedule the advance directly. Media-gated turns still wait for the
+  // media's onComplete.
+  useEffect(() => {
+    const turn = VISION_SCRIPT[cursor]
+    if (!turn || turn.type !== 'agent') return
+    if (turn.text) return
+    if (turn.gateOnMedia) return
+    const wait = turn.advanceAfter ?? 0
+    const t = setTimeout(() => {
+      setCursor((c) => (VISION_SCRIPT[c]?.id === turn.id ? c + 1 : c))
+    }, wait)
+    return () => clearTimeout(t)
+  }, [cursor])
+
+  // Auto-scroll new messages into view.
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+    el.scrollTop = el.scrollHeight
+  }, [history, cursor])
+
+  const onAgentDone = useCallback((id) => {
+    setHistory((h) => h.map((m) => (m.id === id ? { ...m, streaming: false } : m)))
+    const turn = VISION_SCRIPT.find((t) => t.id === id)
+    // Turns gated on media (e.g. video) wait for the media to finish before advancing.
+    if (turn?.gateOnMedia) return
+    const wait = turn?.advanceAfter ?? 0
+    if (advanceTimer.current) clearTimeout(advanceTimer.current)
+    advanceTimer.current = setTimeout(() => {
+      setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
+    }, wait)
+  }, [])
+
+  const onMediaDone = useCallback((id) => {
+    setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
+  }, [])
+
+  const onThinkingDone = useCallback((id) => {
+    setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
+  }, [])
+
+  const onUserSubmit = useCallback(
+    (text) => {
+      const turn = VISION_SCRIPT[cursor]
+      if (!turn || turn.type !== 'input') return
+      setHistory((h) => [
+        ...h,
+        { kind: 'user', id: `${turn.id}-u-${Date.now()}`, text },
+      ])
+      setCursor((c) => c + 1)
+    },
+    [cursor]
+  )
+
+  // Dev hotkey: Shift+Right to skip ahead
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.shiftKey && e.key === 'ArrowRight') {
+        e.preventDefault()
+        setCursor((c) => Math.min(c + 1, VISION_SCRIPT.length))
+      }
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [])
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5">
+        {history.map((m) => {
+          if (m.kind === 'user') {
+            return <UserMessage key={m.id} text={m.text} />
+          }
+          const turn = VISION_SCRIPT.find((t) => t.id === m.id)
+          const isCurrent = currentTurn?.id === m.id
+          const media = turn?.media ? renderMedia(turn, isCurrent, onMediaDone) : null
+          return (
+            <AgentMessage
+              key={m.id}
+              text={m.text}
+              streaming={m.streaming}
+              media={media}
+              mediaPosition={turn?.mediaPosition || 'below'}
+              onDone={() => onAgentDone(m.id)}
+            />
+          )
+        })}
+
+        {currentTurn?.type === 'thinking' && (
+          <ThinkingInline
+            key={currentTurn.id}
+            lines={currentTurn.lines}
+            perLine={currentTurn.perLine}
+            onDone={() => onThinkingDone(currentTurn.id)}
+          />
+        )}
+      </div>
+
+      {/* The composer is always visible. When the cursor is on a non-input
+          turn (agent streaming, thinking, etc.), chips/autoType/onSubmit are
+          undefined so the composer stays inert until the next input turn. */}
+      {(() => {
+        const inputTurn = currentTurn?.type === 'input' ? currentTurn : null
+        return (
+          <SuggestedReplies
+            key={inputTurn?.id || 'idle'}
+            chips={inputTurn?.chips || []}
+            autoType={inputTurn?.autoType}
+            onSubmit={inputTurn ? onUserSubmit : undefined}
+          />
+        )
+      })()}
+    </div>
+  )
+}
+
+// Build the media React element for an agent turn based on the script's media spec.
+function renderMedia(turn, isCurrent, onMediaDone) {
+  const { media } = turn
+  if (!media) return null
+  switch (media.kind) {
+    case 'video':
+      return (
+        <VideoPlayer
+          title={media.title}
+          duration={media.duration}
+          onComplete={
+            isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
+          }
+        />
+      )
+    case 'sword':
+      return <SwordPreviewCard />
+    case 'providerSearch':
+      return (
+        <ProviderSearch
+          providers={media.variant === 'weekend' ? PROVIDERS_WEEKEND : PROVIDERS_ALL}
+        />
+      )
+    case 'confirmation':
+      if (media.variant === 'pt') return <ConfirmationCard {...PT_BOOKING} />
+      if (media.variant === 'colonoscopy') return <ConfirmationCard {...COLONOSCOPY_BOOKING} />
+      return null
+    default:
+      return null
+  }
+}

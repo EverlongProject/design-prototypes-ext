@@ -1,0 +1,53 @@
+import { MapPin } from 'lucide-react'
+
+// Stylized map placeholder. Abstract street grid + pins positioned by props.
+// `pins`: [{ id, x, y, highlighted, label }] — x/y in 0..100 percent.
+
+export default function MapView({ pins = [] }) {
+  return (
+    <div className="relative w-full h-[180px] rounded-lg overflow-hidden border border-border bg-[#E8EEF3]">
+      {/* Abstract street grid */}
+      <svg viewBox="0 0 320 180" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+        <rect width="320" height="180" fill="#E6EEF5" />
+        {/* Greens (parks) */}
+        <ellipse cx="60" cy="40" rx="28" ry="18" fill="#D6E7D4" />
+        <ellipse cx="270" cy="130" rx="34" ry="20" fill="#D6E7D4" />
+        {/* Roads */}
+        <path d="M0 60 Q 80 50 160 70 T 320 80" stroke="#fff" strokeWidth="3" fill="none" />
+        <path d="M0 120 Q 100 110 200 130 T 320 140" stroke="#fff" strokeWidth="3" fill="none" />
+        <path d="M40 0 L 90 180" stroke="#fff" strokeWidth="2" fill="none" />
+        <path d="M180 0 L 220 180" stroke="#fff" strokeWidth="2" fill="none" />
+        <path d="M260 0 L 290 180" stroke="#fff" strokeWidth="2" fill="none" />
+        {/* Water */}
+        <path
+          d="M-10 150 Q 60 140 130 160 T 260 170 L 320 175 L 320 200 L -10 200 Z"
+          fill="#BBD8E8"
+        />
+      </svg>
+
+      {/* Pins */}
+      {pins.map((pin) => (
+        <div
+          key={pin.id}
+          className="absolute -translate-x-1/2 -translate-y-full transition-all duration-300"
+          style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
+        >
+          <div
+            className={`flex items-center justify-center rounded-full shadow-md ${
+              pin.highlighted
+                ? 'w-7 h-7 bg-highmark-primary text-white scale-110'
+                : 'w-6 h-6 bg-white text-highmark-primary border border-highmark-primary'
+            }`}
+          >
+            <MapPin className="w-3.5 h-3.5" />
+          </div>
+          {pin.label && (
+            <span className="absolute left-1/2 -translate-x-1/2 mt-0.5 px-1.5 py-0.5 rounded bg-ink/85 text-white text-[10px] font-sans whitespace-nowrap">
+              {pin.label}
+            </span>
+          )}
+        </div>
+      ))}
+    </div>
+  )
+}
