@@ -121,8 +121,8 @@ You can play from start through booking confirmation and the colonoscopy callbac
 
 ### Tasks
 
-- [ ] **Wire Beat 12 (colonoscopy callback).** On "Yeah, let's do it" chip from Beat 11, agent suggests a Saturday slot at AHN Wexford with Dr. Sarah Chen, June 13. Chips: "Book it" / "Show me other options." On book, ConfirmationCard renders with $0 cost (preventive) and `jessica@company.com` calendar invite. Agent closes with "two appointments on the calendar, two care gaps closed. Anything else?" Final chips: "I'm good, thanks" / "What if my back gets worse before Saturday?"
-- [ ] **Wire Beat 13 (optional tally frame).** A simple static reveal: bullet list of what was accomplished, "zero phone calls" punchline. Could be inside the sidebar or as a full-screen takeover. Recommend full-screen for impact.
+- [x] **Wire Beat 12 (colonoscopy callback).** Already wired in Phase 1's script extension. Verified: `t-callback-slot` thinking → agent slot suggestion (Dr. Sarah Chen, AHN Wexford, June 13) + "Book it" / "Show me other options" chips → `t-callback-booking` thinking → `ConfirmationCard` (variant `colonoscopy`, $0 preventive, `jessica@company.com`, prep-plan extras) + "All set. Two appointments on the calendar, two care gaps closed. Anything else?" + final chips → closing "Take care, Jessica. Talk soon."
+- [x] **Wire Beat 13 (tally frame).** New `src/screens/TallyScreen.jsx` — full-screen takeover with a Highmark-blue gradient (deepest → primary → light blue), animated bullet list (4 accomplishments, staggered fade-in), "Zero phone calls…" punchline, and closing narration line. ChatRunner now accepts an `onComplete` prop that fires once when the cursor moves past the last script turn. AISidebar passes it through; HomeScreen schedules an 800 ms beat after the closing message before revealing the tally.
 - [ ] **End-to-end timing pass.** Run the demo three times. Should land around 6:00 to 7:00. If too short, lengthen the agent's pause in Beat 11 between confirmation and callback prompt. If too long, trim Beat 5's video duration and Beat 8's Sword card pause.
 
 ### Done when
