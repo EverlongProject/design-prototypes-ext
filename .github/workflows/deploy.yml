@@ -42,12 +42,23 @@ jobs:
         working-directory: highmark-demo-may
         run: npm run build
 
+      # Quest demo (uses package-lock for reproducible ci install)
+      - name: Install Quest
+        working-directory: quest-demo-may
+        run: npm ci
+
+      - name: Build Quest
+        working-directory: quest-demo-may
+        run: npm run build
+
       - name: Stage site
         run: |
           mkdir -p _site/manulife-demo-april
           cp -r manulife-demo-april/dist/. _site/manulife-demo-april/
           mkdir -p _site/highmark-demo-may
           cp -r highmark-demo-may/dist/. _site/highmark-demo-may/
+          mkdir -p _site/quest-demo-may
+          cp -r quest-demo-may/dist/. _site/quest-demo-may/
 
       - uses: actions/upload-pages-artifact@v3
         with:
