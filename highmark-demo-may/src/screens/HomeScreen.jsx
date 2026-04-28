@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { ArrowRight, ChevronDown, ChevronRight, Settings } from 'lucide-react'
 import AISidebar from '../components/AISidebar.jsx'
+import TallyScreen from './TallyScreen.jsx'
 
 // MyHighmark home screen, matching Figma node 1:3660.
 
@@ -30,6 +31,7 @@ const ASSETS = {
 
 export default function HomeScreen({ stageKey, onAdvance }) {
   const [aiOpen, setAiOpen] = useState(false)
+  const [tallyOpen, setTallyOpen] = useState(false)
   const autoOpened = useRef(false)
 
   useEffect(() => {
@@ -40,6 +42,12 @@ export default function HomeScreen({ stageKey, onAdvance }) {
     }, 1500)
     return () => clearTimeout(t)
   }, [])
+
+  // After the closing turn ("Take care, Jessica…") finishes, give the
+  // sidebar a beat to settle, then reveal the tally as a full-screen takeover.
+  const handleConversationEnd = () => {
+    setTimeout(() => setTallyOpen(true), 800)
+  }
 
   return (
     <div className="min-h-screen bg-surface-primary">
@@ -59,7 +67,13 @@ export default function HomeScreen({ stageKey, onAdvance }) {
         </div>
       </div>
 
-      <AISidebar open={aiOpen} onClose={() => setAiOpen(false)} />
+      <AISidebar
+        open={aiOpen}
+        onClose={() => setAiOpen(false)}
+        onConversationEnd={handleConversationEnd}
+      />
+
+      {tallyOpen && <TallyScreen />}
     </div>
   )
 }
@@ -306,6 +320,8 @@ function GetCare() {
           <img
             src={ASSETS.providerSearch}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         </div>
@@ -364,6 +380,8 @@ function RewardPrograms() {
           <img
             src={ASSETS.rewardPrograms}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
         </div>
@@ -504,7 +522,13 @@ function NewAndNoteworthy() {
         {cards.map((c) => (
           <Card key={c.title} className="overflow-hidden">
             <div className="h-[180px] bg-highmark-primary-pastel overflow-hidden">
-              <img src={c.image} alt="" className="w-full h-full object-cover" />
+              <img
+                src={c.image}
+                alt=""
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="p-4">
               <p className="font-heading text-subtitle-1 text-ink">{c.title}</p>

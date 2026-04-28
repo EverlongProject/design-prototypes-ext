@@ -5,7 +5,7 @@ import ChatRunner from './ChatRunner.jsx'
 
 const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 
-export default function AISidebar({ open, onClose }) {
+export default function AISidebar({ open, onClose, onConversationEnd }) {
   const [minimized, setMinimized] = useState(false)
 
   if (!open) return null
@@ -27,7 +27,7 @@ export default function AISidebar({ open, onClose }) {
           onMinimize={() => setMinimized(true)}
           onClose={onClose}
         />
-        <ChatRunner />
+        <ChatRunner onComplete={onConversationEnd} />
       </motion.div>
 
       <AnimatePresence>

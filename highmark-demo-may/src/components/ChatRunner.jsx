@@ -21,13 +21,22 @@ import ThinkingInline from './ThinkingInline.jsx'
 // Dev affordance: Shift+Right arrow advances past the current turn,
 // useful for rehearsal.
 
-export default function ChatRunner() {
+export default function ChatRunner({ onComplete }) {
   const [history, setHistory] = useState([])
   const [cursor, setCursor] = useState(0)
+  const completedRef = useRef(false)
   const scrollRef = useRef(null)
   const advanceTimer = useRef(null)
 
   const currentTurn = VISION_SCRIPT[cursor]
+
+  // When the cursor moves past the last script turn, fire onComplete once.
+  useEffect(() => {
+    if (cursor >= VISION_SCRIPT.length && !completedRef.current) {
+      completedRef.current = true
+      onComplete?.()
+    }
+  }, [cursor, onComplete])
 
   // Sync history with every agent turn up through the current cursor.
   // The current cursor's agent turn streams (if it has text); earlier turns
@@ -75,12 +84,18 @@ export default function ChatRunner() {
     return () => clearTimeout(t)
   }, [cursor])
 
-  // Auto-scroll new messages into view.
+  // Auto-scroll: keep the latest content in view while messages stream.
+  // A small polling interval is the simplest way to catch every form of
+  // growth — character-by-character streaming, media reveal, thinking line
+  // crossfade — without fighting React render boundaries.
   useEffect(() => {
-    const el = scrollRef.current
-    if (!el) return
-    el.scrollTop = el.scrollHeight
-  }, [history, cursor])
+    const id = setInterval(() => {
+      const el = scrollRef.current
+      if (!el) return
+      el.scrollTop = el.scrollHeight
+    }, 80)
+    return () => clearInterval(id)
+  }, [])
 
   const onAgentDone = useCallback((id) => {
     setHistory((h) => h.map((m) => (m.id === id ? { ...m, streaming: false } : m)))
