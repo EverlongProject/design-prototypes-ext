@@ -1,0 +1,25 @@
+{
+  "name": "quest-demo-may",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Desktop web prototype of the Quest AI Care Navigation demo for the May 7, 2026 onsite",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host"
+  },
+  "dependencies": {
+    "framer-motion": "^11.3.0",
+    "lucide-react": "^0.395.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.3.1"
+  }
+}
