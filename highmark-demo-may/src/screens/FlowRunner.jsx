@@ -1,5 +1,4 @@
 import { useState, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
 import { STAGES } from '../data/stages.js'
 import HomeScreen from './HomeScreen.jsx'
 import SpreadsheetScreen from './SpreadsheetScreen.jsx'
@@ -40,17 +39,9 @@ export default function FlowRunner({ stageKey, onExit }) {
 
   return (
     <div className="relative min-h-screen bg-surface-primary">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={step.id}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-        >
-          {renderStep(step, { advance, stageKey })}
-        </motion.div>
-      </AnimatePresence>
+      {/* No cross-fade between steps — each screen handles its own entrance.
+          The spreadsheet stays under the iMessage window without flashing. */}
+      {renderStep(step, { advance, stageKey })}
 
       <button
         onClick={onExit}

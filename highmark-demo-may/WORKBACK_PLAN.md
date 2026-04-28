@@ -31,6 +31,49 @@ Sequential plan to build the AI Vision Demo end to end. Each phase has concrete 
 
 ---
 
+## SCENARIO REWRITE (do this before continuing)
+
+The scenario has shifted from "Jessica's back pain" to a caregiver framing. See the updated `DEMO_SCRIPT.md` for full copy.
+
+**Persona update:** Jessica has two sons on her plan, **Liam (18, varsity high school soccer)** and **Noah (14)**. Liam hurt his hamstring playing soccer, Dr. Martinez referred him to PT on Tuesday.
+
+**Beat 6 typed pivot copy changes:**
+> "My son's doctor told me to book him with a physical therapist after he hurt himself playing soccer. Can you help me get him in?"
+
+**Two new components required:**
+
+1. **`DependentPicker.jsx`** — Two side-by-side selectable cards (Liam, Noah) with avatar placeholder, name, and age. Renders inside an agent message. On tap, commits a UserMessage like "Liam" and advances the conversation. New turn type in `visionScript.js`: `dependentPicker` with options array.
+
+2. **`CoverageCard.jsx`** — Compact 3-line card showing per-member coverage snapshot. Lands inline as the first piece of agent response after Liam is selected, paired with the "Pulling Liam's records..." thinking indicator. Justifies the $25 copay number by showing his deductible state. New turn type or `card` variant in `visionScript.js`.
+   ```
+   LIAM PATEL · COMMUNITY BLUE HDHP 1
+   ✓ Deductible met ($1,500 of $1,500)
+   PT visits used: 0 of 30
+   Sports injury PT: covered
+   ```
+
+**Beat 8 Sword copy reframes around Liam.** Same Sword preview card, different copy: "Two paths for Liam... Sword is virtual, in-person is hands-on for sports injuries..." Jessica picks in-person for Liam. **Important:** the agent does NOT know Liam is going to college, do not reference Pitt, August, college, or moving anywhere.
+
+**Beats 9 to 11 reframe as sports PT.** Provider cards now read "Dr. Marcus Patel, PT (Sports Medicine), AHN Sports & Spine Wexford" etc. PT booking confirmation reads "Booked for Liam: Dr. Patel..."
+
+**Beats 11 to 12 are the new orchestration wow: same-day, same-facility bundling.** Instead of suggesting a colonoscopy a few weeks later, the AI surfaces that AHN Wexford has gastroenterology in the same building, and offers a Saturday May 9 slot at 8am with Dr. Sarah Chen, two hours before Liam's 10am PT. Jessica books both at the same facility on the same morning. The colonoscopy ConfirmationCard reads "AHN Wexford (same building as Liam's PT)."
+
+**Beat 13 tally** updates to reflect Liam's PT + Jessica's bundled colonoscopy.
+
+### What this means for already-completed tasks below
+
+Several Phase 2 and Phase 3 tasks are checked off but their copy and data need updating to match the new scenario. The components themselves (ChatRunner, AgentMessage, SwordPreviewCard, ProviderCard, ConfirmationCard, etc.) are still correct. What needs to change is:
+
+- `src/data/visionScript.js` — rewrite Beats 6 to 13 with the new copy from `DEMO_SCRIPT.md`
+- `src/components/DependentPicker.jsx` — net new
+- `src/components/CoverageCard.jsx` — net new
+- `ChatRunner.jsx` — handle the new `dependentPicker` turn type and any new `card` variants needed
+- Any hardcoded date strings in confirmation cards (May 9 10am stays for PT, May 9 8am is new for colonoscopy at AHN Wexford)
+
+After the script is updated, run end to end. If the demo plays cleanly from start through Beat 13 with the caregiver scenario and the CoverageCard lands after Liam is selected, the rewrite is done.
+
+---
+
 ## Phase 1 — Foundation chat primitives
 
 **Goal:** Get the conversation infrastructure in place. Every subsequent phase just composes these primitives. If these are wrong, everything downstream has to be reworked.
@@ -219,7 +262,9 @@ src/
     ├── SwordPreviewCard.jsx         [Phase 3]
     ├── MapView.jsx                  [Phase 3]
     ├── ProviderCard.jsx             [Phase 3]
-    └── ConfirmationCard.jsx         [Phase 3]
+    ├── ConfirmationCard.jsx         [Phase 3]
+    ├── DependentPicker.jsx          [scenario rewrite, Beat 7]
+    └── CoverageCard.jsx             [scenario rewrite, Beat 7]
 ```
 
 ---

@@ -152,13 +152,6 @@ export default function SuggestedReplies({ chips = [], autoType = null, onSubmit
               readOnly={isAutoTyping}
               className="w-full block bg-transparent outline-none font-sans text-body-2 text-ink placeholder:text-ink-subdued resize-none leading-tight max-h-40"
             />
-            {isAutoTyping && (
-              <span
-                className="pointer-events-none absolute top-1 inline-block w-[1.5px] h-[1.1em] bg-ink animate-pulse"
-                style={{ left: `${typingCursorOffset(draft)}ch`, transform: 'translateY(2px)' }}
-                aria-hidden="true"
-              />
-            )}
           </div>
           <button
             type="submit"
@@ -181,9 +174,3 @@ export default function SuggestedReplies({ chips = [], autoType = null, onSubmit
   )
 }
 
-// Approximate caret position based on draft length (ch units). Good enough for demo.
-function typingCursorOffset(draft) {
-  // Last line of text
-  const lastLine = draft.split('\n').pop() || ''
-  return Math.min(lastLine.length, 60) * 0.55
-}

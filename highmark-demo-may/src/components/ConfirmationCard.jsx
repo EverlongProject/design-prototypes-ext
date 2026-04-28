@@ -19,13 +19,13 @@ export default function ConfirmationCard({
         <span className="w-6 h-6 rounded-full bg-success text-white flex items-center justify-center shrink-0">
           <Check className="w-3.5 h-3.5" strokeWidth={3} />
         </span>
-        <span className="font-heading text-[13px] font-semibold text-ink">{title}</span>
+        <span className="font-heading text-[15px] font-semibold text-ink">{title}</span>
       </div>
 
-      <div className="px-4 py-3 space-y-2 font-sans text-[13px] text-ink leading-snug">
+      <div className="px-4 py-3 space-y-2 font-sans text-[15px] text-ink leading-snug">
         <div>
           <p className="font-semibold">{doctor}</p>
-          {practice && <p className="text-ink-subdued text-[12px]">{practice}</p>}
+          {practice && <p className="text-ink-subdued text-[14px]">{practice}</p>}
         </div>
 
         <Row icon={<Calendar className="w-3.5 h-3.5" />} text={when} />
