@@ -25,8 +25,8 @@ export default function SpreadsheetScreen({ onAdvance }) {
               e.stopPropagation()
               onAdvance?.()
             }}
-            initial={{ opacity: 0, x: 40, y: -8 }}
-            animate={{ opacity: 1, x: 0, y: 0 }}
+            initial={{ opacity: 0, x: 40 }}
+            animate={{ opacity: 1, x: 0 }}
             transition={{ type: 'spring', stiffness: 280, damping: 28 }}
             className="fixed top-8 right-8 w-[360px] bg-white/95 backdrop-blur-xl rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.18)] px-3.5 py-3 flex items-start gap-3 text-left hover:bg-white transition-colors"
           >

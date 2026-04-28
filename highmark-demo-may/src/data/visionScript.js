@@ -4,16 +4,21 @@
 //   - { type: 'agent', text, advanceAfter?, media?, mediaPosition?, gateOnMedia? }
 //       agent message; auto-advances after streaming + advanceAfter ms.
 //       Empty text + media is allowed (card-only turns).
-//   - { type: 'input', chips: [{label, primary?}], autoType?: { text } }
+//   - { type: 'input', chips: [{label, primary?, triggersAutoType?}], autoType?: { text } }
 //       suggested replies + composer; advances when user picks a chip or
 //       the auto-typed message commits via the Send button.
+//   - { type: 'dependentPicker', options: [{ id, name, age }] }
+//       inline two-card picker. Selecting a card commits a UserMessage
+//       (the option name) and advances.
 //   - { type: 'thinking', lines: string[], perLine?: ms }
 //       "AI is working" status line crossfade. Advances when ThinkingInline
 //       calls onDone. ~1.2s per line by default.
 //
-// The conversation covers Beats 5–12 plus thinking bursts at the boundaries
-// where the AI is doing real work (coverage check, options lookup, provider
-// search, booking, callback slot search, callback booking).
+// Caregiver scenario: Jessica (47) has two sons on her plan, Liam (18, varsity
+// soccer) and Noah (14). The AI texted about Jessica's colonoscopy. She pivots
+// to booking PT for Liam (hamstring strain, Dr. Martinez referred Tuesday).
+// The AI books Liam's sports PT, then bundles Jessica's colonoscopy onto the
+// same Saturday morning at the same AHN Wexford facility, two hours earlier.
 
 export const VISION_SCRIPT = [
   // ----- Beat 5 — agent intro + embedded video --------------------------------
@@ -54,34 +59,59 @@ Ready to find a doctor?`,
       { label: 'I have a question first', primary: true, triggersAutoType: true },
     ],
     autoType: {
-      text: "Honestly, my back has been killing me for the past week. Can you help me book a physiotherapy session?",
+      text: "My son's doctor told me to book him with a physical therapist after he hurt himself playing soccer. Can you help me get him in?",
     },
   },
 
-  // ----- Thinking before Beat 7 (PT coverage check) ---------------------------
+  // ----- Thinking before Beat 7 (look up dependents) -------------------------
   {
-    id: 't-coverage',
+    id: 't-dependents',
     type: 'thinking',
     lines: [
-      'Checking PT coverage on your plan…',
-      'Pulling your current accumulators…',
+      'Looking up your dependents…',
+      "Pulling Liam and Noah's plans…",
     ],
   },
 
-  // ----- Beat 7 — agent adapts + PT coverage ---------------------------------
+  // ----- Beat 7 — agent adapts + dependent picker ----------------------------
   {
     id: 'b7-a1',
     type: 'agent',
-    text: `Of course, Jessica. Let's take care of your back first. The colonoscopy can wait, we'll come back to it.
+    text: `Of course, Jessica. Let's take care of that first, the colonoscopy can wait.
 
-Quick coverage check on physical therapy:
-
-✓ PT is covered on your plan
-✓ $25 copay per visit, no deductible required
-✓ Up to 30 visits per year
-✓ No referral needed
+Quick check, which of your two sons?`,
+    advanceAfter: 200,
+  },
+  {
+    id: 'b7-picker',
+    type: 'dependentPicker',
+    options: [
+      { id: 'liam', name: 'Liam', age: 18 },
+      { id: 'noah', name: 'Noah', age: 14 },
+    ],
+  },
+  {
+    id: 'b7-a2',
+    type: 'agent',
+    text: `Got it.`,
+    advanceAfter: 200,
+  },
+  {
+    id: 't-records',
+    type: 'thinking',
+    lines: [
+      "Pulling Liam's records…",
+      'Checking his coverage and referral…',
+    ],
+  },
+  {
+    id: 'b7-a3',
+    type: 'agent',
+    text: `**His deductible is already met for the year, so PT visits will be his standard $25 copay.** Sports injury PT is covered on your plan, and we already have his referral so no extra step. I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
 
 You actually have two ways to handle this. Want to hear them?`,
+    media: { kind: 'coverage' },
+    mediaPosition: 'above',
     advanceAfter: 600,
   },
   {
@@ -89,7 +119,7 @@ You actually have two ways to handle this. Want to hear them?`,
     type: 'input',
     chips: [
       { label: 'Yes, what are my options', primary: true },
-      { label: 'Just find me a PT' },
+      { label: 'Just find him a PT' },
     ],
   },
 
@@ -98,20 +128,20 @@ You actually have two ways to handle this. Want to hear them?`,
     id: 't-options',
     type: 'thinking',
     lines: [
-      "Looking at point solutions you're eligible for…",
-      'Comparing virtual and in-person options…',
+      "Checking sports PT coverage on Liam's plan…",
+      'Looking at virtual and in-person options…',
     ],
   },
 
-  // ----- Beat 8 — Sword Health offered ---------------------------------------
+  // ----- Beat 8 — Sword Health offered, framed for Liam ----------------------
   {
     id: 'b8-a1',
     type: 'agent',
-    text: `Two paths:
+    text: `Two paths for Liam:
 
-Sword Health — A virtual PT program already covered for you at $0. You work from home with a real physical therapist, the app uses your phone camera to track your form in real time. Most members with back pain see improvement in 2 to 3 weeks.
+**Sword Health — A virtual PT program covered on your plan at $0.** Liam works through guided exercises at home, the app uses his phone camera to track his form, and a real physical therapist reviews his progress. Most athletes with hamstring strains see meaningful improvement in 2 to 3 weeks.
 
-In-person PT — A clinic near you, $25 per visit copay. Best if you want hands-on treatment.
+**In-person PT — A clinic near you, $25 per visit copay.** Best for hands-on assessment, especially for a sports injury where a hands-on first visit can speed up recovery.
 
 Want a quick look at Sword first?`,
     advanceAfter: 600,
@@ -121,7 +151,16 @@ Want a quick look at Sword first?`,
     type: 'input',
     chips: [
       { label: 'Show me Sword', primary: true },
-      { label: 'Skip Sword, find me an in-person PT' },
+      { label: 'Skip Sword, find him an in-person PT' },
+    ],
+  },
+  // Thinking before the Sword card lands
+  {
+    id: 't-sword',
+    type: 'thinking',
+    lines: [
+      'Looking up your benefits…',
+      'Pulling Sword Health information…',
     ],
   },
   {
@@ -142,14 +181,14 @@ Want a quick look at Sword first?`,
     id: 'b8-input2',
     type: 'input',
     chips: [
-      { label: "I'd rather see someone in person", primary: true },
-      { label: 'Let me try Sword' },
+      { label: 'See someone in person', primary: true },
+      { label: "Let's try Sword" },
     ],
   },
   {
     id: 'b8-a3',
     type: 'agent',
-    text: `No problem. Let's find you a PT.`,
+    text: `No problem. Let's find him a PT.`,
     advanceAfter: 800,
   },
 
@@ -158,17 +197,17 @@ Want a quick look at Sword first?`,
     id: 't-providers',
     type: 'thinking',
     lines: [
-      'Searching in-network providers near you…',
+      'Searching sports PTs near you…',
       'Sorting by network tier…',
-      'Pulling Saturday availability…',
+      'Pulling availability…',
     ],
   },
 
-  // ----- Beat 9 — PT provider search -----------------------------------------
+  // ----- Beat 9 — sports PT provider search ----------------------------------
   {
     id: 'b9-a1',
     type: 'agent',
-    text: `Three in-network options. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Wexford has availability tomorrow afternoon and is the closest to you.`,
+    text: `Three in-network sports PTs near you. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Sports & Spine Wexford has availability tomorrow afternoon and is the closest to your home. He sees a lot of high school athletes.`,
     media: { kind: 'providerSearch', variant: 'all' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -177,9 +216,19 @@ Want a quick look at Sword first?`,
     id: 'b9-input',
     type: 'input',
     chips: [
-      { label: 'Show me weekend slots', primary: true },
-      { label: 'Sort by soonest available' },
       { label: 'Book Dr. Patel' },
+      { label: 'Soonest available' },
+      { label: 'Weekend availability', primary: true },
+    ],
+  },
+
+  // Thinking before Beat 10's weekend filter
+  {
+    id: 't-weekend',
+    type: 'thinking',
+    lines: [
+      'Filtering for weekend availability…',
+      'Pulling Saturday slots…',
     ],
   },
 
@@ -206,17 +255,19 @@ Want a quick look at Sword first?`,
     id: 't-booking',
     type: 'thinking',
     lines: [
-      'Booking with Dr. Patel…',
+      'Booking Liam with Dr. Patel…',
       'Adding to your calendar…',
       'Sending the confirmation to jessica@company.com…',
     ],
   },
 
-  // ----- Beat 11 — booking confirmation, pivots straight to callback ---------
+  // ----- Beat 11 — booking confirmation, pivots to same-day bundle ----------
   {
     id: 'b11-a1',
     type: 'agent',
-    text: `One down. While I have you, your colonoscopy was the original reason I reached out today. Now that your back is sorted, want me to take care of that too?`,
+    text: `Liam's set for Saturday. While we're here, your colonoscopy was the original reason I reached out today. Since you're already going to be at AHN Wexford that morning for Liam, AHN Wexford has gastroenterology too, and I have an opening Saturday at 8am with Dr. Sarah Chen. Two hours before Liam's PT, same building. You could knock both out in one trip.
+
+**It's fully covered as preventive care on your plan, $0 out of pocket.** Are you interested in scheduling your colonoscopy?`,
     media: { kind: 'confirmation', variant: 'pt' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -225,8 +276,8 @@ Want a quick look at Sword first?`,
     id: 'b11-input',
     type: 'input',
     chips: [
-      { label: "Yeah, let's do it", primary: true },
-      { label: 'Not today, ping me later' },
+      { label: 'I am interested', primary: true },
+      { label: 'Not right now' },
     ],
   },
 
@@ -235,33 +286,34 @@ Want a quick look at Sword first?`,
     id: 't-callback-slot',
     type: 'thinking',
     lines: [
-      'Looking at gastroenterology availability at AHN Wexford…',
-      'Finding a Saturday slot…',
+      'Checking gastroenterology at AHN Wexford…',
+      "Looking for a Saturday slot before Liam's PT…",
+      'Found one at 8am with Dr. Chen…',
     ],
   },
 
-  // ----- Beat 12 — colonoscopy callback --------------------------------------
+  // ----- Beat 12 — bundle confirmation prompt --------------------------------
   {
     id: 'b12-a1',
     type: 'agent',
-    text: `I have a Saturday morning slot at AHN Wexford with Dr. Sarah Chen, June 13. Same building as Dr. Patel, fully covered as preventive care.`,
+    text: `Saturday May 9 at 8am with Dr. Sarah Chen at AHN Wexford. Fully covered as preventive care. I'll send your prep instructions Wednesday so you're ready by Friday evening.`,
     advanceAfter: 600,
   },
   {
     id: 'b12-input1',
     type: 'input',
     chips: [
-      { label: 'Book it', primary: true },
+      { label: 'Book appointment', primary: true },
       { label: 'Show me other options' },
     ],
   },
 
-  // ----- Thinking before final colonoscopy confirmation ----------------------
+  // ----- Thinking before Beat 12 final confirmation --------------------------
   {
     id: 't-callback-booking',
     type: 'thinking',
     lines: [
-      'Booking colonoscopy with Dr. Chen…',
+      'Booking your colonoscopy with Dr. Chen…',
       'Sending preventive care confirmation to jessica@company.com…',
     ],
   },
@@ -270,7 +322,7 @@ Want a quick look at Sword first?`,
   {
     id: 'b12-a2',
     type: 'agent',
-    text: `All set. Two appointments on the calendar, two care gaps closed. Anything else?`,
+    text: `All set. Two appointments at AHN Wexford on Saturday morning, both care needs handled in one trip. Anything else?`,
     media: { kind: 'confirmation', variant: 'colonoscopy' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -280,7 +332,7 @@ Want a quick look at Sword first?`,
     type: 'input',
     chips: [
       { label: "I'm good, thanks", primary: true },
-      { label: 'What if my back gets worse before Saturday?' },
+      { label: 'What about the prep, what should I expect?' },
     ],
   },
   {
@@ -292,11 +344,12 @@ Want a quick look at Sword first?`,
 ]
 
 // Provider data used by both Beat 9 (all) and Beat 10 (weekend filter).
+// Sports medicine PTs (AHN Sports & Spine), not generic adult PT.
 export const PROVIDERS_ALL = [
   {
     id: 'patel',
     name: 'Dr. Marcus Patel, PT',
-    practice: 'AHN Wexford',
+    practice: 'AHN Sports & Spine, Wexford',
     distance: '1.4 mi',
     tier: 1,
     nextAvailable: 'Tomorrow, 4:30pm',
@@ -309,7 +362,7 @@ export const PROVIDERS_ALL = [
   {
     id: 'reed',
     name: 'Dr. Olivia Reed, PT',
-    practice: 'Allegheny Sports & Spine',
+    practice: 'AHN Sports & Spine, McCandless',
     distance: '2.1 mi',
     tier: 1,
     nextAvailable: 'Friday, 9:00am',
@@ -346,9 +399,9 @@ export const PROVIDERS_WEEKEND = [
 ]
 
 export const PT_BOOKING = {
-  title: 'Booked',
-  doctor: 'Dr. Marcus Patel, PT',
-  practice: 'AHN Wexford',
+  title: 'Booked for Liam',
+  doctor: 'Dr. Marcus Patel, PT (Sports Medicine)',
+  practice: 'AHN Sports & Spine, Wexford',
   when: 'Saturday, May 9 at 10:00am',
   cost: '$25 copay',
   inviteEmail: 'jessica@company.com',
@@ -356,10 +409,10 @@ export const PT_BOOKING = {
 
 export const COLONOSCOPY_BOOKING = {
   title: 'Colonoscopy booked',
-  doctor: 'Dr. Sarah Chen',
-  practice: 'AHN Wexford',
-  when: 'Saturday, June 13 at 9:00am',
+  doctor: 'Dr. Sarah Chen, Gastroenterology',
+  practice: 'AHN Wexford (same building as Liam’s PT)',
+  when: 'Saturday, May 9 at 8:00am',
   cost: '$0 cost (preventive)',
   inviteEmail: 'jessica@company.com',
-  extras: ['Prep plan will land in your inbox the week before'],
+  extras: ['Prep plan will land in your inbox Wednesday'],
 }

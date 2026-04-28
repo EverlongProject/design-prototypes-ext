@@ -69,7 +69,7 @@ export default function VideoPlayer({ title, duration = '1:02', onComplete, play
           </span>
         )}
 
-        <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/55 text-white text-[11px] font-sans">
+        <span className="absolute bottom-2 right-2 px-2 py-0.5 rounded bg-black/55 text-white text-[13px] font-sans">
           {duration}
         </span>
 
@@ -84,10 +84,10 @@ export default function VideoPlayer({ title, duration = '1:02', onComplete, play
       </div>
 
       <div className="px-3 py-2.5 bg-white">
-        <p className="font-heading text-[13px] font-medium text-ink leading-tight">
+        <p className="font-heading text-[15px] font-medium text-ink leading-tight">
           {title}
         </p>
-        <p className="font-sans text-[11px] text-ink-subdued mt-0.5">
+        <p className="font-sans text-[13px] text-ink-subdued mt-0.5">
           {state === 'playing' ? 'Now playing…' : state === 'watched' ? 'Watched' : 'Tap to play'}
         </p>
       </div>

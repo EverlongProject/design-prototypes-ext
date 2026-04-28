@@ -6,8 +6,8 @@ import { Check } from 'lucide-react'
 // still available bottom-left to return to the stage menu.
 
 const ACCOMPLISHMENTS = [
-  'Booked PT with a Tier 1 AHN provider for Saturday',
-  'Booked her colonoscopy at AHN Wexford for June 13',
+  "Booked Liam's sports PT with a Tier 1 AHN provider for Saturday at 10am",
+  'Bundled her own colonoscopy onto the same Saturday morning at the same AHN building',
   'Closed two HEDIS gaps',
   'Returned to her workday',
 ]
@@ -55,7 +55,7 @@ export default function TallyScreen() {
           transition={{ delay: 0.6 + ACCOMPLISHMENTS.length * STEP + 0.3, duration: 0.5 }}
           className="font-heading text-[26px] leading-tight font-semibold mb-5"
         >
-          Zero phone calls. Zero portal logins. Zero call center deflections. Zero forms.
+          Zero phone calls. Zero separate trips. Zero forms.
         </motion.p>
 
         <motion.p
@@ -64,7 +64,7 @@ export default function TallyScreen() {
           transition={{ delay: 0.6 + ACCOMPLISHMENTS.length * STEP + 0.9, duration: 0.5 }}
           className="text-[16px] opacity-85 leading-relaxed"
         >
-          The AI led with what it texted about, listened when Jessica had a different priority, adapted, then circled back to close the original loop.
+          The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then bundled her own care onto the same trip the family was already going to make.
         </motion.p>
       </div>
     </motion.div>

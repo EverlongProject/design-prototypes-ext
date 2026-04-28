@@ -22,7 +22,11 @@ export default function AgentMessage({
           {streaming ? (
             <StreamingText text={text} onDone={onDone} />
           ) : (
-            text
+            <span
+              dangerouslySetInnerHTML={{
+                __html: text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'),
+              }}
+            />
           )}
         </div>
       )}

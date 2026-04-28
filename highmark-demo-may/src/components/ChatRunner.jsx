@@ -14,6 +14,8 @@ import SwordPreviewCard from './SwordPreviewCard.jsx'
 import ProviderSearch from './ProviderSearch.jsx'
 import ConfirmationCard from './ConfirmationCard.jsx'
 import ThinkingInline from './ThinkingInline.jsx'
+import DependentPicker from './DependentPicker.jsx'
+import CoverageCard from './CoverageCard.jsx'
 
 // Drives the linear conversation script. Renders message history at the top,
 // the current input affordance (chips + composer) at the bottom.
@@ -26,6 +28,7 @@ export default function ChatRunner({ onComplete }) {
   const [cursor, setCursor] = useState(0)
   const completedRef = useRef(false)
   const scrollRef = useRef(null)
+  const contentRef = useRef(null)
   const advanceTimer = useRef(null)
 
   const currentTurn = VISION_SCRIPT[cursor]
@@ -84,17 +87,66 @@ export default function ChatRunner({ onComplete }) {
     return () => clearTimeout(t)
   }, [cursor])
 
-  // Auto-scroll: keep the latest content in view while messages stream.
-  // A small polling interval is the simplest way to catch every form of
-  // growth — character-by-character streaming, media reveal, thinking line
-  // crossfade — without fighting React render boundaries.
+  // After every cursor advance, snap to the bottom across multiple settle
+  // points. A media-bearing turn (Sword card, provider search, confirmation,
+  // coverage card) often goes through two commits — the cursor advance + the
+  // history-sync effect — and a single rAF can land between them. The rAF
+  // catches the first paint, the setTimeout catches anything that finished
+  // settling shortly after (image decode, motion entry, etc.).
   useEffect(() => {
-    const id = setInterval(() => {
-      const el = scrollRef.current
-      if (!el) return
+    const el = scrollRef.current
+    if (!el) return
+    const stick = () => {
       el.scrollTop = el.scrollHeight
-    }, 80)
-    return () => clearInterval(id)
+    }
+    const raf1 = requestAnimationFrame(() => {
+      stick()
+      requestAnimationFrame(stick)
+    })
+    const t = setTimeout(stick, 150)
+    return () => {
+      cancelAnimationFrame(raf1)
+      clearTimeout(t)
+    }
+  }, [cursor])
+
+  // Auto-scroll: a ResizeObserver on the inner content fires *only* when the
+  // content's actual height changes (mid-stream char append, thinking line
+  // crossfade, new card landing). No polling, no time-based pause, so it
+  // can't collide with wheel/touch momentum. The `stick` flag tracks whether
+  // the user is reading near the bottom; if they've scrolled away, we leave
+  // their scroll position alone until they return.
+  useEffect(() => {
+    const el = scrollRef.current
+    const inner = contentRef.current
+    if (!el || !inner) return
+
+    let stick = true
+    const NEAR_BOTTOM_PX = 40
+
+    const onScroll = () => {
+      const distanceFromBottom = el.scrollHeight - el.clientHeight - el.scrollTop
+      stick = distanceFromBottom <= NEAR_BOTTOM_PX
+    }
+    el.addEventListener('scroll', onScroll, { passive: true })
+
+    // Observe both the inner content (grows mid-stream) AND the scroll
+    // container itself (shrinks when chips/composer expand below it). The
+    // second case is what was hiding the tail of an agent message behind
+    // the newly appeared chips.
+    const ro = new ResizeObserver(() => {
+      if (stick) el.scrollTop = el.scrollHeight
+    })
+    ro.observe(inner)
+    ro.observe(el)
+
+    // Anchor the initial position at the bottom.
+    el.scrollTop = el.scrollHeight
+
+    return () => {
+      ro.disconnect()
+      el.removeEventListener('scroll', onScroll)
+    }
   }, [])
 
   const onAgentDone = useCallback((id) => {
@@ -120,7 +172,8 @@ export default function ChatRunner({ onComplete }) {
   const onUserSubmit = useCallback(
     (text) => {
       const turn = VISION_SCRIPT[cursor]
-      if (!turn || turn.type !== 'input') return
+      if (!turn) return
+      if (turn.type !== 'input' && turn.type !== 'dependentPicker') return
       setHistory((h) => [
         ...h,
         { kind: 'user', id: `${turn.id}-u-${Date.now()}`, text },
@@ -144,7 +197,8 @@ export default function ChatRunner({ onComplete }) {
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
-      <div ref={scrollRef} className="flex-1 overflow-y-auto px-5 py-5">
+      <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain px-5 py-5">
+        <div ref={contentRef}>
         {history.map((m) => {
           if (m.kind === 'user') {
             return <UserMessage key={m.id} text={m.text} />
@@ -172,6 +226,15 @@ export default function ChatRunner({ onComplete }) {
             onDone={() => onThinkingDone(currentTurn.id)}
           />
         )}
+
+        {currentTurn?.type === 'dependentPicker' && (
+          <DependentPicker
+            key={currentTurn.id}
+            options={currentTurn.options}
+            onSelect={(opt) => onUserSubmit(opt.name)}
+          />
+        )}
+        </div>
       </div>
 
       {/* The composer is always visible. When the cursor is on a non-input
@@ -209,6 +272,8 @@ function renderMedia(turn, isCurrent, onMediaDone) {
       )
     case 'sword':
       return <SwordPreviewCard />
+    case 'coverage':
+      return <CoverageCard />
     case 'providerSearch':
       return (
         <ProviderSearch

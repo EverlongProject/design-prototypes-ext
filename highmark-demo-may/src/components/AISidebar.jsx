@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, Minus } from 'lucide-react'
 import ChatRunner from './ChatRunner.jsx'
@@ -7,6 +7,18 @@ const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 
 export default function AISidebar({ open, onClose, onConversationEnd }) {
   const [minimized, setMinimized] = useState(false)
+
+  // Lock body scroll while the sidebar is visible so wheel events over the
+  // sidebar chrome (header, composer, gaps between cards) don't accidentally
+  // scroll the home page underneath. Restored when the sidebar closes.
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.body.style.overflow = prev
+    }
+  }, [open])
 
   if (!open) return null
 
@@ -45,7 +57,7 @@ export default function AISidebar({ open, onClose, onConversationEnd }) {
             <span className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center">
               <img src={ASSET('AI%20Icon.svg')} alt="" className="w-5 h-5 brightness-0 invert" />
             </span>
-            <span className="font-heading text-button-2 font-semibold">Ask Mark</span>
+            <span className="font-heading text-button-2 font-semibold">Mark</span>
           </motion.button>
         )}
       </AnimatePresence>
@@ -68,7 +80,7 @@ function SidebarHeader({ onMinimize, onClose }) {
           <img src={ASSET('AI%20Icon.svg')} alt="" className="w-4 h-4" />
         </span>
         <div className="min-w-0">
-          <p className="font-heading text-subtitle-2 text-ink leading-tight truncate">Ask Mark</p>
+          <p className="font-heading text-subtitle-2 text-ink leading-tight truncate">Mark</p>
           <p className="font-sans text-caption text-ink-subdued leading-tight truncate">AI Assistant</p>
         </div>
       </div>
