@@ -25,10 +25,11 @@ const TIME_SLOTS = [
 
 // === Schedule wrapper ===
 
-const ScheduleScreen = ({ onConfirm, onBack }) => {
-  const [step, setStep] = React.useState('questionnaire');
+const ScheduleScreen = ({ onConfirm, onBack, service = 'flu' }) => {
+  const skipQuestionnaire = service !== 'flu';
+  const [step, setStep] = React.useState(skipQuestionnaire ? 'location' : 'questionnaire');
   const [data, setData] = React.useState({
-    answers: {}, // { q1: 'yes' | 'no', ... }
+    answers: {},
     zip: '66219',
     location: null,
     date: null,
@@ -49,6 +50,10 @@ const ScheduleScreen = ({ onConfirm, onBack }) => {
     onConfirm(data);
   };
 
+  const isScreening = service === 'screening';
+  const headingTitle = isScreening ? 'Schedule your biometric screening' : 'Schedule your flu shot';
+  const breadcrumbLabel = isScreening ? 'Biometric Screening' : 'Flu Shot';
+
   return (
     <main id="main" style={mainWrap}>
       <div style={contentWrap}>
@@ -56,29 +61,35 @@ const ScheduleScreen = ({ onConfirm, onBack }) => {
         <div style={{ padding: '20px 0 8px', fontSize: 13, color: '#5a5a5a' }}>
           <button onClick={onBack} style={breadLink}>Home</button>
           <span style={breadSep}>/</span>
-          <button onClick={onBack} style={breadLink}>All Services</button>
-          <span style={breadSep}>/</span>
-          <span>Flu Shot</span>
+          {!isScreening && (
+            <>
+              <button onClick={onBack} style={breadLink}>All Services</button>
+              <span style={breadSep}>/</span>
+            </>
+          )}
+          <span>{breadcrumbLabel}</span>
         </div>
 
         <div style={{ padding: '8px 0 16px' }}>
           <h1 style={{ margin: 0, color: '#2c6e35', fontSize: 28, fontWeight: 600, letterSpacing: '-0.01em' }}>
-            Schedule your flu shot
+            {headingTitle}
           </h1>
           <p style={{ margin: '6px 0 0', color: '#3a3a3a', fontSize: 14 }}>
             Complete each step to book your appointment.
           </p>
         </div>
 
-        {/* === QUESTIONNAIRE === */}
-        <QuestionnaireStep
-          state={step === 'questionnaire' ? 'active' : (completed.questionnaire ? 'done' : 'collapsed')}
-          data={data}
-          updateData={updateData}
-          onContinue={() => goToStep('location')}
-          onChange={() => goToStep('questionnaire')}
-          onCancel={onBack}
-        />
+        {/* === QUESTIONNAIRE === (flu only) */}
+        {!skipQuestionnaire && (
+          <QuestionnaireStep
+            state={step === 'questionnaire' ? 'active' : (completed.questionnaire ? 'done' : 'collapsed')}
+            data={data}
+            updateData={updateData}
+            onContinue={() => goToStep('location')}
+            onChange={() => goToStep('questionnaire')}
+            onCancel={onBack}
+          />
+        )}
 
         {/* === LOCATION === */}
         <LocationStep

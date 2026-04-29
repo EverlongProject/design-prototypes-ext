@@ -4,42 +4,6 @@
 const HomeScreen = ({ onNav }) => {
   const greeting = 'Welcome back, Test';
 
-  const tiles = [
-    {
-      id: 'all-services',
-      title: 'All Services',
-      desc: 'Browse and book screenings, vaccinations, lab tests, and more in one place.',
-      icon: 'activity',
-      cta: 'View All Services',
-      featured: true,
-      action: () => onNav('services'),
-    },
-    {
-      id: 'screening',
-      title: 'Biometric Screening',
-      desc: 'Get the knowledge you need to identify your health risks.',
-      icon: 'heart-pulse',
-      cta: 'Make an Appointment',
-      action: () => onNav('services'),
-    },
-    {
-      id: 'questionnaire',
-      title: 'Health Questionnaire',
-      desc: 'Get deeper insights about your health and wellness.',
-      icon: 'clipboard',
-      cta: 'Continue Questionnaire',
-      action: () => {},
-    },
-    {
-      id: 'rewards',
-      title: 'My Rewards',
-      desc: 'Track your earned wellness incentives and program progress.',
-      icon: 'shield',
-      cta: 'View Rewards',
-      action: () => {},
-    },
-  ];
-
   return (
     <main id="main" style={mainWrap}>
       <div style={contentWrap}>
@@ -120,7 +84,7 @@ const HomeScreen = ({ onNav }) => {
             <p style={{ margin: '0 0 12px', fontSize: 13, color: '#3a3a3a', maxWidth: 460 }}>
               Attend an event at work or a location designated by your organization.
             </p>
-            <PrimaryButton onClick={() => onNav('services')}>Make an Appointment</PrimaryButton>
+            <PrimaryButton onClick={() => onNav('schedule-screening')}>Make an Appointment</PrimaryButton>
           </div>
         </Card>
 

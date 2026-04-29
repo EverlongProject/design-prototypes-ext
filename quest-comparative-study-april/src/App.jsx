@@ -459,7 +459,7 @@ const HomeScreen = ({ onNav }) => {
             <p style={{ margin: '0 0 12px', fontSize: 13, color: '#3a3a3a', maxWidth: 460 }}>
               Attend an event at work or a location designated by your organization.
             </p>
-            <PrimaryButton onClick={() => onNav('services')}>Make an Appointment</PrimaryButton>
+            <PrimaryButton onClick={() => onNav('schedule-screening')}>Make an Appointment</PrimaryButton>
           </div>
         </Card>
 
@@ -1195,16 +1195,126 @@ const ReviewStep = ({ state, data, onConfirm, onCancel }) => {
   )
 }
 
-const ScheduleScreen = ({ onConfirm, onBack }) => {
-  const [step, setStep] = React.useState('location')
+// =====================================================================
+// VACCINES / IMMUNIZATIONS — eligibility questionnaire (flu only)
+// Mirrors screens-schedule.jsx so the deployed monolith bundle stays in
+// sync until the modular split is finished.
+// =====================================================================
+
+const QUESTIONS = [
+  { id: 'q1', text: 'Have you ever had an adverse reaction to a previous dose of Influenza (flu) or Pneumonia vaccine?', required: true },
+  { id: 'q2', text: 'Have you ever had an adverse reaction to a previous dose of any other vaccine (Does not include tiredness, soreness, fever, or chills in response to an mRNA COVID-19 vaccine)?', required: false },
+  { id: 'q3', text: 'Have you ever had Guillain-Barre Syndrome (an illness with sudden muscle weakness)?', required: true },
+  { id: 'q4', text: 'Have you ever had an active, unstabilized neurological disorder?', required: true },
+  { id: 'q5', text: 'Are you currently experiencing a moderate or severe acute illness, with or without a fever?', required: true },
+  { id: 'q6', text: 'Do you have a known severe allergy to eggs, gelatin, or any component of the influenza vaccine?', required: true },
+]
+
+const QuestionnaireStep = ({ state, data, updateData, onContinue, onChange, onCancel }) => {
+  const [showRequired, setShowRequired] = React.useState(false)
+
+  if (state === 'collapsed') {
+    return <CollapsedSection title="Vaccines / Immunizations" />
+  }
+  if (state === 'done') {
+    const yesCount = Object.values(data.answers || {}).filter(v => v === 'yes').length
+    return (
+      <Card>
+        <CompletedHeader title="Vaccines / Immunizations" onChange={onChange} />
+        <div style={{ fontSize: 14, color: '#3a3a3a' }}>
+          {QUESTIONS.filter(q => q.required).length} required questions answered.
+          {yesCount > 0 && <span style={{ marginLeft: 6, color: '#5a5a5a' }}>({yesCount} "Yes")</span>}
+        </div>
+      </Card>
+    )
+  }
+
+  const setAnswer = (qid, val) => {
+    updateData({ answers: { ...(data.answers || {}), [qid]: val } })
+  }
+
+  const requiredAnswered = QUESTIONS.filter(q => q.required).every(q => (data.answers || {})[q.id])
+
+  return (
+    <Card accent="lime">
+      <SectionTitle>Vaccines / Immunizations</SectionTitle>
+      <p style={{ margin: '0 0 18px', fontSize: 14, color: '#3a3a3a' }}>
+        To ensure your safety and determine eligibility for this service, please answer the following questions.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+        {QUESTIONS.map((q) => {
+          const val = (data.answers || {})[q.id]
+          const missing = showRequired && q.required && !val
+          return (
+            <div key={q.id}>
+              <div style={{
+                fontSize: 14, fontWeight: 600, color: '#2b2b2b',
+                marginBottom: 10, lineHeight: 1.45,
+              }}>
+                {q.text}{q.required && <span style={{ color: '#c5292a' }}> *</span>}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {['yes', 'no'].map(opt => (
+                  <label key={opt} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 10,
+                    cursor: 'pointer', fontSize: 14, color: '#2b2b2b',
+                  }}>
+                    <span style={{
+                      width: 18, height: 18, borderRadius: '50%',
+                      border: `2px solid ${missing ? '#c5292a' : (val === opt ? '#2c6e35' : '#888')}`,
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
+                    }}>
+                      {val === opt && <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#2c6e35' }} />}
+                    </span>
+                    <input
+                      type="radio"
+                      name={q.id}
+                      value={opt}
+                      checked={val === opt}
+                      onChange={() => setAnswer(q.id, opt)}
+                      style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
+                    />
+                    {opt === 'yes' ? 'Yes' : 'No'}
+                  </label>
+                ))}
+              </div>
+              {missing && <div style={errorText}>Required</div>}
+            </div>
+          )
+        })}
+      </div>
+
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 16,
+        paddingTop: 18, marginTop: 22, borderTop: '1px solid #e8e8e8',
+      }}>
+        <PrimaryButton onClick={() => {
+          if (!requiredAnswered) { setShowRequired(true); return }
+          onContinue()
+        }} disabled={!requiredAnswered}>Continue</PrimaryButton>
+        <TextLink onClick={onCancel}>Cancel</TextLink>
+      </div>
+    </Card>
+  )
+}
+
+const ScheduleScreen = ({ onConfirm, onBack, service = 'flu' }) => {
+  const skipQuestionnaire = service !== 'flu'
+  const [step, setStep] = React.useState(skipQuestionnaire ? 'location' : 'questionnaire')
   const [data, setData] = React.useState({
     zip: '66219',
     location: null,
     date: null,
     time: null,
+    answers: {},
   })
 
+  const allAnswered = QUESTIONS.filter(q => q.required).every(q => data.answers[q.id])
+
   const completed = {
+    questionnaire: allAnswered && step !== 'questionnaire',
     location: !!data.location && step !== 'location',
     datetime: !!data.date && !!data.time && step !== 'datetime',
   }
@@ -1214,25 +1324,44 @@ const ScheduleScreen = ({ onConfirm, onBack }) => {
 
   const submitConfirm = () => onConfirm(data)
 
+  const isScreening = service === 'screening'
+  const headingTitle = isScreening ? 'Schedule your biometric screening' : 'Schedule your flu shot'
+  const breadcrumbLabel = isScreening ? 'Biometric Screening' : 'Flu Shot'
+
   return (
     <main id="main" style={mainWrap}>
       <div style={contentWrap}>
         <div style={{ padding: '20px 0 8px', fontSize: 13, color: '#5a5a5a' }}>
           <button onClick={onBack} style={breadLink}>Home</button>
           <span style={breadSep}>/</span>
-          <button onClick={onBack} style={breadLink}>All Services</button>
-          <span style={breadSep}>/</span>
-          <span>Flu Shot</span>
+          {!isScreening && (
+            <>
+              <button onClick={onBack} style={breadLink}>All Services</button>
+              <span style={breadSep}>/</span>
+            </>
+          )}
+          <span>{breadcrumbLabel}</span>
         </div>
 
         <div style={{ padding: '8px 0 16px' }}>
           <h1 style={{ margin: 0, color: '#2c6e35', fontSize: 28, fontWeight: 600, letterSpacing: '-0.01em' }}>
-            Schedule your flu shot
+            {headingTitle}
           </h1>
           <p style={{ margin: '6px 0 0', color: '#3a3a3a', fontSize: 14 }}>
             Complete each step to book your appointment.
           </p>
         </div>
+
+        {!skipQuestionnaire && (
+          <QuestionnaireStep
+            state={step === 'questionnaire' ? 'active' : (completed.questionnaire ? 'done' : 'collapsed')}
+            data={data}
+            updateData={updateData}
+            onContinue={() => goToStep('location')}
+            onChange={() => goToStep('questionnaire')}
+            onCancel={onBack}
+          />
+        )}
 
         <LocationStep
           state={step === 'location' ? 'active' : (completed.location ? 'done' : 'collapsed')}
@@ -1386,8 +1515,19 @@ export default function App() {
         return (
           <div data-screen-label="03 Schedule (Location · Date · Review)">
             <ScheduleScreen
+              service="flu"
               onConfirm={(d) => { setConfirmedData(d); setRoute('confirmation') }}
               onBack={() => setRoute('services')}
+            />
+          </div>
+        )
+      case 'schedule-screening':
+        return (
+          <div data-screen-label="03b Schedule Biometric Screening">
+            <ScheduleScreen
+              service="screening"
+              onConfirm={(d) => { setConfirmedData(d); setRoute('confirmation') }}
+              onBack={() => setRoute('home')}
             />
           </div>
         )
