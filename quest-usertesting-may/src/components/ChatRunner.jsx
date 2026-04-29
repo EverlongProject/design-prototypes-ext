@@ -4,7 +4,6 @@ import {
   LOCATIONS_ALL,
   SCREENING_BOOKING,
   SCREENING_WITH_FLU_BOOKING,
-  RESCHEDULED_BOOKING,
 } from '../data/careNavScript.js'
 import AgentMessage from './AgentMessage.jsx'
 import UserMessage from './UserMessage.jsx'
@@ -230,7 +229,6 @@ function renderMedia(turn, isCurrent, onMediaDone) {
     case 'confirmation':
       if (media.variant === 'screening') return <ConfirmationCard {...SCREENING_BOOKING} />
       if (media.variant === 'screeningWithFlu') return <ConfirmationCard {...SCREENING_WITH_FLU_BOOKING} />
-      if (media.variant === 'rescheduled') return <ConfirmationCard {...RESCHEDULED_BOOKING} />
       return null
     default:
       return null

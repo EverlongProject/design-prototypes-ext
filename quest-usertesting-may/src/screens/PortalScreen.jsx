@@ -1,12 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { ArrowUp, ChevronDown, ChevronRight, Settings, Sparkles, Play, FileCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ArrowUp, ChevronDown, ChevronRight, Settings, Sparkles, Play } from 'lucide-react'
 import AISidebar from '../components/AISidebar.jsx'
-import {
-  CARE_NAV_SCRIPT_PRE,
-  CARE_NAV_SCRIPT_POST,
-  CARE_NAV_SCRIPT_RESCHEDULE,
-} from '../data/careNavScript.js'
+import { CARE_NAV_SCRIPT_PRE } from '../data/careNavScript.js'
 
 const ASSET = (name) => `${import.meta.env.BASE_URL}assets/${name}`
 const ASSETS = {
@@ -19,129 +14,34 @@ const ASSETS = {
   wellnessIncentive: ASSET('WellnessIncentive.png'),
 }
 
-// Demo phase machine. The portal reuses the AI sidebar across three
-// conversations separated by narrative beats (book → cancel→reschedule →
-// results).
-//
-//   before-screening     → sidebar opens automatically with PRE script
-//   pre-cancel           → sidebar closed; hero search auto-types
-//                          "Cancel my appointment" after a beat
-//   cancel-conversation  → sidebar reopens with RESCHEDULE script
-//   after-screening      → sidebar closed, results banner visible on the home
-//   results-conversation → sidebar reopened with POST script (results talk)
-//   done                 → all conversations complete, exit to StageMenu
-// User-testing variant: shorter delay so the sidebar appears almost
-// immediately on landing. Participants should see the conversational agent
-// streaming its first message right away.
+// User-testing variant: single conversation only (CARE_NAV_SCRIPT_PRE,
+// trimmed to end after the flu shot is confirmed). The sidebar appears on
+// landing and stays open on the last turn — no scripted follow-up, no
+// reschedule beat, no results banner.
 const SIDEBAR_AUTO_OPEN_MS = 600
-const RESULTS_BANNER_DELAY_MS = 800
-const PRE_CANCEL_DELAY_MS = 1500
-const HERO_AUTOTYPE_TEXT = 'Cancel my appointment'
-const HERO_AUTOTYPE_SETTLE_MS = 400
 
-export default function PortalScreen({ onAdvance }) {
-  const [phase, setPhase] = useState('before-screening')
+export default function PortalScreen() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [heroQuery, setHeroQuery] = useState('')
-  const [heroAutoTyping, setHeroAutoTyping] = useState(false)
 
-  // Auto-open the sidebar shortly after the portal lands.
   useEffect(() => {
-    if (phase !== 'before-screening') return
     const t = setTimeout(() => setSidebarOpen(true), SIDEBAR_AUTO_OPEN_MS)
     return () => clearTimeout(t)
-  }, [phase])
+  }, [])
 
-  // Auto-type "Cancel my appointment" into the hero search after the PRE
-  // sidebar closes, then submit to open the reschedule sidebar.
-  useEffect(() => {
-    if (phase !== 'pre-cancel') return
-    let cancelled = false
-    const timers = []
-    const start = setTimeout(() => {
-      if (cancelled) return
-      setHeroQuery('')
-      setHeroAutoTyping(true)
-      let i = 0
-      const TYPING_BASE_MS = 35
-      const TYPING_JITTER = 25
-      const TYPING_PAUSE_PUNCT = 240
-      const typeNext = () => {
-        if (cancelled) return
-        if (i >= HERO_AUTOTYPE_TEXT.length) {
-          const settle = setTimeout(() => {
-            if (cancelled) return
-            setHeroAutoTyping(false)
-            setPhase('cancel-conversation')
-            setSidebarOpen(true)
-          }, HERO_AUTOTYPE_SETTLE_MS)
-          timers.push(settle)
-          return
-        }
-        const ch = HERO_AUTOTYPE_TEXT[i]
-        i += 1
-        setHeroQuery(HERO_AUTOTYPE_TEXT.slice(0, i))
-        let nextDelay = TYPING_BASE_MS + Math.random() * TYPING_JITTER
-        if (ch === ',' || ch === '.') nextDelay += TYPING_PAUSE_PUNCT
-        const t = setTimeout(typeNext, nextDelay)
-        timers.push(t)
-      }
-      typeNext()
-    }, PRE_CANCEL_DELAY_MS)
-    timers.push(start)
-    return () => {
-      cancelled = true
-      timers.forEach(clearTimeout)
-    }
-  }, [phase])
-
-  const handleConversationEnd = () => {
-    if (phase === 'before-screening') {
-      // Mari just finished booking. Close the sidebar and queue the
-      // "Cancel my appointment" auto-type beat.
-      setSidebarOpen(false)
-      setTimeout(() => setPhase('pre-cancel'), 800)
-    } else if (phase === 'cancel-conversation') {
-      // Reschedule conversation finished. Close the sidebar and surface the
-      // "Results are in" banner.
-      setSidebarOpen(false)
-      setHeroQuery('')
-      setTimeout(() => setPhase('after-screening'), RESULTS_BANNER_DELAY_MS)
-    } else if (phase === 'results-conversation') {
-      // Post-results conversation finished. Leave the sidebar open on the
-      // last turn so the room can sit on the closing line. The user (or the
-      // Menu button) ends the demo, not the script.
-      setPhase('done')
-    }
-  }
-
-  const handleAskAI = () => {
-    setPhase('results-conversation')
-    setSidebarOpen(true)
-  }
-
-  const script =
-    phase === 'cancel-conversation' ? CARE_NAV_SCRIPT_RESCHEDULE :
-    phase === 'results-conversation' ? CARE_NAV_SCRIPT_POST :
-    CARE_NAV_SCRIPT_PRE
+  // Conversation end is intentionally a no-op. The script ends after the flu
+  // shot confirmation; we leave the sidebar open on the last turn so the
+  // participant has no scripted prompt to do anything else.
+  const handleConversationEnd = () => {}
 
   return (
     <div className="relative min-h-screen bg-surface-primary">
-      <HeroBand
-        query={heroQuery}
-        onQueryChange={setHeroQuery}
-        readOnly={heroAutoTyping}
-      />
+      <HeroBand query={heroQuery} onQueryChange={setHeroQuery} />
       <PartnershipStrip />
 
       <div className="max-w-quest-vw mx-auto">
         <div className="w-[1190px] mx-auto pt-8 pb-16 flex gap-8">
           <div className="w-[830px] shrink-0 space-y-8">
-            <AnimatePresence>
-              {phase === 'after-screening' && (
-                <ResultsReadyBanner key="results-banner" onAskAI={handleAskAI} />
-              )}
-            </AnimatePresence>
             <WellnessIncentive />
             <ScheduleScreening />
             <HealthProfileQuestionnaire />
@@ -156,63 +56,18 @@ export default function PortalScreen({ onAdvance }) {
       <Footer />
 
       <AISidebar
-        key={phase}
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
         onConversationEnd={handleConversationEnd}
-        script={script}
+        script={CARE_NAV_SCRIPT_PRE}
       />
     </div>
   )
 }
 
-/* ---------------------------- Results Banner ----------------------------- */
-
-function ResultsReadyBanner({ onAskAI }) {
-  return (
-    <motion.section
-      initial={{ opacity: 0, y: -12 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -8 }}
-      transition={{ type: 'spring', stiffness: 240, damping: 26 }}
-      className="rounded-lg bg-quest-primary-pastel border border-quest-primary px-5 py-4 flex items-center justify-between gap-4 shadow-card"
-    >
-      <div className="flex items-start gap-3 min-w-0">
-        <span className="shrink-0 w-9 h-9 rounded-full bg-quest-primary text-white flex items-center justify-center mt-0.5">
-          <FileCheck className="w-5 h-5" />
-        </span>
-        <div className="min-w-0">
-          <p className="font-heading text-subtitle-1 text-ink">
-            Your results are in
-          </p>
-          <p className="font-sans text-body-2 text-ink-subdued mt-0.5">
-            Your Biometric Screening results are ready to view in your Quest profile.
-          </p>
-        </div>
-      </div>
-      <div className="flex items-center gap-2 shrink-0">
-        <button
-          type="button"
-          className="rounded-full bg-white border border-border px-4 py-1.5 text-button-2 font-sans text-ink hover:border-quest-primary"
-        >
-          View results
-        </button>
-        <button
-          type="button"
-          onClick={onAskAI}
-          className="rounded-full bg-quest-primary text-white px-4 py-1.5 text-button-2 font-sans hover:bg-quest-primary-dark inline-flex items-center gap-1.5"
-        >
-          <Sparkles className="w-4 h-4" />
-          Ask AI
-        </button>
-      </div>
-    </motion.section>
-  )
-}
-
 /* --------------------------------- Hero ---------------------------------- */
 
-function HeroBand({ query, onQueryChange, readOnly = false }) {
+function HeroBand({ query, onQueryChange }) {
   return (
     <div className="h-[300px] relative bg-gradient-to-b from-quest-sage to-quest-sage-deep">
       <div className="max-w-quest-vw mx-auto px-0 pt-[24px]">
@@ -231,7 +86,6 @@ function HeroBand({ query, onQueryChange, readOnly = false }) {
               type="text"
               value={query}
               onChange={(e) => onQueryChange?.(e.target.value)}
-              readOnly={readOnly}
               placeholder="Schedule an appointment, ask a question or simply start a conversation"
               className="flex-1 h-full bg-transparent outline-none font-sans text-body-2 text-ink placeholder:text-ink-subdued"
             />
