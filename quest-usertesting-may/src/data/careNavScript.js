@@ -165,13 +165,80 @@ Your employer's wellness calendar shows your annual Biometric Screening is due. 
     ],
   },
 
-  // Thinking — adding the flu shot ------------------------------------------
+  // Beat 5b — vaccine eligibility intake ------------------------------------
+  // After Mari agrees to add the flu shot, the agent runs the standard
+  // pre-vaccination safety screen (4 questions). For the user-testing flow
+  // we expect "No" to each, mirroring real-world eligibility for a healthy
+  // adult; the chips lead with "No" as the primary affordance.
   {
-    id: 't-update',
+    id: 'b5b-intro',
+    type: 'agent',
+    text: `Before I book the flu shot, a few quick safety questions to confirm eligibility.`,
+    advanceAfter: 600,
+  },
+  {
+    id: 'b5b-q1-a',
+    type: 'agent',
+    text: `Have you ever had an adverse reaction to a previous dose of Influenza (flu) or Pneumonia vaccine?`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b5b-q1-input',
+    type: 'input',
+    chips: [
+      { label: 'No', primary: true },
+      { label: 'Yes' },
+    ],
+  },
+  {
+    id: 'b5b-q2-a',
+    type: 'agent',
+    text: `Have you ever had an adverse reaction to a previous dose of any other vaccine? (Does not include tiredness, soreness, fever, or chills in response to an mRNA COVID-19 vaccine.)`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b5b-q2-input',
+    type: 'input',
+    chips: [
+      { label: 'No', primary: true },
+      { label: 'Yes' },
+    ],
+  },
+  {
+    id: 'b5b-q3-a',
+    type: 'agent',
+    text: `Have you ever had Guillain-Barre Syndrome (an illness with sudden muscle weakness)?`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b5b-q3-input',
+    type: 'input',
+    chips: [
+      { label: 'No', primary: true },
+      { label: 'Yes' },
+    ],
+  },
+  {
+    id: 'b5b-q4-a',
+    type: 'agent',
+    text: `Have you ever had an active, unstabilized neurological disorder?`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b5b-q4-input',
+    type: 'input',
+    chips: [
+      { label: 'No', primary: true },
+      { label: 'Yes' },
+    ],
+  },
+
+  // Thinking — booking the service ------------------------------------------
+  {
+    id: 't-booking-service',
     type: 'thinking',
     lines: [
-      'Adding the flu shot to your visit…',
-      'Updating your appointment…',
+      'Booking service…',
     ],
   },
 
