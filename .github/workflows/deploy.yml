@@ -60,6 +60,15 @@ jobs:
         working-directory: quest-usertesting-may
         run: npm run build
 
+      # Quest comparative study (no package-lock yet)
+      - name: Install Quest comparative study
+        working-directory: quest-comparative-study-april
+        run: npm install
+
+      - name: Build Quest comparative study
+        working-directory: quest-comparative-study-april
+        run: npm run build
+
       - name: Stage site
         run: |
           mkdir -p _site/manulife-demo-april
@@ -70,6 +79,8 @@ jobs:
           cp -r quest-demo-may/dist/. _site/quest-demo-may/
           mkdir -p _site/quest-usertesting-may
           cp -r quest-usertesting-may/dist/. _site/quest-usertesting-may/
+          mkdir -p _site/quest-comparative-study-april
+          cp -r quest-comparative-study-april/dist/. _site/quest-comparative-study-april/
 
       - uses: actions/upload-pages-artifact@v3
         with:
