@@ -11,6 +11,7 @@ import UserMessage from './UserMessage.jsx'
 import SuggestedReplies from './SuggestedReplies.jsx'
 import VideoPlayer from './VideoPlayer.jsx'
 import SwordPreviewCard from './SwordPreviewCard.jsx'
+import SwordComparisonTable from './SwordComparisonTable.jsx'
 import ProviderSearch from './ProviderSearch.jsx'
 import ConfirmationCard from './ConfirmationCard.jsx'
 import ThinkingInline from './ThinkingInline.jsx'
@@ -102,6 +103,8 @@ export default function ChatRunner({
           kind: 'agent',
           id: turn.id,
           text: turn.text || '',
+          heading: turn.heading,
+          divider: turn.divider,
           streaming: hasText && isLast,
         })
       })
@@ -264,6 +267,8 @@ export default function ChatRunner({
               <AgentMessage
                 key={m.id}
                 text={m.text}
+                heading={m.heading}
+                divider={m.divider}
                 streaming={m.streaming}
                 media={media}
                 mediaPosition={turn?.mediaPosition || 'below'}
@@ -352,12 +357,15 @@ function renderMedia(turn, isCurrent, onMediaDone) {
       return (
         <SwordPreviewCard
           label={media.label}
+          showTable={media.showTable}
           ctaHref={media.ctaHref}
           onComplete={
             isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
           }
         />
       )
+    case 'swordCompare':
+      return <SwordComparisonTable withHeading />
     case 'coverage': {
       const { kind, ...coverageProps } = media
       return <CoverageCard {...coverageProps} />

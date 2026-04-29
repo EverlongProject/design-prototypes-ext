@@ -14,7 +14,7 @@ export default function SpreadsheetScreen({ onAdvance }) {
       <img
         src={ASSET('Spreadsheet.png')}
         alt=""
-        className="w-full h-screen object-cover select-none pointer-events-none"
+        className="w-full h-auto block select-none pointer-events-none"
       />
 
       <AnimatePresence>

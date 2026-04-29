@@ -141,15 +141,18 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 **Visual:** A compact `CoverageCard` lands in the sidebar showing Liam's coverage snapshot.
 
 **Coverage card content:**
-> **LIAM PATEL · COMMUNITY BLUE HDHP 1**
-> ✓ Deductible met ($1,500 of $1,500)
-> PT visits used: 0 of 30
-> Sports injury PT: covered
+> Plan
+> **Liam Smith**
+> Community Blue HDHP 1
+>
+> Deductible: $1,500 of $1,500 met
+> PT visits used: 0 of 10
+> Sports injury PT: ✓ Covered
 
 **Agent (continues, below the card):**
-> I see Dr. Martinez sent over a PT referral for Liam on Tuesday for a left hamstring strain. His deductible is already met for the year, so PT visits will be his standard $25 copay. I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
+> Liam's deductible is already met for the year, so PT visits will be his standard $25 copay. I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
 >
-> You actually have two ways to handle this. Want to hear them or should I start searching for a provider?
+> Based on your plan, there are 2 ways you can handle this. Want to see your options or should I start searching for a provider?
 
 **Suggested replies:**
 - **"Show me options"** (default)
@@ -167,41 +170,36 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 
 **Agent:**
 > Two paths for Liam:
->
+
+**Visual:** A Sword preview card lands inline with the agent message. Branded hero image + heading + three "what you get" bullets. The cost comparison strip is *not* part of the card — it surfaces in the next agent turn.
+
+**Agent (continues, with the comparison strip below the text):**
 > **Sword Health** — A virtual PT program covered on your plan at $0. Liam works through guided exercises at home, the app uses his phone camera to track his form, and a real physical therapist reviews his progress. Most athletes with hamstring strains see meaningful improvement in 2 to 3 weeks.
 >
 > **In-person PT** — A clinic near you, $25 per visit copay. Best for hands-on assessment, especially for a sports injury where a hands-on first visit can speed up recovery.
->
-> Want a quick look at Sword first?
 
-**Suggested replies:**
-- **"Show me Sword"** (default)
-- "Skip Sword, find him an in-person PT"
-
-**User action:** Taps **"Show me Sword."**
-
-**Visual:** A Sword preview card slides in below the chat. Phone mockup with motion-tracking overlay, a real PT on video, three "what you get" bullets, and a small cost comparison strip:
+**Comparison strip (rendered as media after the text):**
 
 | | Sword | In-person |
 |---|---|---|
 | Cost (6 sessions) | **$0** | ~$150* |
-| Where | Home, his phone | Clinic |
+| Where | Home | Clinic |
 
 *Deductible met
 
-**Agent (after the card lands, ~5 seconds later):**
-> That's the gist. Want to give it a try, or would you prefer to see someone in person?
+**Agent (next turn):**
+> You can choose either or both! Want to give Sword a try or do you prefer to see someone in person?
 
 **Suggested replies:**
-- **"I'd rather take him in person"** (default)
 - "Let's try Sword"
+- **"See someone in person"** (default)
 
-**User action:** Taps **"I'd rather take him in person."**
+**User action:** Taps **"See someone in person."**
 
 **Agent:**
 > No problem. Let's find him a PT.
 
-**Visual:** Sword card collapses, the map starts to load.
+**Visual:** Card and comparison strip stay in the scroll history; the map starts to load below.
 
 **Hidden hooks:** Health Coach Agent surfaces Sword. Even though Jessica declined for Liam this time, she now knows Sword exists and saw the cost difference. Point solution awareness grows over time.
 
@@ -237,7 +235,7 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 - Next available: Today, 5:00pm
 
 **Agent:**
-> Three in-network sports PTs near you. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Sports & Spine Wexford has availability tomorrow afternoon and is the closest to your home. He sees a lot of high school athletes.
+> Three in-network sports PTs near you. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Sports & Spine Wexford has availability tomorrow afternoon and is the closest to your home.
 
 **Suggested replies:**
 - **"Show me weekend slots"** (default)
@@ -293,10 +291,30 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 
 **Agent (below the card, after a brief beat):**
 > Liam is all set for Saturday.
+
+**Visual:** A divider line separates the booking confirmation from the next message. The next agent message opens with a styled heading at 19px so the topic shift is unmistakable.
+
+**Agent (next turn — divider above, heading at top):**
+> ─────
 >
-> **Closing the loop**
+> ### Closing the loop: book your colonoscopy
 >
-> Your colonoscopy was the original reason I reached out today. It's fully covered as preventive care on your plan, $0 out of pocket. Do you want to schedule it at the same facility (AHN Wexford), or pick a different one?
+> Your colonoscopy was the original reason I reached out today. It's fully covered as preventive care on your plan, $0 out of pocket. Quick reminder:
+> • Procedure takes about 30 minutes
+> • You'll need to fast for ~24 hours and take a prep medication
+> • You'll need someone to drive you home
+> • Most members do it on a Saturday morning
+>
+> **Want to book it now?** It will be quick…
+
+**Suggested replies:**
+- **"Yes, book it"** (default)
+- "Not right now"
+
+**User action:** Taps **"Yes, book it."**
+
+**Agent (next turn):**
+> Great. Do you want to schedule it at the same facility (AHN Wexford), or pick a different one?
 
 **Suggested replies:**
 - **"Same facility, please"** (default)
@@ -304,9 +322,9 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 
 **User action:** Taps **"Same facility, please."**
 
-**Hidden hooks:** Returning to the original mission with a clear "Closing the loop" heading makes the topic shift unmistakable to the viewer. We give Jessica autonomy over the facility choice rather than implying she'd book her own colonoscopy on the same hour as her son's PT. The emotional beat — the AI didn't forget why it reached out — survives, but the practical framing is realistic.
+**Hidden hooks:** Returning to the original mission with a clear "Closing the loop" heading + divider makes the topic shift unmistakable to the viewer. We give Jessica two distinct decision points — first a clean opt-in to even book the colonoscopy, then autonomy over the facility — rather than collapsing them into one question. The emotional beat survives, but the practical framing is realistic and the user has a graceful exit ("Not right now") that lands on the closing line.
 
-**Time:** ~25 seconds.
+**Time:** ~30 seconds.
 
 ---
 
@@ -363,13 +381,13 @@ A static closing frame summarizing what just happened, ~10 seconds:
 
 In a few minutes, Jessica:
 - Booked Liam's sports PT with a Tier 1 AHN provider for Saturday at 10am
-- Booked her own colonoscopy at the same AHN facility for Tuesday at 8am
-- Closed two HEDIS gaps
+- Booked her own colonoscopy at the same AHN building
+- Closed two care gaps
 - Returned to her workday
 
-**Zero phone calls. Zero portal logins. Zero forms.**
+**Zero phone calls. Zero separate trips. Zero forms.**
 
-The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then circled back to close the loop on her own care without forcing it onto someone else's calendar.
+The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then closed the loop and booked her own care at the same facility.
 
 ---
 

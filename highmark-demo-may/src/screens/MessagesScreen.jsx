@@ -10,7 +10,7 @@ export default function MessagesScreen({ onAdvance }) {
       <img
         src={ASSET('Spreadsheet.png')}
         alt=""
-        className="absolute inset-0 w-full h-full object-cover select-none pointer-events-none"
+        className="absolute top-0 left-0 w-full h-auto block select-none pointer-events-none"
       />
 
       <div className="relative min-h-screen flex items-center justify-center p-8">
