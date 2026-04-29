@@ -1,0 +1,41 @@
+:root {
+  --quest-green: #2c6e35;
+  --quest-green-dark: #245a2c;
+  --quest-green-darker: #1d4a23;
+  --quest-green-light: #3d8a48;
+  --quest-text-green: #2c6e35;
+  --quest-lime: #b6cc1f;
+  --quest-lime-soft: #c8d547;
+  --quest-logo-green: #7fb342;
+  --quest-bg: #f4f4f4;
+  --quest-card: #ffffff;
+  --quest-border: #d8d8d8;
+  --quest-section-collapsed: #c8c8c8;
+  --quest-section-collapsed-text: #555;
+  --quest-text: #2b2b2b;
+  --quest-text-muted: #5a5a5a;
+  --quest-text-faint: #777;
+  --quest-error: #c5292a;
+  --quest-link: #2c6e35;
+  --quest-footer: #2f2f2f;
+  --quest-footer-text: #cfcfcf;
+  --quest-disabled-btn: #b8b8b8;
+  --quest-btn-secondary-bg: #ffffff;
+  --quest-btn-secondary-border: #2c6e35;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  font-family: 'Source Sans 3', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: var(--quest-bg);
+  color: var(--quest-text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
