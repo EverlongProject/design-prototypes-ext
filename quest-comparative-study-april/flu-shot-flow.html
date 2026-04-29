@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quest Diagnostics — Schedule Flu Shot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --quest-green: #2c6e35;
+    --quest-green-dark: #245a2c;
+    --quest-green-darker: #1d4a23;
+    --quest-green-light: #3d8a48;
+    --quest-text-green: #2c6e35;
+    --quest-lime: #b6cc1f;
+    --quest-lime-soft: #c8d547;
+    --quest-logo-green: #7fb342;
+    --quest-bg: #f4f4f4;
+    --quest-card: #ffffff;
+    --quest-border: #d8d8d8;
+    --quest-section-collapsed: #c8c8c8;
+    --quest-section-collapsed-text: #555;
+    --quest-text: #2b2b2b;
+    --quest-text-muted: #5a5a5a;
+    --quest-text-faint: #777;
+    --quest-error: #c5292a;
+    --quest-link: #2c6e35;
+    --quest-footer: #2f2f2f;
+    --quest-footer-text: #cfcfcf;
+    --quest-disabled-btn: #b8b8b8;
+    --quest-btn-secondary-bg: #ffffff;
+    --quest-btn-secondary-border: #2c6e35;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Source Sans 3', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background: var(--quest-bg);
+    color: var(--quest-text);
+    font-size: 14px;
+    line-height: 1.45;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  a { color: var(--quest-link); }
+  button { font-family: inherit; cursor: pointer; }
+  #root { display: flex; flex-direction: column; min-height: 100vh; flex: 1; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+<template id="__bundler_thumbnail" data-bg-color="#f4f4f4">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#f4f4f4"/>
+    <g transform="translate(600 400)">
+      <circle r="160" fill="none" stroke="#7fb342" stroke-width="44"/>
+      <circle r="100" fill="none" stroke="#2c6e35" stroke-width="32"/>
+      <rect x="80" y="80" width="120" height="22" rx="4" fill="#2c6e35" transform="rotate(45 140 91)"/>
+    </g>
+    <text x="600" y="640" text-anchor="middle" font-family="'Source Sans 3', sans-serif" font-size="36" font-weight="600" fill="#2c6e35">Quest Diagnostics</text>
+    <text x="600" y="688" text-anchor="middle" font-family="'Source Sans 3', sans-serif" font-size="22" fill="#5a5a5a">Schedule your flu shot</text>
+  </svg>
+</template>
+<div id="root"></div>
+<script type="text/babel" src="src/icons.jsx"></script>
+<script type="text/babel" src="src/chrome.jsx"></script>
+<script type="text/babel" src="src/screens-home.jsx"></script>
+<script type="text/babel" src="src/screens-services.jsx"></script>
+<script type="text/babel" src="src/screens-schedule.jsx"></script>
+<script type="text/babel" src="src/screens-confirmation.jsx"></script>
+<script type="text/babel" src="src/app.jsx"></script>
+</body>
+</html>
