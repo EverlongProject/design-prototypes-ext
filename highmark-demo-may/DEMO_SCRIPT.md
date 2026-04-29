@@ -6,12 +6,12 @@
 
 **Member's actual priority:** Booking PT for Liam, who hurt his hamstring playing soccer. His doctor (Dr. Martinez) referred him to physical therapy on Tuesday.
 
-**Demo arc in one sentence:** The AI reaches out about Jessica's colonoscopy, she pivots to a more pressing need (booking PT for her injured son), the AI adapts and books Liam in, then bundles Jessica's colonoscopy onto the same Saturday morning at the same AHN facility so the family handles two care needs in one trip.
+**Demo arc in one sentence:** The AI reaches out about Jessica's colonoscopy, she pivots to a more pressing need (booking PT for her injured son), the AI adapts and books Liam in, then circles back to book Jessica's colonoscopy at the same AHN facility for a Saturday after Liam's PT course wraps, picking a date that respects the family's care calendar.
 
 **Total runtime:** ~6 to 7 minutes.
 
 **Agents featured:**
-- Care Gap Agent (opens the loop with colonoscopy outreach, closes it at the end via same-day bundling)
+- Care Gap Agent (opens the loop with colonoscopy outreach, closes it at the end with continuity-aware booking)
 - Health Coach Agent (introduces Sword as a virtual PT option for Liam)
 - Benefits Navigation Agent (dependent coverage check, sports injury PT)
 - Care Navigation Agent (pediatric / sports PT provider search, map, booking, then GI booking)
@@ -149,13 +149,13 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 **Agent (continues, below the card):**
 > I see Dr. Martinez sent over a PT referral for Liam on Tuesday for a left hamstring strain. His deductible is already met for the year, so PT visits will be his standard $25 copay. I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
 >
-> You actually have two ways to handle this. Want to hear them?
+> You actually have two ways to handle this. Want to hear them or should I start searching for a provider?
 
 **Suggested replies:**
-- **"Yes, what are my options"** (default)
-- "Just find him a PT"
+- **"Show me options"** (default)
+- "Find a physical therapist"
 
-**User action:** Taps **"Yes, what are my options."**
+**User action:** Taps **"Show me options."**
 
 **Hidden hook:** This is the new wow beat, and the CoverageCard is the fourth proof point that the AI is connected to real data: not just plan documents (general coverage), not just provider directories, not just appointment systems, but real-time per-member accumulator data. Showing Liam's specific deductible state (met) justifies the $25 copay number rather than just asserting it. The HIPAA framing ("primary caregiver on his plan") gets handled in one line so it doesn't trip up a sharp viewer.
 
@@ -184,9 +184,10 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 
 | | Sword | In-person |
 |---|---|---|
-| Cost over 6 weeks | **$0** | ~$300 (12 visits at $25) |
+| Cost (6 sessions) | **$0** | ~$150* |
 | Where | Home, his phone | Clinic |
-| Schedule | On his time | Booked appointments |
+
+*Deductible met
 
 **Agent (after the card lands, ~5 seconds later):**
 > That's the gist. Want to give it a try, or would you prefer to see someone in person?
@@ -278,7 +279,7 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 
 ---
 
-## Beat 11: Booking confirmation + same-day callback prompt
+## Beat 11: Booking confirmation + Closing the Loop
 
 **Visual:** A confirmation card slides up inside the sidebar with a green check.
 
@@ -291,46 +292,53 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 > Calendar invite sent to jessica@company.com
 
 **Agent (below the card, after a brief beat):**
-> Liam's set for Saturday. While we're here, your colonoscopy was the original reason I reached out today. Since you're already going to be at AHN Wexford that morning for Liam, AHN Wexford has gastroenterology too, and I have an opening Saturday at 8am with Dr. Sarah Chen. Two hours before Liam's PT, same building. You could knock both out in one trip. Want me to book it?
+> Liam is all set for Saturday.
+>
+> **Closing the loop**
+>
+> Your colonoscopy was the original reason I reached out today. It's fully covered as preventive care on your plan, $0 out of pocket. Do you want to schedule it at the same facility (AHN Wexford), or pick a different one?
 
 **Suggested replies:**
-- **"Yeah, let's do it"** (default)
-- "Not this Saturday, ping me later"
+- **"Same facility, please"** (default)
+- "Pick a different facility"
 
-**User action:** Taps **"Yeah, let's do it."**
+**User action:** Taps **"Same facility, please."**
 
-**Hidden hooks:** This is the new orchestration wow. The AI doesn't just remember the original mission, it finds a practical optimization (same day, same building) that no person would think to surface to the member. It saves Jessica a separate trip, which is a tangible value moment any parent in the room will recognize immediately.
+**Hidden hooks:** Returning to the original mission with a clear "Closing the loop" heading makes the topic shift unmistakable to the viewer. We give Jessica autonomy over the facility choice rather than implying she'd book her own colonoscopy on the same hour as her son's PT. The emotional beat — the AI didn't forget why it reached out — survives, but the practical framing is realistic.
 
-**Time:** ~35 seconds.
+**Time:** ~25 seconds.
 
 ---
 
-## Beat 12: The colonoscopy bundle (THE CLOSE)
+## Beat 12: The colonoscopy callback (THE CLOSE)
 
 **Agent (with thinking indicator):**
-> *[thinking: "Pulling Saturday GI availability at AHN Wexford..." → "Confirming the 8am slot..."]*
+> *[thinking: "Pulling colonoscopy openings…" → "Checking gastroenterology at AHN Wexford…"]*
 >
-> Done. Saturday May 9 at 8am with Dr. Sarah Chen at AHN Wexford. Fully covered as preventive care. I'll send your prep instructions Wednesday so you're ready by Friday evening.
+> Here are three openings with Dr. Sarah Chen at AHN Wexford. Pick what works.
 
-**Suggested replies:**
-- **"Book it"** (default)
-- "Show me other options"
+**Visual:** A `SlotPicker` lands in the sidebar with three full-width selectable cards (calendar icon, day, time, chevron).
 
-**User action:** Taps **"Book it."**
+**Slot picker cards:**
+- **Tuesday** · 8:00am
+- **Tuesday** · 9:00am
+- **Wednesday** · 8:30am
+
+**User action:** Taps **Tuesday at 8:00am**.
 
 **Visual:** Confirmation card slides up.
 
 **Confirmation card:**
 > ✓ **Colonoscopy booked**
 > Dr. Sarah Chen, Gastroenterology
-> AHN Wexford (same building as Liam's PT)
-> Saturday, May 9 at 8:00am
+> AHN Wexford
+> Tuesday, May 12 at 8:00am
 > $0 cost (preventive)
 > Calendar invite sent to jessica@company.com
-> Prep plan will land in your inbox Wednesday
+> Prep plan will land in your inbox the week before
 
 **Agent:**
-> All set. Two appointments at AHN Wexford on Saturday morning, both care needs handled in one trip. Anything else?
+> All set, your colonoscopy is booked. I'll send your prep instructions the week before so you're ready. Anything else?
 
 **Suggested replies:**
 - **"I'm good, thanks"** (default)
@@ -341,9 +349,9 @@ After ~5 to 8 seconds (long enough for Jessica to feel like she watched a bit, o
 **Agent:**
 > Take care, Jessica. Talk soon.
 
-**Visual:** Sidebar slides closed. The MyHighmark home shows two new items in the calendar widget at the top, both Saturday May 9: Jessica's colonoscopy at 8am and Liam's PT at 10am. Optional: brief cut back to the spreadsheet, with the appointments visible in her macOS calendar mini-widget on her desktop, completing the "back to your day" arc.
+**Visual:** Sidebar slides closed. The MyHighmark home shows two new items in the calendar widget at the top: Liam's PT on Saturday May 9 at 10am, and Jessica's colonoscopy on Tuesday May 12 at 8am. Optional: brief cut back to the spreadsheet, with the appointments visible in her macOS calendar mini-widget on her desktop, completing the "back to your day" arc.
 
-**Hidden hooks (the wow moment):** Two HEDIS gaps closed in one session, in one trip, on one Saturday morning. The Care Gap Agent didn't just remember the original mission, it bundled it onto an existing trip the family was already going to make. This is the orchestration moment: one conversation, two outcomes, optimized for the member's life, not for the system's calendar.
+**Hidden hooks (the wow moment):** Two HEDIS gaps closed in one session. The Care Gap Agent led with what it texted about, listened when Jessica had a different priority, adapted to help Liam, then circled back to the original outreach with a clear "Closing the loop" beat and let her pick a realistic time for herself. One conversation, two outcomes, optimized for her life rather than the system's calendar.
 
 **Time:** ~50 seconds.
 
@@ -355,13 +363,13 @@ A static closing frame summarizing what just happened, ~10 seconds:
 
 In a few minutes, Jessica:
 - Booked Liam's sports PT with a Tier 1 AHN provider for Saturday at 10am
-- Bundled her own colonoscopy onto the same Saturday morning at the same AHN building
+- Booked her own colonoscopy at the same AHN facility for Tuesday at 8am
 - Closed two HEDIS gaps
 - Returned to her workday
 
-**Zero phone calls. Zero portal logins. Zero separate trips. Zero forms.**
+**Zero phone calls. Zero portal logins. Zero forms.**
 
-The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then bundled her own care onto the same trip the family was already going to make.
+The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then circled back to close the loop on her own care without forcing it onto someone else's calendar.
 
 ---
 
@@ -380,7 +388,7 @@ The AI led with what it texted about, listened when Jessica had a different prio
 | 9. PT provider search | 45s |
 | 10. Filter | 30s |
 | 11. Booking + same-day callback prompt | 35s |
-| 12. Colonoscopy bundle | 50s |
+| 12. Colonoscopy callback | 50s |
 | 13. Tally (optional) | 10s |
 | **Total** | **~6:31** |
 
@@ -404,7 +412,7 @@ Buffer for animation, thinking indicators, and reading: ~7:00 to 7:30.
 
 **Map and provider cards in Beats 9 and 10.** Plan early whether the sidebar widens (e.g., 400px to 640px) or whether the home page dims and the map overlays. Either works, pick one. The Tier 1 / Tier 2 framing is the most important visual hook here, the costs should be visible without being preachy. Providers are sports medicine PTs (AHN Sports & Spine), not generic adult PT.
 
-**Beat 11 to 12 transition (the new wow).** Beat 11's confirmation card lands for Liam, then after a brief beat the agent surfaces the practical optimization: same Saturday morning, same AHN building, two hours apart. The orchestration moment isn't just "the AI remembered the original mission," it's "the AI found a way to bundle Jessica's care onto a trip the family was already going to make." That's the demoable proof of an AI that thinks about the member's life, not just the system's calendar.
+**Beat 11 to 12 transition (the orchestration moment).** Beat 11's confirmation card lands for Liam, then a clear "Closing the loop" beat surfaces. The agent returns to the original outreach reason, confirms the colonoscopy is fully covered, and asks Jessica whether she wants the same facility (AHN Wexford) or a different one. Beat 12 then offers three real weekday slots she can pick from. The wow isn't "we crammed two procedures into one morning" (that's medically unrealistic given prep + sedation). The wow is that the AI didn't lose the thread, picked the same facility she's now familiar with, and gave her real autonomy over the timing instead of forcing it on her. That's the demoable proof of an AI that thinks about the member's life, not just the system's calendar.
 
 **Persona tells.** The agent's lines should consistently sound like it knows Jessica's family: "Liam" (by name, after disambiguation), "your home" (not "an address"), "AHN Sports & Spine Wexford" (specific facility), "same building as Liam's PT" (continuity awareness). None of this needs to be displayed on screen, but the language should reinforce it throughout. Things the agent does NOT know in this demo: that Liam is going to college, his school name, when he's leaving home. Don't reference any of that.
 

@@ -42,9 +42,9 @@ export default function SwordPreviewCard({
               <div className="px-2 py-1.5 text-center">In-person</div>
             </div>
             <div className="grid grid-cols-3 border-t border-border">
-              <div className="px-2 py-1.5 text-ink-subdued">Cost (6 weeks)</div>
+              <div className="px-2 py-1.5 text-ink-subdued">Cost (6 sessions)</div>
               <div className="px-2 py-1.5 text-center font-semibold text-success">$0</div>
-              <div className="px-2 py-1.5 text-center text-ink">~$300</div>
+              <div className="px-2 py-1.5 text-center text-ink">~$150*</div>
             </div>
             <div className="grid grid-cols-3 border-t border-border">
               <div className="px-2 py-1.5 text-ink-subdued">Where</div>
@@ -52,6 +52,7 @@ export default function SwordPreviewCard({
               <div className="px-2 py-1.5 text-center text-ink">Clinic</div>
             </div>
           </div>
+          <p className="text-[12px] text-ink-subdued mt-1.5 px-1">*Deductible met</p>
 
           {ctaHref && (
             <a
