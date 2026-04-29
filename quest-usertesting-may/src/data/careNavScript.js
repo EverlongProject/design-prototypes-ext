@@ -192,131 +192,20 @@ I'll text you a reminder tonight at 8pm.`,
     advanceAfter: 800,
   },
 
-  // Beat 7 — wrap-up (no team % social proof, no HR doc claim) --------------
-  {
-    id: 'b7-a1',
-    type: 'agent',
-    text: `You're all set. I'll have your results ready in your Quest profile within 48 hours of your visit.`,
-    advanceAfter: 600,
-  },
-  {
-    id: 'b7-input',
-    type: 'input',
-    chips: [
-      { label: "I'm good, thanks", primary: true },
-      { label: 'What should I expect at the visit?' },
-    ],
-  },
+  // User-testing variant ends here. The original demo continues with a
+  // wrap-up turn ("You're all set…") and the post-results conversation, but
+  // for testing we stop the moment the flu shot is confirmed so the
+  // participant has no scripted next step.
 ]
 
 // ---------------------------------------------------------------------------
-// Post-results conversation — re-engages after results land
+// Post-results and reschedule conversations were trimmed for the user-testing
+// variant. The session ends after the flu shot is confirmed (b6-a1 above)
+// and the participant is left in an open-ended state, no scripted follow-up.
+// See quest-demo-may for the full multi-conversation flow.
 // ---------------------------------------------------------------------------
-// The portal sidebar closes after CARE_NAV_SCRIPT_PRE finishes and a "Results
-// are in" banner appears on the home. When Mari taps Ask AI, the sidebar
-// reopens with this script.
-export const CARE_NAV_SCRIPT_POST = [
-  {
-    id: 'p1-a1',
-    type: 'agent',
-    text: `Welcome back, Mari. Your results came back. Most numbers look good. **Your cholesterol is borderline at 215**, which is a useful early signal.
 
-Your employer covers a nutrition coaching program through Pack Health at zero cost. Most members see meaningful improvement in 8 to 12 weeks. Want me to enroll you?`,
-    advanceAfter: 600,
-  },
-  {
-    id: 'p1-input',
-    type: 'input',
-    chips: [
-      { label: 'Yes, enroll me', primary: true },
-      { label: 'Tell me more first' },
-    ],
-  },
-  {
-    id: 'p1-close',
-    type: 'agent',
-    text: `Great. I've sent your enrollment details to your inbox. Take care, Mari. Talk soon.`,
-    advanceAfter: 1000,
-  },
-]
-
-// ---------------------------------------------------------------------------
-// Reschedule conversation — Mari changes her mind after booking
-// ---------------------------------------------------------------------------
-// Plays between PRE and POST. The portal's hero search auto-types "Cancel my
-// appointment" after the PRE sidebar closes; that typed phrase is replayed as
-// the opening 'user' turn in this script, then the agent saves the booking by
-// suggesting a same-location reschedule.
-export const CARE_NAV_SCRIPT_RESCHEDULE = [
-  {
-    id: 'r-u1',
-    type: 'user',
-    text: 'Cancel my appointment',
-  },
-  {
-    id: 'r-a1',
-    type: 'agent',
-    text: `Got it, you'd like to cancel your appointment for tomorrow at 8:00am at Quest PSC Wexford. Mind sharing why? It helps me find better options.`,
-    advanceAfter: 600,
-  },
-  {
-    id: 'r-input1',
-    type: 'input',
-    chips: [
-      { label: "The time doesn't work", primary: true },
-      { label: 'Found a better option' },
-      { label: 'I changed my mind' },
-      { label: 'Other reason' },
-    ],
-  },
-  {
-    id: 'r-t1',
-    type: 'thinking',
-    lines: [
-      'Looking for alternative times…',
-      'Checking same-location availability…',
-    ],
-  },
-  {
-    id: 'r-a2',
-    type: 'agent',
-    text: `I have an opening at the **same location, Wexford, on Thursday at 7:30am**. Want me to reschedule instead of canceling?`,
-    advanceAfter: 600,
-  },
-  {
-    id: 'r-input2',
-    type: 'input',
-    chips: [
-      { label: 'Yes, reschedule', primary: true },
-      { label: 'Just cancel' },
-    ],
-  },
-  {
-    id: 'r-t2',
-    type: 'thinking',
-    lines: [
-      'Rescheduling your appointment…',
-      'Updating your calendar…',
-      'Sending the new confirmation…',
-    ],
-  },
-  {
-    id: 'r-a3',
-    type: 'agent',
-    text: `Done. You're now set for Wexford on Thursday at 7:30am. Same prep notes apply.`,
-    media: { kind: 'confirmation', variant: 'rescheduled' },
-    mediaPosition: 'above',
-    advanceAfter: 800,
-  },
-  {
-    id: 'r-input3',
-    type: 'input',
-    chips: [{ label: 'Thanks', primary: true }],
-  },
-]
-
-// Backwards-compatible alias so any direct importers keep working. Prefer the
-// PRE / POST exports going forward.
+// Backwards-compatible alias so any direct importers keep working.
 export const CARE_NAV_SCRIPT = CARE_NAV_SCRIPT_PRE
 
 // ---------------------------------------------------------------------------
@@ -382,15 +271,3 @@ export const SCREENING_WITH_FLU_BOOKING = {
   ],
 }
 
-export const RESCHEDULED_BOOKING = {
-  title: 'Rescheduled',
-  doctor: 'Biometric Screening + flu shot',
-  practice: 'Quest PSC — Wexford',
-  when: 'Thursday at 7:30am',
-  cost: 'HSA-eligible',
-  inviteEmail: 'mari@company.com',
-  extras: [
-    'No food or drink after midnight Wednesday',
-    'Bring a photo ID',
-  ],
-}
