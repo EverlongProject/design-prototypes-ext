@@ -26,15 +26,18 @@ const TIME_SLOTS = [
 // === Schedule wrapper ===
 
 const ScheduleScreen = ({ onConfirm, onBack }) => {
-  const [step, setStep] = React.useState('location');
+  const [step, setStep] = React.useState('questionnaire');
   const [data, setData] = React.useState({
+    answers: {}, // { q1: 'yes' | 'no', ... }
     zip: '66219',
     location: null,
     date: null,
     time: null,
   });
 
+  const allAnswered = QUESTIONS.filter(q => q.required).every(q => data.answers[q.id]);
   const completed = {
+    questionnaire: allAnswered && step !== 'questionnaire',
     location: !!data.location && step !== 'location',
     datetime: !!data.date && !!data.time && step !== 'datetime',
   };
@@ -67,6 +70,16 @@ const ScheduleScreen = ({ onConfirm, onBack }) => {
           </p>
         </div>
 
+        {/* === QUESTIONNAIRE === */}
+        <QuestionnaireStep
+          state={step === 'questionnaire' ? 'active' : (completed.questionnaire ? 'done' : 'collapsed')}
+          data={data}
+          updateData={updateData}
+          onContinue={() => goToStep('location')}
+          onChange={() => goToStep('questionnaire')}
+          onCancel={onBack}
+        />
+
         {/* === LOCATION === */}
         <LocationStep
           state={step === 'location' ? 'active' : (completed.location ? 'done' : 'collapsed')}
@@ -96,6 +109,109 @@ const ScheduleScreen = ({ onConfirm, onBack }) => {
         />
       </div>
     </main>
+  );
+};
+
+// =====================================================================
+// QUESTIONNAIRE STEP
+// =====================================================================
+
+const QUESTIONS = [
+  { id: 'q1', text: 'Have you ever had an adverse reaction to a previous dose of Influenza (flu) or Pneumonia vaccine?', required: true },
+  { id: 'q2', text: 'Have you ever had an adverse reaction to a previous dose of any other vaccine (Does not include tiredness, soreness, fever, or chills in response to an mRNA COVID-19 vaccine)?', required: false },
+  { id: 'q3', text: 'Have you ever had Guillain-Barre Syndrome (an illness with sudden muscle weakness)?', required: true },
+  { id: 'q4', text: 'Have you ever had an active, unstabilized neurological disorder?', required: true },
+  { id: 'q5', text: 'Are you currently experiencing a moderate or severe acute illness, with or without a fever?', required: true },
+  { id: 'q6', text: 'Do you have a known severe allergy to eggs, gelatin, or any component of the influenza vaccine?', required: true },
+];
+
+const QuestionnaireStep = ({ state, data, updateData, onContinue, onChange, onCancel }) => {
+  const [showRequired, setShowRequired] = React.useState(false);
+
+  if (state === 'collapsed') {
+    return <CollapsedSection title="Vaccines / Immunizations" />;
+  }
+  if (state === 'done') {
+    const yesCount = Object.values(data.answers).filter(v => v === 'yes').length;
+    return (
+      <Card>
+        <CompletedHeader title="Vaccines / Immunizations" onChange={onChange} />
+        <div style={{ fontSize: 14, color: '#3a3a3a' }}>
+          {QUESTIONS.filter(q => q.required).length} required questions answered.
+          {yesCount > 0 && <span style={{ marginLeft: 6, color: '#5a5a5a' }}>({yesCount} "Yes")</span>}
+        </div>
+      </Card>
+    );
+  }
+
+  const setAnswer = (qid, val) => {
+    updateData({ answers: { ...data.answers, [qid]: val } });
+  };
+
+  const requiredAnswered = QUESTIONS.filter(q => q.required).every(q => data.answers[q.id]);
+
+  return (
+    <Card accent="lime">
+      <SectionTitle>Vaccines / Immunizations</SectionTitle>
+      <p style={{ margin: '0 0 18px', fontSize: 14, color: '#3a3a3a' }}>
+        To ensure your safety and determine eligibility for this service, please answer the following questions.
+      </p>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 22 }}>
+        {QUESTIONS.map((q) => {
+          const val = data.answers[q.id];
+          const missing = showRequired && q.required && !val;
+          return (
+            <div key={q.id}>
+              <div style={{
+                fontSize: 14, fontWeight: 600, color: '#2b2b2b',
+                marginBottom: 10, lineHeight: 1.45,
+              }}>
+                {q.text}{q.required && <span style={{ color: '#c5292a' }}> *</span>}
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {['yes', 'no'].map(opt => (
+                  <label key={opt} style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 10,
+                    cursor: 'pointer', fontSize: 14, color: '#2b2b2b',
+                  }}>
+                    <span style={{
+                      width: 18, height: 18, borderRadius: '50%',
+                      border: `2px solid ${missing ? '#c5292a' : (val === opt ? '#2c6e35' : '#888')}`,
+                      display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0,
+                    }}>
+                      {val === opt && <span style={{ width: 10, height: 10, borderRadius: '50%', background: '#2c6e35' }} />}
+                    </span>
+                    <input
+                      type="radio"
+                      name={q.id}
+                      value={opt}
+                      checked={val === opt}
+                      onChange={() => setAnswer(q.id, opt)}
+                      style={{ position: 'absolute', opacity: 0, pointerEvents: 'none' }}
+                    />
+                    {opt === 'yes' ? 'Yes' : 'No'}
+                  </label>
+                ))}
+              </div>
+              {missing && <div style={errorText}>Required</div>}
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{
+        display: 'flex', alignItems: 'center', gap: 16,
+        paddingTop: 18, marginTop: 22, borderTop: '1px solid #e8e8e8',
+      }}>
+        <PrimaryButton onClick={() => {
+          if (!requiredAnswered) { setShowRequired(true); return; }
+          onContinue();
+        }} disabled={!requiredAnswered}>Continue</PrimaryButton>
+        <TextLink onClick={onCancel}>Cancel</TextLink>
+      </div>
+    </Card>
   );
 };
 
