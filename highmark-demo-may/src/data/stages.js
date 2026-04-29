@@ -24,8 +24,7 @@ export const STAGES = {
     blurb: 'Capability-specific sidebar. Member lands on the Benefits page and asks Highmark AI a coverage question in context.',
     badge: 'Phase 1',
     steps: [
-      { id: 'benefits-home', type: 'home' }
-      // TODO: add Benefits page + sidebar AI interaction
+      { id: 'benefits-page', type: 'nearTerm', startPage: 'benefits' }
     ]
   },
   healthCoach: {
@@ -34,8 +33,7 @@ export const STAGES = {
     blurb: 'Capability-specific sidebar. Member engages the Health Coach from a Journey screen with Sword / Noom / Spring recommendations in context.',
     badge: 'Phase 1',
     steps: [
-      { id: 'health-coach-home', type: 'home' }
-      // TODO: add Journey page + Health Coach sidebar interaction
+      { id: 'journey-page', type: 'nearTerm', startPage: 'journey' }
     ]
   }
 }

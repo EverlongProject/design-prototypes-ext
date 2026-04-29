@@ -16,83 +16,120 @@ import ConfirmationCard from './ConfirmationCard.jsx'
 import ThinkingInline from './ThinkingInline.jsx'
 import DependentPicker from './DependentPicker.jsx'
 import CoverageCard from './CoverageCard.jsx'
+import ResourceOptionCard from './ResourceOptionCard.jsx'
+import SpringHealthCard from './SpringHealthCard.jsx'
+import ManageStressCard from './ManageStressCard.jsx'
 
-// Drives the linear conversation script. Renders message history at the top,
-// the current input affordance (chips + composer) at the bottom.
+// Drives a linear conversation script. Renders message history at the top,
+// the current input affordance at the bottom.
 //
-// Dev affordance: Shift+Right arrow advances past the current turn,
-// useful for rehearsal.
+// Props:
+//   script — array of turns. Defaults to VISION_SCRIPT for the P1 sidebar.
+//   onComplete — fired once when the conversation runs off the end.
+//
+// In P3 the user's query lives in the side rail title, so we don't echo it
+// as a bubble inside the conversation.
+//
+// Branching:
+//   `trail` is the list of turn indices the user has actually visited, in
+//   order. The current turn is the last entry. Chips, resourceOption picks,
+//   and dependent picks can specify a `gotoId` to jump to a non-sequential
+//   turn — when they do, the in-between turns are skipped (not added to
+//   history). Without `gotoId`, advancement is +1 from the current turn.
+//
+// Dev affordance: Shift+Right arrow advances past the current turn.
 
-export default function ChatRunner({ onComplete }) {
+export default function ChatRunner({
+  script = VISION_SCRIPT,
+  onComplete,
+}) {
+  const [trail, setTrail] = useState([0])
   const [history, setHistory] = useState([])
-  const [cursor, setCursor] = useState(0)
   const completedRef = useRef(false)
   const scrollRef = useRef(null)
   const contentRef = useRef(null)
   const advanceTimer = useRef(null)
 
-  const currentTurn = VISION_SCRIPT[cursor]
+  const cursor = trail[trail.length - 1]
+  const currentTurn = script[cursor]
 
-  // When the cursor moves past the last script turn, fire onComplete once.
+  // Resolve a gotoId to a turn index. Falls back to cursor+1 when not found.
+  const resolveNext = useCallback(
+    (fromIdx, gotoId) => {
+      if (!gotoId) return fromIdx + 1
+      const idx = script.findIndex((t) => t.id === gotoId)
+      return idx >= 0 ? idx : fromIdx + 1
+    },
+    [script]
+  )
+
+  // Push the next turn onto the trail, but only if `fromId` is still the
+  // current turn (guards against stale callbacks from unmounted media etc).
+  const advanceFrom = useCallback(
+    (fromId, gotoId) => {
+      setTrail((tr) => {
+        const cur = tr[tr.length - 1]
+        if (script[cur]?.id !== fromId) return tr
+        return [...tr, resolveNext(cur, gotoId)]
+      })
+    },
+    [resolveNext, script]
+  )
+
+  // onComplete fires once when the trail walks off the end of the script.
   useEffect(() => {
-    if (cursor >= VISION_SCRIPT.length && !completedRef.current) {
+    if (cursor >= script.length && !completedRef.current) {
       completedRef.current = true
       onComplete?.()
     }
-  }, [cursor, onComplete])
+  }, [cursor, onComplete, script.length])
 
-  // Sync history with every agent turn up through the current cursor.
-  // The current cursor's agent turn streams (if it has text); earlier turns
-  // are added (or marked) as fully rendered. This keeps the conversation
-  // consistent under both natural advancement and Shift+Right skips, where
-  // multiple cursor increments may batch into a single useEffect run.
+  // History sync — iterate the trail (not 0..cursor) so branches don't pull
+  // skipped turns into history. Adds any agent turn we've visited that isn't
+  // already in history; flips streaming off for any agent turn that's no
+  // longer current (e.g. after a Shift+Right batch).
   useEffect(() => {
     setHistory((h) => {
       let next = [...h]
-      for (let i = 0; i <= cursor && i < VISION_SCRIPT.length; i++) {
-        const turn = VISION_SCRIPT[i]
-        if (!turn || turn.type !== 'agent') continue
-        if (next.some((m) => m.id === turn.id)) continue
+      trail.forEach((idx, i) => {
+        const turn = script[idx]
+        if (!turn || turn.type !== 'agent') return
+        if (next.some((m) => m.id === turn.id)) return
         const hasText = !!turn.text
-        const isCurrent = i === cursor
+        const isLast = i === trail.length - 1
         next.push({
           kind: 'agent',
           id: turn.id,
           text: turn.text || '',
-          streaming: hasText && isCurrent,
+          streaming: hasText && isLast,
         })
-      }
-      // Any earlier agent turn that's still flagged as streaming should settle.
+      })
+      const currentId = script[cursor]?.id
       next = next.map((m) => {
         if (m.kind !== 'agent' || !m.streaming) return m
-        const idx = VISION_SCRIPT.findIndex((t) => t.id === m.id)
-        return idx < cursor ? { ...m, streaming: false } : m
+        return m.id === currentId ? m : { ...m, streaming: false }
       })
       return next
     })
-  }, [cursor])
+  }, [trail, cursor, script])
 
-  // For media-only agent turns (no text), there's no stream onDone to fire,
-  // so schedule the advance directly. Media-gated turns still wait for the
-  // media's onComplete.
+  // Media-only agent turns (no text) have no stream onDone, so schedule the
+  // advance directly. Media-gated turns wait for the media's onComplete.
   useEffect(() => {
-    const turn = VISION_SCRIPT[cursor]
+    const turn = script[cursor]
     if (!turn || turn.type !== 'agent') return
     if (turn.text) return
     if (turn.gateOnMedia) return
     const wait = turn.advanceAfter ?? 0
     const t = setTimeout(() => {
-      setCursor((c) => (VISION_SCRIPT[c]?.id === turn.id ? c + 1 : c))
+      advanceFrom(turn.id)
     }, wait)
     return () => clearTimeout(t)
-  }, [cursor])
+  }, [cursor, script, advanceFrom])
 
   // After every cursor advance, snap to the bottom across multiple settle
-  // points. A media-bearing turn (Sword card, provider search, confirmation,
-  // coverage card) often goes through two commits — the cursor advance + the
-  // history-sync effect — and a single rAF can land between them. The rAF
-  // catches the first paint, the setTimeout catches anything that finished
-  // settling shortly after (image decode, motion entry, etc.).
+  // points (rAF + delayed setTimeout) so media-bearing turns and motion
+  // entries don't leave the tail occluded behind chips.
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
@@ -110,12 +147,9 @@ export default function ChatRunner({ onComplete }) {
     }
   }, [cursor])
 
-  // Auto-scroll: a ResizeObserver on the inner content fires *only* when the
-  // content's actual height changes (mid-stream char append, thinking line
-  // crossfade, new card landing). No polling, no time-based pause, so it
-  // can't collide with wheel/touch momentum. The `stick` flag tracks whether
-  // the user is reading near the bottom; if they've scrolled away, we leave
-  // their scroll position alone until they return.
+  // ResizeObserver-driven auto-scroll. Sticks to the bottom only while the
+  // user is actually reading at the bottom — if they scroll away we leave
+  // them alone until they return.
   useEffect(() => {
     const el = scrollRef.current
     const inner = contentRef.current
@@ -130,17 +164,12 @@ export default function ChatRunner({ onComplete }) {
     }
     el.addEventListener('scroll', onScroll, { passive: true })
 
-    // Observe both the inner content (grows mid-stream) AND the scroll
-    // container itself (shrinks when chips/composer expand below it). The
-    // second case is what was hiding the tail of an agent message behind
-    // the newly appeared chips.
     const ro = new ResizeObserver(() => {
       if (stick) el.scrollTop = el.scrollHeight
     })
     ro.observe(inner)
     ro.observe(el)
 
-    // Anchor the initial position at the bottom.
     el.scrollTop = el.scrollHeight
 
     return () => {
@@ -149,97 +178,136 @@ export default function ChatRunner({ onComplete }) {
     }
   }, [])
 
-  const onAgentDone = useCallback((id) => {
-    setHistory((h) => h.map((m) => (m.id === id ? { ...m, streaming: false } : m)))
-    const turn = VISION_SCRIPT.find((t) => t.id === id)
-    // Turns gated on media (e.g. video) wait for the media to finish before advancing.
-    if (turn?.gateOnMedia) return
-    const wait = turn?.advanceAfter ?? 0
-    if (advanceTimer.current) clearTimeout(advanceTimer.current)
-    advanceTimer.current = setTimeout(() => {
-      setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
-    }, wait)
-  }, [])
+  const onAgentDone = useCallback(
+    (id) => {
+      setHistory((h) => h.map((m) => (m.id === id ? { ...m, streaming: false } : m)))
+      const turn = script.find((t) => t.id === id)
+      if (turn?.gateOnMedia) return
+      const wait = turn?.advanceAfter ?? 0
+      if (advanceTimer.current) clearTimeout(advanceTimer.current)
+      advanceTimer.current = setTimeout(() => {
+        advanceFrom(id)
+      }, wait)
+    },
+    [advanceFrom, script]
+  )
 
-  const onMediaDone = useCallback((id) => {
-    setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
-  }, [])
+  const onMediaDone = useCallback(
+    (id) => {
+      advanceFrom(id)
+    },
+    [advanceFrom]
+  )
 
-  const onThinkingDone = useCallback((id) => {
-    setCursor((c) => (VISION_SCRIPT[c]?.id === id ? c + 1 : c))
-  }, [])
+  const onThinkingDone = useCallback(
+    (id) => {
+      advanceFrom(id)
+    },
+    [advanceFrom]
+  )
 
+  // Submission from chips (meta = chip object), typed/auto-typed text (no meta),
+  // or DependentPicker (meta passed by picker).
   const onUserSubmit = useCallback(
-    (text) => {
-      const turn = VISION_SCRIPT[cursor]
+    (text, meta) => {
+      const turn = script[cursor]
       if (!turn) return
-      if (turn.type !== 'input' && turn.type !== 'dependentPicker') return
+      if (
+        turn.type !== 'input' &&
+        turn.type !== 'dependentPicker' &&
+        turn.type !== 'resourceOptions'
+      )
+        return
       setHistory((h) => [
         ...h,
         { kind: 'user', id: `${turn.id}-u-${Date.now()}`, text },
       ])
-      setCursor((c) => c + 1)
+      setTrail((tr) => {
+        const cur = tr[tr.length - 1]
+        if (script[cur]?.id !== turn.id) return tr
+        return [...tr, resolveNext(cur, meta?.gotoId)]
+      })
     },
-    [cursor]
+    [cursor, script, resolveNext]
   )
 
-  // Dev hotkey: Shift+Right to skip ahead
+  // Dev hotkey: Shift+Right to skip ahead.
   useEffect(() => {
     const onKey = (e) => {
       if (e.shiftKey && e.key === 'ArrowRight') {
         e.preventDefault()
-        setCursor((c) => Math.min(c + 1, VISION_SCRIPT.length))
+        setTrail((tr) => {
+          const cur = tr[tr.length - 1]
+          if (cur >= script.length) return tr
+          return [...tr, cur + 1]
+        })
       }
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [])
+  }, [script.length])
 
   return (
     <div className="flex-1 flex flex-col min-h-0">
       <div ref={scrollRef} className="flex-1 overflow-y-auto overscroll-contain px-5 py-5">
         <div ref={contentRef}>
-        {history.map((m) => {
-          if (m.kind === 'user') {
-            return <UserMessage key={m.id} text={m.text} />
-          }
-          const turn = VISION_SCRIPT.find((t) => t.id === m.id)
-          const isCurrent = currentTurn?.id === m.id
-          const media = turn?.media ? renderMedia(turn, isCurrent, onMediaDone) : null
-          return (
-            <AgentMessage
-              key={m.id}
-              text={m.text}
-              streaming={m.streaming}
-              media={media}
-              mediaPosition={turn?.mediaPosition || 'below'}
-              onDone={() => onAgentDone(m.id)}
+          {history.map((m) => {
+            if (m.kind === 'user') {
+              return <UserMessage key={m.id} text={m.text} />
+            }
+            const turn = script.find((t) => t.id === m.id)
+            const isCurrent = currentTurn?.id === m.id
+            const media = turn?.media ? renderMedia(turn, isCurrent, onMediaDone) : null
+            return (
+              <AgentMessage
+                key={m.id}
+                text={m.text}
+                streaming={m.streaming}
+                media={media}
+                mediaPosition={turn?.mediaPosition || 'below'}
+                onDone={() => onAgentDone(m.id)}
+              />
+            )
+          })}
+
+          {currentTurn?.type === 'thinking' && (
+            <ThinkingInline
+              key={currentTurn.id}
+              lines={currentTurn.lines}
+              perLine={currentTurn.perLine}
+              onDone={() => onThinkingDone(currentTurn.id)}
             />
-          )
-        })}
+          )}
 
-        {currentTurn?.type === 'thinking' && (
-          <ThinkingInline
-            key={currentTurn.id}
-            lines={currentTurn.lines}
-            perLine={currentTurn.perLine}
-            onDone={() => onThinkingDone(currentTurn.id)}
-          />
-        )}
+          {currentTurn?.type === 'dependentPicker' && (
+            <DependentPicker
+              key={currentTurn.id}
+              options={currentTurn.options}
+              onSelect={(opt) => onUserSubmit(opt.name, opt)}
+            />
+          )}
 
-        {currentTurn?.type === 'dependentPicker' && (
-          <DependentPicker
-            key={currentTurn.id}
-            options={currentTurn.options}
-            onSelect={(opt) => onUserSubmit(opt.name)}
-          />
-        )}
+          {currentTurn?.type === 'resourceOptions' && (
+            <div key={currentTurn.id} className="space-y-3 mt-2">
+              {currentTurn.options.map((opt) => (
+                <ResourceOptionCard
+                  key={opt.id}
+                  icon={opt.icon}
+                  name={opt.name}
+                  subtitle={opt.subtitle}
+                  description={opt.description}
+                  costChip={opt.costChip}
+                  onSelect={() => onUserSubmit(opt.name, opt)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* The composer is always visible. When the cursor is on a non-input
-          turn (agent streaming, thinking, etc.), chips/autoType/onSubmit are
-          undefined so the composer stays inert until the next input turn. */}
+          turn, chips/autoType/onSubmit are undefined so the composer stays
+          inert. */}
       {(() => {
         const inputTurn = currentTurn?.type === 'input' ? currentTurn : null
         return (
@@ -284,6 +352,22 @@ function renderMedia(turn, isCurrent, onMediaDone) {
       if (media.variant === 'pt') return <ConfirmationCard {...PT_BOOKING} />
       if (media.variant === 'colonoscopy') return <ConfirmationCard {...COLONOSCOPY_BOOKING} />
       return null
+    case 'springHealth':
+      return (
+        <SpringHealthCard
+          onComplete={
+            isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
+          }
+        />
+      )
+    case 'manageStress':
+      return (
+        <ManageStressCard
+          onComplete={
+            isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
+          }
+        />
+      )
     default:
       return null
   }

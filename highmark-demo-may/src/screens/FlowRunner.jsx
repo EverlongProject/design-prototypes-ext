@@ -3,6 +3,7 @@ import { STAGES } from '../data/stages.js'
 import HomeScreen from './HomeScreen.jsx'
 import SpreadsheetScreen from './SpreadsheetScreen.jsx'
 import MessagesScreen from './MessagesScreen.jsx'
+import NearTermRunner from './NearTermRunner.jsx'
 
 // Map step types to screen components. Add new types here as the flow grows.
 function renderStep(step, { advance, stageKey }) {
@@ -13,7 +14,8 @@ function renderStep(step, { advance, stageKey }) {
       return <MessagesScreen onAdvance={advance} />
     case 'home':
       return <HomeScreen stageKey={stageKey} onAdvance={advance} />
-    // TODO: add 'chat', 'benefits', 'careNav', 'recoveryPlan', 'careGapClose', etc.
+    case 'nearTerm':
+      return <NearTermRunner startPage={step.startPage} />
     default:
       return (
         <div className="min-h-screen flex items-center justify-center bg-surface-secondary text-ink">
