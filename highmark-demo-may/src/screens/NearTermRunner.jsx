@@ -4,6 +4,7 @@ import Footer from '../components/Footer.jsx'
 import Siderail from '../components/Siderail.jsx'
 import ChatRunner from '../components/ChatRunner.jsx'
 import { HEALTH_COACH_SCRIPT } from '../data/healthCoachScript.js'
+import { BENEFITS_SCRIPT } from '../data/benefitsScript.js'
 import BenefitsScreen from './BenefitsScreen.jsx'
 import JourneyScreen from './JourneyScreen.jsx'
 
@@ -57,13 +58,9 @@ export default function NearTermRunner({ startPage = 'benefits' }) {
           onClose={closeSiderail}
         >
           {page === 'journey' ? (
-            <ChatRunner key={runId} script={HEALTH_COACH_SCRIPT} />
+            <ChatRunner key={`j-${runId}`} script={HEALTH_COACH_SCRIPT} />
           ) : (
-            <div className="flex-1 overflow-y-auto px-5 pb-5">
-              <p className="font-sans text-[15px] leading-relaxed text-ink whitespace-pre-wrap">
-                Good call! You're at the age where getting a full picture of your health pays off. Highmark is offering a free NiaHealth biomarker screening — it's an at-home blood draw, zero friction. Here are some times that may work for you.
-              </p>
-            </div>
+            <ChatRunner key={`b-${runId}`} script={BENEFITS_SCRIPT} />
           )}
         </Siderail>
       </div>

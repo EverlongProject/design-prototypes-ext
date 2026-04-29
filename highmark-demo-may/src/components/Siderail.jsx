@@ -13,7 +13,7 @@ export default function Siderail({ open, title, onClose, children }) {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: '100%', opacity: 0 }}
           transition={{ type: 'spring', stiffness: 240, damping: 28 }}
-          className="fixed top-[61px] right-0 bottom-0 w-[400px] z-30 bg-white border-l border-border shadow-[0_0_24px_rgba(0,34,60,0.08)] flex flex-col"
+          className="fixed top-[61px] right-0 bottom-0 w-[500px] z-30 bg-white border-l border-border shadow-[0_0_24px_rgba(0,34,60,0.08)] flex flex-col"
         >
           <div className="px-5 pt-4 pb-3 flex items-center gap-2">
             <h3 className="flex-1 font-heading text-heading-3 font-semibold text-ink leading-tight">

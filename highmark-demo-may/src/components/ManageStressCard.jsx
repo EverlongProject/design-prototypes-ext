@@ -7,11 +7,11 @@ import { Check } from 'lucide-react'
 export default function ManageStressCard({ onComplete }) {
   return (
     <div className="bg-white rounded-lg border border-border shadow-card overflow-hidden">
-      <div className="aspect-[16/9] bg-gradient-to-br from-highmark-primary to-highmark-primary-dark flex items-center justify-center">
-        <span className="font-heading text-[28px] font-semibold text-white tracking-tight">
-          Manage Stress
-        </span>
-      </div>
+      <img
+        src={`${import.meta.env.BASE_URL}assets/ManageStress-Card.png`}
+        alt=""
+        className="w-full aspect-[16/9] object-cover"
+      />
 
       <div className="px-5 pt-4 pb-3">
         <p className="font-heading text-subtitle-1 font-semibold text-ink leading-tight">

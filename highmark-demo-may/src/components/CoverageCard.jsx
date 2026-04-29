@@ -1,24 +1,90 @@
 import { Check } from 'lucide-react'
 
-// Compact per-member coverage snapshot. Lands inline in Beat 7 after Liam
-// is selected. Styled to match the home-screen deductible card UI:
-// overline header, big number with progress bar, then secondary rows.
-// Justifies the $25 copay number ("his deductible is already met") rather
-// than asserting it. Fourth proof point that the AI is reading per-member
-// accumulator data, not just plan documents.
+// Coverage snapshot card. Two modes share the same shell:
+//
+// 1) Member mode (P1 Beat 7): per-member accumulator card. Pass `member` as
+//    the overline subject. Renders a big deductible figure with progress
+//    bar, then PT-visit and sports-injury rows. Justifies "his deductible
+//    is already met" rather than asserting a copay.
+//
+// 2) Service mode (P2 Beat 4): per-service coverage answer. Pass
+//    `serviceLabel` (e.g. "PT Coverage") and the service-shaped fields:
+//    `coveredLabel`, `copay`, `visitLimit`. The deductible block stays at
+//    the bottom as a compact row with progress bar.
+//
+// Service mode kicks in when serviceLabel or coveredLabel is set.
 
 export default function CoverageCard({
+  // Member-mode props
   member = 'Liam Smith',
+  // Common
   plan = 'Community Blue HDHP 1',
-  deductibleSpent = 1500,
-  deductibleTotal = 1500,
+  // Member-mode rows
   ptVisitsUsed = 0,
   ptVisitsTotal = 30,
   sportsInjuryCovered = true,
+  // Service-mode props
+  serviceLabel,
+  coveredLabel,
+  copay,
+  visitLimit,
+  // Deductible (used in both modes)
+  deductibleSpent = 1500,
+  deductibleTotal = 1500,
 }) {
+  const isService = !!(serviceLabel || coveredLabel)
   const deductibleMet = deductibleSpent >= deductibleTotal
-  const pct = Math.min(100, (deductibleSpent / deductibleTotal) * 100)
+  const pct = deductibleTotal > 0
+    ? Math.min(100, (deductibleSpent / deductibleTotal) * 100)
+    : 0
 
+  if (isService) {
+    return (
+      <div className="w-full max-w-[340px] bg-surface-card border border-border rounded-lg shadow-card p-5 font-sans">
+        <p className="text-overline text-ink-subdued mb-3">
+          {(serviceLabel || 'Coverage').toUpperCase()} · {plan.toUpperCase()}
+        </p>
+
+        {coveredLabel && (
+          <div className="flex items-center gap-2 mb-4">
+            <span className="w-6 h-6 rounded-full bg-success/15 text-success flex items-center justify-center shrink-0">
+              <Check className="w-3.5 h-3.5" strokeWidth={3} />
+            </span>
+            <p className="font-heading text-subtitle-1 font-semibold text-ink leading-tight">
+              {coveredLabel}
+            </p>
+          </div>
+        )}
+
+        <div className="border-t border-border pt-3 space-y-2 text-body-2">
+          {copay && (
+            <Row label="Copay" value={copay} />
+          )}
+          {visitLimit && (
+            <Row label="Visit limit" value={visitLimit} />
+          )}
+          {deductibleTotal > 0 && (
+            <div>
+              <div className="flex items-baseline justify-between">
+                <span className="text-ink-subdued">Deductible</span>
+                <span className="text-ink font-semibold">
+                  ${deductibleSpent.toLocaleString()} of ${deductibleTotal.toLocaleString()} met
+                </span>
+              </div>
+              <div className="w-full h-1.5 rounded-full bg-neutral-medium overflow-hidden mt-1.5">
+                <div
+                  className="h-full rounded-full bg-success"
+                  style={{ width: `${pct}%` }}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Member mode (P1 Beat 7)
   return (
     <div className="w-full max-w-[340px] bg-surface-card border border-border rounded-lg shadow-card p-5 font-sans">
       <p className="text-overline text-ink-subdued mb-2">
@@ -45,12 +111,7 @@ export default function CoverageCard({
       </p>
 
       <div className="border-t border-border pt-3 space-y-2 text-body-2">
-        <div className="flex items-center justify-between">
-          <span className="text-ink-subdued">PT visits used</span>
-          <span className="text-ink font-semibold">
-            {ptVisitsUsed} of {ptVisitsTotal}
-          </span>
-        </div>
+        <Row label="PT visits used" value={`${ptVisitsUsed} of ${ptVisitsTotal}`} />
         <div className="flex items-center justify-between">
           <span className="text-ink-subdued">Sports injury PT</span>
           <span
@@ -63,6 +124,15 @@ export default function CoverageCard({
           </span>
         </div>
       </div>
+    </div>
+  )
+}
+
+function Row({ label, value }) {
+  return (
+    <div className="flex items-baseline justify-between">
+      <span className="text-ink-subdued">{label}</span>
+      <span className="text-ink font-semibold text-right">{value}</span>
     </div>
   )
 }
