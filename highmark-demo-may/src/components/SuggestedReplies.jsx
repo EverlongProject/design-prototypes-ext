@@ -4,10 +4,11 @@ import { Plus, ArrowUp } from 'lucide-react'
 // Chips + composer. If `autoType` is provided, the composer starts typing
 // the message after `autoType.delay` ms and then commits via onSubmit.
 //
-// onSubmit(text) is called when:
-//   - a chip is clicked (text = chip label)
-//   - the user submits typed text manually
-//   - the auto-typed message finishes and commits
+// onSubmit(text, meta?) is called when:
+//   - a chip is clicked (text = chip label, meta = the chip object so the
+//     caller can read e.g. chip.gotoId for branching)
+//   - the user submits typed text manually (meta undefined)
+//   - the auto-typed message finishes and commits (meta undefined)
 
 const TYPING_BASE_MS = 35  // ~75 wpm
 const TYPING_JITTER = 25
@@ -107,7 +108,7 @@ export default function SuggestedReplies({ chips = [], autoType = null, onSubmit
     // Tapping a different chip while auto-typing cancels the typing and
     // commits that chip. The cursor advance unmounts SuggestedReplies, so
     // the typing effect's cleanup cancels its timers.
-    onSubmit?.(chip.label)
+    onSubmit?.(chip.label, chip)
   }
 
   return (
