@@ -21,7 +21,7 @@
 // mother. Behavioral archetype: time-pressured, action-oriented. Tone
 // calibration: concise.
 //
-// SCENARIO — Mari's annual Basic Health Profile is due. Quest texts her, she
+// SCENARIO — Mari's annual Biometric Screening is due. Quest texts her, she
 // taps in, the agent finds her an appointment in natural language, BOOKS the
 // screening, then RECOMMENDS adding a flu shot to the same visit (pre-checked
 // recommendation requiring explicit confirmation). After results land later,
@@ -45,7 +45,7 @@ export const CARE_NAV_SCRIPT_PRE = [
     type: 'agent',
     text: `Hi Mari, I'm your Quest Care Navigation Assistant. Glad you tapped through.
 
-Your employer's wellness calendar shows your annual Basic Health Profile is due. Most members are in and out in under 15 minutes, and your visit is HSA-eligible. Want help finding a spot that works with your week?`,
+Your employer's wellness calendar shows your annual Biometric Screening is due. Most members are in and out in under 15 minutes, and your visit is HSA-eligible. Want help finding a spot that works with your week?`,
     advanceAfter: 600,
   },
   {
@@ -75,7 +75,7 @@ Your employer's wellness calendar shows your annual Basic Health Profile is due.
   {
     id: 'b2-a1',
     type: 'agent',
-    text: `Looks like this is your first Basic Health Profile with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?`,
+    text: `Looks like this is your first Biometric Screening with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?`,
     advanceAfter: 600,
   },
   {
@@ -359,7 +359,7 @@ export const LOCATIONS_ALL = [
 
 export const SCREENING_BOOKING = {
   title: 'Booked',
-  doctor: 'Basic Health Profile',
+  doctor: 'Biometric Screening',
   practice: 'Quest PSC — Wexford',
   when: 'Tomorrow, 8:00am',
   cost: 'HSA-eligible',
@@ -371,7 +371,7 @@ export const SCREENING_BOOKING = {
 
 export const SCREENING_WITH_FLU_BOOKING = {
   title: 'Booked',
-  doctor: 'Basic Health Profile + flu shot',
+  doctor: 'Biometric Screening + flu shot',
   practice: 'Quest PSC — Wexford',
   when: 'Tomorrow, 8:00am',
   cost: 'HSA-eligible',
@@ -384,7 +384,7 @@ export const SCREENING_WITH_FLU_BOOKING = {
 
 export const RESCHEDULED_BOOKING = {
   title: 'Rescheduled',
-  doctor: 'Basic Health Profile + flu shot',
+  doctor: 'Biometric Screening + flu shot',
   practice: 'Quest PSC — Wexford',
   when: 'Thursday at 7:30am',
   cost: 'HSA-eligible',

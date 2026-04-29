@@ -30,7 +30,10 @@ const ASSETS = {
 //   after-screening      → sidebar closed, results banner visible on the home
 //   results-conversation → sidebar reopened with POST script (results talk)
 //   done                 → all conversations complete, exit to StageMenu
-const SIDEBAR_AUTO_OPEN_MS = 2800
+// User-testing variant: shorter delay so the sidebar appears almost
+// immediately on landing. Participants should see the conversational agent
+// streaming its first message right away.
+const SIDEBAR_AUTO_OPEN_MS = 600
 const RESULTS_BANNER_DELAY_MS = 800
 const PRE_CANCEL_DELAY_MS = 1500
 const HERO_AUTOTYPE_TEXT = 'Cancel my appointment'
@@ -183,7 +186,7 @@ function ResultsReadyBanner({ onAskAI }) {
             Your results are in
           </p>
           <p className="font-sans text-body-2 text-ink-subdued mt-0.5">
-            Your Basic Health Profile results are ready to view in your Quest profile.
+            Your Biometric Screening results are ready to view in your Quest profile.
           </p>
         </div>
       </div>

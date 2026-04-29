@@ -31,7 +31,7 @@ export default function MessagesScreen({ onAdvance }) {
           <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col gap-2">
             <Timestamp />
             <InboundBubble>
-              Your annual Basic Health Profile is due. 3 weeks left in your screening window. HSA-eligible. Tap below to find a spot in under 2 minutes.
+              Your annual Biometric Screening is due. 3 weeks left in your screening window. HSA-eligible. Tap below to find a spot in under 2 minutes.
             </InboundBubble>
             <LinkPreviewBubble onClick={onAdvance} />
           </div>

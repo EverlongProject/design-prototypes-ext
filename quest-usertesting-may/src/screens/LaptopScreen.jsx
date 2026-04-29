@@ -54,7 +54,7 @@ export default function LaptopScreen({ onAdvance }) {
                 <span className="text-[11px] text-black/50 shrink-0">now</span>
               </div>
               <p className="text-[13px] text-black/85 leading-snug mt-0.5">
-                Your annual Basic Health Profile is due. 3 weeks left in your screening window. HSA-eligible.
+                Your annual Biometric Screening is due. 3 weeks left in your screening window. HSA-eligible.
               </p>
             </div>
           </motion.button>

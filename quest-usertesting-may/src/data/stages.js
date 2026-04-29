@@ -9,9 +9,10 @@ export const STAGES = {
     label: 'AI Care Navigation Demo',
     blurb: "Mari's afternoon. Quest reaches out about her annual screening, she books on-site, the Care Navigation Agent auto-bundles a flu shot, and the Health Coach hands off after results.",
     badge: 'Vision',
+    // User-testing variant: drops the laptop SMS notification + iMessage
+    // thread intro. Participants begin on the portal with the AI sidebar
+    // opening on its own.
     steps: [
-      { id: 'care-nav-laptop', type: 'laptop' },
-      { id: 'care-nav-messages', type: 'messages' },
       { id: 'care-nav-portal', type: 'portal' }
     ]
   }
