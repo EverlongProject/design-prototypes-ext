@@ -107,9 +107,9 @@ Quick check, which of your two sons?`,
   {
     id: 'b7-a3',
     type: 'agent',
-    text: `**His deductible is already met for the year, so PT visits will be his standard $25 copay.** Sports injury PT is covered on your plan, and we already have his referral so no extra step. I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
+    text: `**Liam's deductible is already met for the year, so PT visits will be his standard $25 copay.** I have access to Liam's records as the primary caregiver on his plan, so I can book this for you.
 
-You actually have two ways to handle this. Want to hear them?`,
+Based on your plan, there are 2 ways you can handle this. Want to see your options or should I start searching for a provider?`,
     media: { kind: 'coverage' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -118,8 +118,8 @@ You actually have two ways to handle this. Want to hear them?`,
     id: 'b7-input',
     type: 'input',
     chips: [
-      { label: 'Yes, what are my options', primary: true },
-      { label: 'Just find him a PT' },
+      { label: 'Show me options', primary: true },
+      { label: 'Find a physical therapist' },
     ],
   },
 
@@ -133,56 +133,37 @@ You actually have two ways to handle this. Want to hear them?`,
     ],
   },
 
-  // ----- Beat 8 — Sword Health offered, framed for Liam ----------------------
-  {
-    id: 'b8-a1',
-    type: 'agent',
-    text: `Two paths for Liam:
-
-**Sword Health — A virtual PT program covered on your plan at $0.** Liam works through guided exercises at home, the app uses his phone camera to track his form, and a real physical therapist reviews his progress. Most athletes with hamstring strains see meaningful improvement in 2 to 3 weeks.
-
-**In-person PT — A clinic near you, $25 per visit copay.** Best for hands-on assessment, especially for a sports injury where a hands-on first visit can speed up recovery.
-
-Want a quick look at Sword first?`,
-    advanceAfter: 600,
-  },
-  {
-    id: 'b8-input1',
-    type: 'input',
-    chips: [
-      { label: 'Show me Sword', primary: true },
-      { label: 'Skip Sword, find him an in-person PT' },
-    ],
-  },
-  // Thinking before the Sword card lands
-  {
-    id: 't-sword',
-    type: 'thinking',
-    lines: [
-      'Looking up your benefits…',
-      'Pulling Sword Health information…',
-    ],
-  },
+  // ----- Beat 8 — Sword card + comparison surfaced inline ------------------
   {
     id: 'b8-card',
     type: 'agent',
-    text: '',
-    media: { kind: 'sword' },
-    mediaPosition: 'above',
-    advanceAfter: 4500,
+    text: `Two paths for Liam:`,
+    media: { kind: 'sword', showTable: false },
+    mediaPosition: 'below',
+    advanceAfter: 800,
   },
   {
-    id: 'b8-a2',
+    id: 'b8-detail',
     type: 'agent',
-    text: `That's the gist. Want to give it a try, or would you prefer to see someone in person?`,
+    text: `**Sword Health — A virtual PT program covered on your plan at $0.** Liam works through guided exercises at home, the app uses his phone camera to track his form, and a real physical therapist reviews his progress. Most athletes with hamstring strains see meaningful improvement in 2 to 3 weeks.
+
+**In-person PT — A clinic near you, $25 per visit copay.** Best for hands-on assessment, especially for a sports injury where a hands-on first visit can speed up recovery.`,
+    media: { kind: 'swordCompare' },
+    mediaPosition: 'below',
+    advanceAfter: 800,
+  },
+  {
+    id: 'b8-decision',
+    type: 'agent',
+    text: `You can choose either or both! Want to give Sword a try or do you prefer to see someone in person?`,
     advanceAfter: 400,
   },
   {
-    id: 'b8-input2',
+    id: 'b8-input',
     type: 'input',
     chips: [
-      { label: 'See someone in person', primary: true },
       { label: "Let's try Sword" },
+      { label: 'See someone in person', primary: true },
     ],
   },
   {
@@ -207,7 +188,7 @@ Want a quick look at Sword first?`,
   {
     id: 'b9-a1',
     type: 'agent',
-    text: `Three in-network sports PTs near you. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Sports & Spine Wexford has availability tomorrow afternoon and is the closest to your home. He sees a lot of high school athletes.`,
+    text: `Three in-network sports PTs near you. I've sorted by Tier 1 first since your plan covers those at the lowest copay. Dr. Patel at AHN Sports & Spine Wexford has availability tomorrow afternoon and is the closest to your home.`,
     media: { kind: 'providerSearch', variant: 'all' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -261,50 +242,76 @@ Want a quick look at Sword first?`,
     ],
   },
 
-  // ----- Beat 11 — booking confirmation, pivots to same-day bundle ----------
+  // ----- Beat 11 — PT confirmation + Closing the Loop pivot ---------------
   {
     id: 'b11-a1',
     type: 'agent',
-    text: `Liam's set for Saturday. While we're here, your colonoscopy was the original reason I reached out today. Since you're already going to be at AHN Wexford that morning for Liam, AHN Wexford has gastroenterology too, and I have an opening Saturday at 8am with Dr. Sarah Chen. Two hours before Liam's PT, same building. You could knock both out in one trip.
-
-**It's fully covered as preventive care on your plan, $0 out of pocket.** Are you interested in scheduling your colonoscopy?`,
+    text: `Liam is all set for Saturday.`,
     media: { kind: 'confirmation', variant: 'pt' },
     mediaPosition: 'above',
     advanceAfter: 600,
   },
   {
-    id: 'b11-input',
+    id: 'b11-a2',
+    type: 'agent',
+    divider: true,
+    heading: 'Closing the loop: book your colonoscopy',
+    text: `Your colonoscopy was the original reason I reached out today. It's fully covered as preventive care on your plan, $0 out of pocket. Quick reminder:
+• Procedure takes about 30 minutes
+• You'll need to fast for ~24 hours and take a prep medication
+• You'll need someone to drive you home
+• Most members do it on a Saturday morning
+
+**Want to book it now?** It will be quick…`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b11-input1',
     type: 'input',
     chips: [
-      { label: 'I am interested', primary: true },
-      { label: 'Not right now' },
+      { label: 'Yes, book it', primary: true },
+      { label: 'Not right now', gotoId: 'b12-close' },
+    ],
+  },
+  {
+    id: 'b11-a3',
+    type: 'agent',
+    text: `Great. Do you want to schedule it at the same facility (AHN Wexford), or pick a different one?`,
+    advanceAfter: 400,
+  },
+  {
+    id: 'b11-input2',
+    type: 'input',
+    chips: [
+      { label: 'Same facility, please', primary: true },
+      { label: 'Pick a different facility' },
     ],
   },
 
-  // ----- Thinking before Beat 12 slot suggestion -----------------------------
+  // ----- Thinking before slot picker ---------------------------------------
   {
     id: 't-callback-slot',
     type: 'thinking',
     lines: [
+      'Pulling colonoscopy openings…',
       'Checking gastroenterology at AHN Wexford…',
-      "Looking for a Saturday slot before Liam's PT…",
-      'Found one at 8am with Dr. Chen…',
     ],
   },
 
-  // ----- Beat 12 — bundle confirmation prompt --------------------------------
+  // ----- Beat 12 — slot picker --------------------------------------------
   {
     id: 'b12-a1',
     type: 'agent',
-    text: `Saturday May 9 at 8am with Dr. Sarah Chen at AHN Wexford. Fully covered as preventive care. I'll send your prep instructions Wednesday so you're ready by Friday evening.`,
-    advanceAfter: 600,
+    text: `Here are three openings with Dr. Sarah Chen at AHN Wexford. Pick what works.`,
+    advanceAfter: 400,
   },
   {
-    id: 'b12-input1',
-    type: 'input',
-    chips: [
-      { label: 'Book appointment', primary: true },
-      { label: 'Show me other options' },
+    id: 'b12-slots',
+    type: 'slotPicker',
+    options: [
+      { id: 'tue-8', day: 'Tuesday', time: '8:00am' },
+      { id: 'tue-9', day: 'Tuesday', time: '9:00am' },
+      { id: 'wed-830', day: 'Wednesday', time: '8:30am' },
     ],
   },
 
@@ -322,7 +329,7 @@ Want a quick look at Sword first?`,
   {
     id: 'b12-a2',
     type: 'agent',
-    text: `All set. Two appointments at AHN Wexford on Saturday morning, both care needs handled in one trip. Anything else?`,
+    text: `All set, your colonoscopy is booked. I'll send your prep instructions the week before so you're ready.`,
     media: { kind: 'confirmation', variant: 'colonoscopy' },
     mediaPosition: 'above',
     advanceAfter: 600,
@@ -355,7 +362,7 @@ export const PROVIDERS_ALL = [
     nextAvailable: 'Tomorrow, 4:30pm',
     rating: 4.8,
     reviews: 215,
-    copay: '$25',
+    copay: '$25 copay',
     highlighted: true,
     pin: { x: 28, y: 38 },
   },
@@ -368,7 +375,7 @@ export const PROVIDERS_ALL = [
     nextAvailable: 'Friday, 9:00am',
     rating: 4.7,
     reviews: 168,
-    copay: '$25',
+    copay: '$25 copay',
     pin: { x: 58, y: 60 },
   },
   {
@@ -410,9 +417,9 @@ export const PT_BOOKING = {
 export const COLONOSCOPY_BOOKING = {
   title: 'Colonoscopy booked',
   doctor: 'Dr. Sarah Chen, Gastroenterology',
-  practice: 'AHN Wexford (same building as Liam’s PT)',
-  when: 'Saturday, May 9 at 8:00am',
+  practice: 'AHN Wexford',
+  when: 'Tuesday, May 12 at 8:00am',
   cost: '$0 cost (preventive)',
   inviteEmail: 'jessica@company.com',
-  extras: ['Prep plan will land in your inbox Wednesday'],
+  extras: ['Prep plan will land in your inbox the week before'],
 }

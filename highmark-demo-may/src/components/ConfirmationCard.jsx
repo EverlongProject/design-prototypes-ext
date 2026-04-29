@@ -1,4 +1,4 @@
-import { Check, MapPin, Calendar, Mail } from 'lucide-react'
+import { Check, MapPin, Calendar, Mail, DollarSign } from 'lucide-react'
 
 // Booking confirmation card. Used for both PT booking (Beat 11) and the
 // colonoscopy callback (Beat 13). `extras` is an optional array of strings
@@ -14,7 +14,7 @@ export default function ConfirmationCard({
   extras = [],
 }) {
   return (
-    <div className="w-full max-w-[340px] rounded-lg border border-success/30 bg-white shadow-card overflow-hidden">
+    <div className="w-full rounded-lg border border-success/30 bg-white shadow-card overflow-hidden">
       <div className="flex items-center gap-2 px-4 py-2.5 bg-success/10 border-b border-success/20">
         <span className="w-6 h-6 rounded-full bg-success text-white flex items-center justify-center shrink-0">
           <Check className="w-3.5 h-3.5" strokeWidth={3} />
@@ -23,13 +23,11 @@ export default function ConfirmationCard({
       </div>
 
       <div className="px-4 py-3 space-y-2 font-sans text-[15px] text-ink leading-snug">
-        <div>
-          <p className="font-semibold">{doctor}</p>
-          {practice && <p className="text-ink-subdued text-[14px]">{practice}</p>}
-        </div>
+        <p className="font-semibold text-[19px] leading-tight">{doctor}</p>
 
         <Row icon={<Calendar className="w-3.5 h-3.5" />} text={when} />
-        {cost != null && <Row icon={<MapPin className="w-3.5 h-3.5" />} text={cost} />}
+        {practice && <Row icon={<MapPin className="w-3.5 h-3.5" />} text={practice} />}
+        {cost != null && <Row icon={<DollarSign className="w-3.5 h-3.5" />} text={cost} />}
         {inviteEmail && (
           <Row icon={<Mail className="w-3.5 h-3.5" />} text={`Calendar invite sent to ${inviteEmail}`} />
         )}

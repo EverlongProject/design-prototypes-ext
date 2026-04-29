@@ -11,10 +11,12 @@ import UserMessage from './UserMessage.jsx'
 import SuggestedReplies from './SuggestedReplies.jsx'
 import VideoPlayer from './VideoPlayer.jsx'
 import SwordPreviewCard from './SwordPreviewCard.jsx'
+import SwordComparisonTable from './SwordComparisonTable.jsx'
 import ProviderSearch from './ProviderSearch.jsx'
 import ConfirmationCard from './ConfirmationCard.jsx'
 import ThinkingInline from './ThinkingInline.jsx'
 import DependentPicker from './DependentPicker.jsx'
+import SlotPicker from './SlotPicker.jsx'
 import CoverageCard from './CoverageCard.jsx'
 import ResourceOptionCard from './ResourceOptionCard.jsx'
 import SpringHealthCard from './SpringHealthCard.jsx'
@@ -101,6 +103,8 @@ export default function ChatRunner({
           kind: 'agent',
           id: turn.id,
           text: turn.text || '',
+          heading: turn.heading,
+          divider: turn.divider,
           streaming: hasText && isLast,
         })
       })
@@ -215,7 +219,8 @@ export default function ChatRunner({
       if (
         turn.type !== 'input' &&
         turn.type !== 'dependentPicker' &&
-        turn.type !== 'resourceOptions'
+        turn.type !== 'resourceOptions' &&
+        turn.type !== 'slotPicker'
       )
         return
       setHistory((h) => [
@@ -262,6 +267,8 @@ export default function ChatRunner({
               <AgentMessage
                 key={m.id}
                 text={m.text}
+                heading={m.heading}
+                divider={m.divider}
                 streaming={m.streaming}
                 media={media}
                 mediaPosition={turn?.mediaPosition || 'below'}
@@ -284,6 +291,14 @@ export default function ChatRunner({
               key={currentTurn.id}
               options={currentTurn.options}
               onSelect={(opt) => onUserSubmit(opt.name, opt)}
+            />
+          )}
+
+          {currentTurn?.type === 'slotPicker' && (
+            <SlotPicker
+              key={currentTurn.id}
+              options={currentTurn.options}
+              onSelect={(opt) => onUserSubmit(`${opt.day} at ${opt.time}`, opt)}
             />
           )}
 
@@ -342,12 +357,15 @@ function renderMedia(turn, isCurrent, onMediaDone) {
       return (
         <SwordPreviewCard
           label={media.label}
+          showTable={media.showTable}
           ctaHref={media.ctaHref}
           onComplete={
             isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
           }
         />
       )
+    case 'swordCompare':
+      return <SwordComparisonTable withHeading />
     case 'coverage': {
       const { kind, ...coverageProps } = media
       return <CoverageCard {...coverageProps} />

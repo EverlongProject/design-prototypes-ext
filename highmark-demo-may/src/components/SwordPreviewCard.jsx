@@ -1,11 +1,15 @@
 import { Smartphone, Home, Calendar } from 'lucide-react'
+import SwordComparisonTable from './SwordComparisonTable.jsx'
 
-// Static Sword preview card. Phone mockup with motion-track overlay,
-// three what-you-get bullets, and a cost comparison strip.
+// Static Sword preview card. Branded hero image, three what-you-get bullets,
+// and (optionally) the Sword vs in-person cost comparison strip.
 //
 // Props:
 //   label — heading shown above the bullets. Defaults to "Sword Health"
 //     (P1 Beat 8). P2 Beat 6 passes "Sword Thrive" instead.
+//   showTable — when false, the cost comparison strip is omitted. P1 Beat 8
+//     hides it on the card so the script can surface the same table after
+//     additional copy via the `swordCompare` media kind. Defaults to true.
 //   ctaHref — optional. When set, a "Get started" CTA renders below the
 //     comparison strip as an <a target="_blank" rel="noopener noreferrer">
 //     wrapping a button. Used by P2 to hand off to the Sword login page.
@@ -15,6 +19,7 @@ import { Smartphone, Home, Calendar } from 'lucide-react'
 
 export default function SwordPreviewCard({
   label = 'Sword Health',
+  showTable = true,
   ctaHref,
   onComplete,
 }) {
@@ -35,23 +40,7 @@ export default function SwordPreviewCard({
             <Bullet icon={<Calendar className="w-3.5 h-3.5" />} text="Most members improve in 2–3 weeks" />
           </ul>
 
-          <div className="rounded-md border border-border overflow-hidden text-[14px] font-sans">
-            <div className="grid grid-cols-3 bg-surface-secondary text-ink-subdued font-semibold">
-              <div className="px-2 py-1.5" />
-              <div className="px-2 py-1.5 text-center">Sword</div>
-              <div className="px-2 py-1.5 text-center">In-person</div>
-            </div>
-            <div className="grid grid-cols-3 border-t border-border">
-              <div className="px-2 py-1.5 text-ink-subdued">Cost (6 weeks)</div>
-              <div className="px-2 py-1.5 text-center font-semibold text-success">$0</div>
-              <div className="px-2 py-1.5 text-center text-ink">~$300</div>
-            </div>
-            <div className="grid grid-cols-3 border-t border-border">
-              <div className="px-2 py-1.5 text-ink-subdued">Where</div>
-              <div className="px-2 py-1.5 text-center text-ink">Home</div>
-              <div className="px-2 py-1.5 text-center text-ink">Clinic</div>
-            </div>
-          </div>
+          {showTable && <SwordComparisonTable />}
 
           {ctaHref && (
             <a

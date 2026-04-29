@@ -21,7 +21,7 @@ export default function CoverageCard({
   plan = 'Community Blue HDHP 1',
   // Member-mode rows
   ptVisitsUsed = 0,
-  ptVisitsTotal = 30,
+  ptVisitsTotal = 10,
   sportsInjuryCovered = true,
   // Service-mode props
   serviceLabel,
@@ -84,33 +84,26 @@ export default function CoverageCard({
     )
   }
 
-  // Member mode (P1 Beat 7)
+  // Member mode (P1 Beat 7) — labeled member header + uniform row list.
   return (
     <div className="w-full max-w-[340px] bg-surface-card border border-border rounded-lg shadow-card p-5 font-sans">
-      <p className="text-overline text-ink-subdued mb-2">
-        {member.toUpperCase()} · {plan.toUpperCase()}
+      <p className="font-heading text-[22px] font-semibold text-ink leading-tight">
+        {member}
       </p>
-
-      <p className="font-heading text-subtitle-1 text-ink mb-1">Deductible</p>
-      <div className="flex items-baseline gap-2 mb-2">
-        <span className="font-heading text-[24px] font-semibold text-ink leading-none">
-          ${deductibleSpent.toLocaleString()}
-        </span>
-        <span className="text-body-2 text-ink-subdued">
-          of ${deductibleTotal.toLocaleString()} spent
-        </span>
-      </div>
-      <div className="w-full h-2 rounded-full bg-neutral-medium overflow-hidden mb-1.5">
-        <div
-          className="h-full rounded-full bg-success"
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      <p className="text-body-2 font-semibold text-success text-right mb-4">
-        {deductibleMet ? 'Deductible met' : `$${(deductibleTotal - deductibleSpent).toLocaleString()} remaining`}
-      </p>
+      <p className="font-sans text-body-2 text-ink-subdued mb-4">{plan}</p>
 
       <div className="border-t border-border pt-3 space-y-2 text-body-2">
+        <div className="flex items-baseline justify-between">
+          <span className="text-ink-subdued">Deductible</span>
+          <span
+            className={`font-semibold text-right ${
+              deductibleMet ? 'text-success' : 'text-ink'
+            }`}
+          >
+            ${deductibleSpent.toLocaleString()} of ${deductibleTotal.toLocaleString()}
+            {deductibleMet ? ' met' : ''}
+          </span>
+        </div>
         <Row label="PT visits used" value={`${ptVisitsUsed} of ${ptVisitsTotal}`} />
         <div className="flex items-center justify-between">
           <span className="text-ink-subdued">Sports injury PT</span>

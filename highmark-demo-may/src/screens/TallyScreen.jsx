@@ -7,8 +7,8 @@ import { Check } from 'lucide-react'
 
 const ACCOMPLISHMENTS = [
   "Booked Liam's sports PT with a Tier 1 AHN provider for Saturday at 10am",
-  'Bundled her own colonoscopy onto the same Saturday morning at the same AHN building',
-  'Closed two HEDIS gaps',
+  'Booked her own colonoscopy at the same AHN building',
+  'Closed two care gaps',
   'Returned to her workday',
 ]
 
@@ -39,9 +39,9 @@ export default function TallyScreen() {
               initial={{ opacity: 0, x: -16 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.6 + i * STEP, duration: 0.4 }}
-              className="flex items-start gap-3 text-[18px] leading-snug"
+              className="flex items-center gap-3 text-[18px] leading-snug"
             >
-              <span className="mt-1 w-6 h-6 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+              <span className="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center shrink-0">
                 <Check className="w-4 h-4" strokeWidth={3} />
               </span>
               <span>{line}</span>
@@ -64,7 +64,7 @@ export default function TallyScreen() {
           transition={{ delay: 0.6 + ACCOMPLISHMENTS.length * STEP + 0.9, duration: 0.5 }}
           className="text-[16px] opacity-85 leading-relaxed"
         >
-          The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then bundled her own care onto the same trip the family was already going to make.
+          The AI led with what it texted about, listened when Jessica had a different priority, adapted to help her son, then closed the loop and booked her own care at the same facility.
         </motion.p>
       </div>
     </motion.div>
