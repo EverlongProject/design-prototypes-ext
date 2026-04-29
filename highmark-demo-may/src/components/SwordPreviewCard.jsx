@@ -1,41 +1,33 @@
-import { Smartphone, Activity, Home, Calendar } from 'lucide-react'
+import { Smartphone, Home, Calendar } from 'lucide-react'
 
-// Static Sword Health preview card. "Sword Health" is now a heading above
-// the card. Phone mockup with motion-track overlay graphic, three what-you-get
-// bullets, and a cost comparison strip.
+// Static Sword preview card. Phone mockup with motion-track overlay,
+// three what-you-get bullets, and a cost comparison strip.
+//
+// Props:
+//   label — heading shown above the bullets. Defaults to "Sword Health"
+//     (P1 Beat 8). P2 Beat 6 passes "Sword Thrive" instead.
+//   ctaHref — optional. When set, a "Get started" CTA renders below the
+//     comparison strip as an <a target="_blank" rel="noopener noreferrer">
+//     wrapping a button. Used by P2 to hand off to the Sword login page.
+//     The anchor's onClick fires onComplete so the conversation advances
+//     after the user gesture, without preventing the new-tab navigation.
+//   onComplete — fires when the user taps Get started.
 
-export default function SwordPreviewCard() {
+export default function SwordPreviewCard({
+  label = 'Sword Health',
+  ctaHref,
+  onComplete,
+}) {
   return (
     <div className="w-full max-w-[340px] rounded-lg overflow-hidden border border-border shadow-card bg-white">
-      <div className="relative h-[170px] bg-gradient-to-br from-[#0F2A4F] to-[#0066B1] flex items-center justify-center overflow-hidden">
-          {/* Phone mockup */}
-          <div className="relative w-[110px] h-[155px] rounded-2xl bg-[#0a1a2e] border-2 border-white/15 shadow-2xl overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#143462] to-[#0a1a2e]" />
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-black" />
-
-            {/* Motion-track overlay: stylized skeleton dots + lines */}
-            <svg viewBox="0 0 110 155" className="absolute inset-0 w-full h-full">
-              <circle cx="55" cy="40" r="4" fill="#5BC8E8" />
-              <line x1="55" y1="44" x2="55" y2="80" stroke="#5BC8E8" strokeWidth="1.5" />
-              <line x1="55" y1="55" x2="38" y2="70" stroke="#5BC8E8" strokeWidth="1.5" />
-              <line x1="55" y1="55" x2="72" y2="70" stroke="#5BC8E8" strokeWidth="1.5" />
-              <circle cx="38" cy="70" r="2.5" fill="#5BC8E8" />
-              <circle cx="72" cy="70" r="2.5" fill="#5BC8E8" />
-              <line x1="55" y1="80" x2="44" y2="115" stroke="#5BC8E8" strokeWidth="1.5" />
-              <line x1="55" y1="80" x2="66" y2="115" stroke="#5BC8E8" strokeWidth="1.5" />
-              <circle cx="44" cy="115" r="2.5" fill="#5BC8E8" />
-              <circle cx="66" cy="115" r="2.5" fill="#5BC8E8" />
-              <circle cx="55" cy="80" r="3" fill="#5BC8E8" />
-            </svg>
-
-            <div className="absolute bottom-2 left-2 right-2 px-2 py-1 rounded bg-white/10 backdrop-blur text-[10px] text-white font-sans">
-              Tracking… 92%
-            </div>
-          </div>
-        </div>
+      <img
+        src={`${import.meta.env.BASE_URL}assets/Sword-Card.png`}
+        alt=""
+        className="w-full aspect-[16/9] object-cover"
+      />
 
         <div className="px-4 py-3">
-          <h3 className="font-heading text-[16px] font-semibold text-ink mb-3">Sword Health</h3>
+          <h3 className="font-heading text-[16px] font-semibold text-ink mb-3">{label}</h3>
 
           <ul className="space-y-2 mb-3">
             <Bullet icon={<Smartphone className="w-3.5 h-3.5" />} text="Real PT, guided sessions on your phone" />
@@ -60,6 +52,23 @@ export default function SwordPreviewCard() {
               <div className="px-2 py-1.5 text-center text-ink">Clinic</div>
             </div>
           </div>
+
+          {ctaHref && (
+            <a
+              href={ctaHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => onComplete?.()}
+              className="block mt-4"
+            >
+              <button
+                type="button"
+                className="w-full h-11 rounded-full bg-highmark-primary text-white font-sans text-button-2 font-semibold hover:bg-highmark-primary-dark transition-colors"
+              >
+                Get started
+              </button>
+            </a>
+          )}
         </div>
     </div>
   )

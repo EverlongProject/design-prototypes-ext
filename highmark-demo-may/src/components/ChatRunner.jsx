@@ -339,9 +339,19 @@ function renderMedia(turn, isCurrent, onMediaDone) {
         />
       )
     case 'sword':
-      return <SwordPreviewCard />
-    case 'coverage':
-      return <CoverageCard />
+      return (
+        <SwordPreviewCard
+          label={media.label}
+          ctaHref={media.ctaHref}
+          onComplete={
+            isCurrent && turn.gateOnMedia ? () => onMediaDone(turn.id) : undefined
+          }
+        />
+      )
+    case 'coverage': {
+      const { kind, ...coverageProps } = media
+      return <CoverageCard {...coverageProps} />
+    }
     case 'providerSearch':
       return (
         <ProviderSearch
