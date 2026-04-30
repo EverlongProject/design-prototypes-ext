@@ -183,7 +183,7 @@ function ResultsReadyBanner({ onAskAI }) {
             Your results are in
           </p>
           <p className="font-sans text-body-2 text-ink-subdued mt-0.5">
-            Your Basic Health Profile results are ready to view in your Quest profile.
+            Your Biometric Screening results are ready to view in your Quest profile.
           </p>
         </div>
       </div>

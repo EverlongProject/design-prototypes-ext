@@ -2,7 +2,7 @@
 
 **Persona:** Mari Patel, 47, working full-time, primary caregiver for her aging mother. Mid-afternoon at her desk on a Tuesday. Behavioral archetype: time-pressured, action-oriented. Easily overwhelmed, frequently abandons scheduling.
 
-**Outreach trigger (why the AI texted):** Mari's annual Basic Health Profile is due. Her Health Story has no flu vaccine on file for this season.
+**Outreach trigger (why the AI texted):** Mari's annual Biometric Screening is due. Her Health Story has no flu vaccine on file for this season.
 
 **Member's actual priority:** Get this off her plate without it eating into her day.
 
@@ -21,7 +21,6 @@
 - Proactive collection-method offer addressing needle phobia
 - **Agent proactively spots and offers the missing flu shot, no extra navigation** (first hero moment)
 - **Cancel becomes reschedule: agent saves the booking instead of losing it** (second hero moment)
-- "HSA-eligible" framing (Mari's employer funds her HSA as a benefit)
 - Time-shifted re-engagement when results land (narrative gap, then results banner)
 
 ---
@@ -44,7 +43,7 @@
 
 **Notification preview text:**
 > **Quest**
-> Your annual Basic Health Profile is due. 3 weeks left in your screening window. HSA-eligible.
+> Your annual Biometric Screening is due. 3 weeks left in your screening window.
 
 **Time:** ~3 seconds before tap.
 
@@ -55,9 +54,9 @@
 **Visual:** iMessage-style thread with Quest.
 
 **SMS body:**
-> Your annual Basic Health Profile is due. 3 weeks left in your screening window. HSA-eligible. Tap below to find a spot in under 2 minutes.
+> Your annual Biometric Screening is due. 3 weeks left in your screening window. Tap below to find a spot in under 2 minutes.
 >
-> [Find your spot, Quest Diagnostics, myquest.com]
+> [Schedule your appointment, Quest Diagnostics, myquest.com]
 
 **User action:** Taps the link preview.
 
@@ -76,9 +75,9 @@
 ## Beat 5: Agent greeting
 
 **Agent message:**
-> Hi Mari, I'm your Quest Care Navigation Assistant. Glad you tapped through.
+> Hi Mari, I'm your Quest AI Companion. Glad you tapped through.
 >
-> Most members are in and out in under 15 minutes for their Basic Health Profile, and your visit is HSA-eligible. Want help finding a spot that works with your week?
+> Most participants are in and out in under 15 minutes for their Biometric Screening. Want help finding a spot that works with your week?
 
 **Suggested replies:**
 - **"Yes, find me a spot"** (primary, triggers the auto-typed pivot)
@@ -99,7 +98,7 @@
 **Visual:** Cursor lands in the input. Characters appear one at a time at ~75 wpm with a couple of natural pauses. Total typing ~8 to 10 seconds.
 
 **Typed message:**
-> Find me an appointment near work tomorrow morning, with parking.
+> Find me an appointment near work tomorrow morning, with parking available
 
 **User action:** Taps Send.
 
@@ -117,7 +116,7 @@
 > Filtering for parking and morning availability…
 
 **Agent:**
-> Looks like this is your first Basic Health Profile with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?
+> Looks like this is your first Biometric Screening with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?
 
 **Suggested replies:**
 - **"Standard blood draw is fine"** (primary)
@@ -168,10 +167,9 @@
 
 **Confirmation card content:**
 > ✓ **Booked**
-> Basic Health Profile
+> Biometric Screening
 > Quest PSC, Wexford
 > Tomorrow, 8:00am
-> HSA-eligible
 > Calendar invite sent to mari@company.com
 > • Bring a photo ID
 
@@ -191,11 +189,12 @@
 > No flu vaccine on file for this season…
 
 **Agent:**
-> One thing I noticed: you haven't had your flu shot this season. **I can add it to this same visit, same chair, no extra time.** Want me to include it?
+> Before you go: it's flu season and we don't have a record of you getting the flu shot. **I can add it to this same visit, same chair, no extra time.** Want me to include it?
 
 **Suggested replies:**
 - **"Yes, add the flu shot"** (primary)
-- "Just the screening"
+- "I already got it"
+- "Not interested"
 
 **User action:** Taps **"Yes, add the flu shot."**
 
@@ -217,10 +216,9 @@
 
 **Confirmation card content:**
 > ✓ **Booked**
-> Basic Health Profile + flu shot
+> Biometric Screening + flu shot
 > Quest PSC, Wexford
 > Tomorrow, 8:00am
-> HSA-eligible
 > Calendar invite sent to mari@company.com
 > • No food or drink after midnight
 > • Bring a photo ID
@@ -297,10 +295,9 @@
 
 **Confirmation card content:**
 > ✓ **Rescheduled**
-> Basic Health Profile + flu shot
+> Biometric Screening + flu shot
 > Quest PSC — Wexford
 > Thursday at 7:30am
-> HSA-eligible
 > Calendar invite sent to mari@company.com
 > • No food or drink after midnight Wednesday
 > • Bring a photo ID
@@ -323,7 +320,7 @@
 
 **Banner content:**
 > ✓ **Your results are in**
-> Your Basic Health Profile results are ready to view in your Quest profile.
+> Your Biometric Screening results are ready to view in your Quest profile.
 > [View results] [Ask AI ✨]
 
 **User action:** Taps **"Ask AI."**
@@ -341,7 +338,7 @@
 **Agent:**
 > Welcome back, Mari. Your results came back. Most numbers look good. **Your cholesterol is borderline at 215**, which is a useful early signal.
 >
-> Your employer covers a nutrition coaching program through Pack Health at zero cost. Most members see meaningful improvement in 8 to 12 weeks. Want me to enroll you?
+> Your employer covers a nutrition coaching program through Pack Health at zero cost. Most participants see meaningful improvement in 8 to 12 weeks. Want me to enroll you?
 
 **Suggested replies:**
 - **"Yes, enroll me"** (primary)
@@ -366,7 +363,7 @@ The barriers from Quest's January framework, addressed across the flow:
 |---|---|
 | Limited attention | SMS deadline cue (no employer-tied social proof, compliance-safe) |
 | Friction | **Agent proactively spots and offers the missing flu shot, no extra navigation (Beat 10, hero)** |
-| Present bias | "Under 15 minutes" framing (Beat 5), HSA-eligible reframe (throughout) |
+| Present bias | "Under 15 minutes" framing (Beat 5) |
 | Status quo bias | Agent does the work on her behalf throughout |
 | Social norms | Intentionally restrained, dropped employer-tied claims for compliance |
 
@@ -405,7 +402,7 @@ Buffer for animation, thinking indicators, and reading: **~5:00 to 6:00**.
 
 **Recommendation moment in Beat 10.** Text-only. The agent's question stands on its own, no card. We deliberately removed the visual pre-selection treatment to keep the consent feel obvious in a clinical context. The two-step thinking indicator before the question (`Checking your Health Story for any open care gaps… / No flu vaccine on file for this season…`) does the work of showing the agent's reasoning.
 
-**Two confirmation card variants.** `confirmation` with `variant: 'screening'` shows just the Basic Health Profile after Beat 9. `confirmation` with `variant: 'screeningWithFlu'` replaces it after Beat 11 once the flu shot is added.
+**Two confirmation card variants.** `confirmation` with `variant: 'screening'` shows just the Biometric Screening after Beat 9. `confirmation` with `variant: 'screeningWithFlu'` replaces it after Beat 11 once the flu shot is added.
 
 **Phase machine in PortalScreen.** Five phases drive the flow: `before-screening` (sidebar auto-opens with PRE script), `pre-cancel` (sidebar closed; hero search auto-types "Cancel my appointment"), `cancel-conversation` (sidebar reopens with RESCHEDULE script), `after-screening` (sidebar closed, results banner visible), `results-conversation` (sidebar reopens with POST script). The sidebar uses `key={phase}` to force a fresh ChatRunner instance on phase change. The `done` phase exits to the StageMenu.
 
@@ -413,7 +410,7 @@ Buffer for animation, thinking indicators, and reading: **~5:00 to 6:00**.
 
 **Sidebar geometry.** Build to match Figma node `15:751`. Highmark's 550px width is a reasonable default if Figma hasn't been measured yet.
 
-**Persona tells.** The agent's lines should consistently reinforce that it knows Mari's context: "your Health Story" (not "your records"), "near your work" (not "near you"), "this season" (specific, not generic), "first Basic Health Profile with us" (history-aware). None of this needs to be displayed on screen, but the language reinforces it throughout.
+**Persona tells.** The agent's lines should consistently reinforce that it knows Mari's context: "your Health Story" (not "your records"), "near your work" (not "near you"), "this season" (specific, not generic), "first Biometric Screening with us" (history-aware). None of this needs to be displayed on screen, but the language reinforces it throughout.
 
 **Things the agent does NOT know in this demo:**
 - Mari's mother's specific health conditions (just "caregiver" context)
