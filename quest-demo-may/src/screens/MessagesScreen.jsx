@@ -31,7 +31,7 @@ export default function MessagesScreen({ onAdvance }) {
           <div className="flex-1 px-5 py-4 overflow-hidden flex flex-col gap-2">
             <Timestamp />
             <InboundBubble>
-              Your annual Basic Health Profile is due. 3 weeks left in your screening window. HSA-eligible. Tap below to find a spot in under 2 minutes.
+              Your annual Biometric Screening is due. 3 weeks left in your screening window. Tap below to find a spot in under 2 minutes.
             </InboundBubble>
             <LinkPreviewBubble onClick={onAdvance} />
           </div>
@@ -98,7 +98,7 @@ function LinkPreviewBubble({ onClick }) {
       </div>
       <div className="px-3 py-2.5 border-t border-black/30">
         <p className="text-white text-[13px] font-medium leading-tight mb-0.5">
-          Find your spot — Quest Diagnostics
+          Schedule your appointment — Quest Diagnostics
         </p>
         <p className="text-white/55 text-[11px]">myquest.com</p>
       </div>

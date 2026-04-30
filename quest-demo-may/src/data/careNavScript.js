@@ -43,9 +43,9 @@ export const CARE_NAV_SCRIPT_PRE = [
   {
     id: 'b1-a1',
     type: 'agent',
-    text: `Hi Mari, I'm your Quest Care Navigation Assistant. Glad you tapped through.
+    text: `Hi Mari, I'm your Quest AI Companion. Glad you tapped through.
 
-Most members are in and out in under 15 minutes for their Basic Health Profile, and your visit is HSA-eligible. Want help finding a spot that works with your week?`,
+Most participants are in and out in under 15 minutes for their Biometric Screening. Want help finding a spot that works with your week?`,
     advanceAfter: 600,
   },
   {
@@ -56,7 +56,7 @@ Most members are in and out in under 15 minutes for their Basic Health Profile, 
       { label: 'I have a question first' },
     ],
     autoType: {
-      text: 'Find me an appointment near work tomorrow morning, with parking.',
+      text: 'Find me an appointment near work tomorrow morning, with parking available',
     },
   },
 
@@ -75,7 +75,7 @@ Most members are in and out in under 15 minutes for their Basic Health Profile, 
   {
     id: 'b2-a1',
     type: 'agent',
-    text: `Looks like this is your first Basic Health Profile with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?`,
+    text: `Looks like this is your first Biometric Screening with us. A quick heads up: you can pick between a standard blood draw or a finger stick at most locations. Want me to filter for finger stick availability?`,
     advanceAfter: 600,
   },
   {
@@ -153,7 +153,7 @@ Most members are in and out in under 15 minutes for their Basic Health Profile, 
   {
     id: 'b5-a1',
     type: 'agent',
-    text: `One thing I noticed: you haven't had your flu shot this season. **I can add it to this same visit, same chair, no extra time.** Want me to include it?`,
+    text: `Before you go: it's flu season and we don't have a record of you getting the flu shot. **I can add it to this same visit, same chair, no extra time.** Want me to include it?`,
     advanceAfter: 700,
   },
   {
@@ -161,7 +161,8 @@ Most members are in and out in under 15 minutes for their Basic Health Profile, 
     type: 'input',
     chips: [
       { label: 'Yes, add the flu shot', primary: true },
-      { label: 'Just the screening' },
+      { label: 'I already got it' },
+      { label: 'Not interested' },
     ],
   },
 
@@ -221,7 +222,7 @@ export const CARE_NAV_SCRIPT_POST = [
     type: 'agent',
     text: `Welcome back, Mari. Your results came back. Most numbers look good. **Your cholesterol is borderline at 215**, which is a useful early signal.
 
-Your employer covers a nutrition coaching program through Pack Health at zero cost. Most members see meaningful improvement in 8 to 12 weeks. Want me to enroll you?`,
+Your employer covers a nutrition coaching program through Pack Health at zero cost. Most participants see meaningful improvement in 8 to 12 weeks. Want me to enroll you?`,
     advanceAfter: 600,
   },
   {
@@ -359,10 +360,9 @@ export const LOCATIONS_ALL = [
 
 export const SCREENING_BOOKING = {
   title: 'Booked',
-  doctor: 'Basic Health Profile',
+  doctor: 'Biometric Screening',
   practice: 'Quest PSC — Wexford',
   when: 'Tomorrow, 8:00am',
-  cost: 'HSA-eligible',
   inviteEmail: 'mari@company.com',
   extras: [
     'Bring a photo ID',
@@ -371,10 +371,9 @@ export const SCREENING_BOOKING = {
 
 export const SCREENING_WITH_FLU_BOOKING = {
   title: 'Booked',
-  doctor: 'Basic Health Profile + flu shot',
+  doctor: 'Biometric Screening + flu shot',
   practice: 'Quest PSC — Wexford',
   when: 'Tomorrow, 8:00am',
-  cost: 'HSA-eligible',
   inviteEmail: 'mari@company.com',
   extras: [
     'No food or drink after midnight',
@@ -384,10 +383,9 @@ export const SCREENING_WITH_FLU_BOOKING = {
 
 export const RESCHEDULED_BOOKING = {
   title: 'Rescheduled',
-  doctor: 'Basic Health Profile + flu shot',
+  doctor: 'Biometric Screening + flu shot',
   practice: 'Quest PSC — Wexford',
   when: 'Thursday at 7:30am',
-  cost: 'HSA-eligible',
   inviteEmail: 'mari@company.com',
   extras: [
     'No food or drink after midnight Wednesday',
